@@ -1,3 +1,7 @@
 from django.contrib import admin
+from moovie.models import *
 
-# Register your models here.
+class MovieAdmin(admin.ModelAdmin):
+    list_display = ('id', 'title', 'duration', 'release_date', 'description', 'average_rating', 'image', 'create_date')
+
+admin.site.register(Movie, MovieAdmin)

@@ -4,16 +4,16 @@ from django.contrib.auth.models import User
 
 class Movie(models.Model):
 
-    title = models.CharField(max_length=128, blank=False, unique=True)
+    title = models.TextField(max_length=128, blank=False, unique=True)
     duration = models.IntegerField(default=0)
     release_date = models.DateTimeField(blank=False)
     description = models.TextField(max_length=256)
     average_rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.00)
-    image = models.ImageField(upload_to='movie_images', default = 'media/movie_images/movie_placeholder.png')
+    image = models.ImageField(upload_to='movie_images', default = 'movie_images/placeholder.png')
     create_date = models.DateTimeField(auto_now_add=True, blank=False)
     
     def __str__(self):
-        return str(self.id) + '_' + self.title
+        return str(self.id) + '-' + self.title
 
 class Genre(models.Model):
 
@@ -31,11 +31,11 @@ class Person(models.Model):
 
     name = models.CharField(max_length=64, blank=False)
     surname = models.CharField(max_length=32, blank=False)
-    image = models.ImageField(upload_to='person_images', blank=True)
+    image = models.ImageField(upload_to='person_images', default='person_images/placeholder.jpg')
     person_type = models.CharField(max_length=16, blank=False)
     
     def __str__(self):
-        return str(self.id) + '_' + self.name + ' ' + self.surname
+        return str(self.id) + '-' + self.name + ' ' + self.surname
 
 class DirectorMovie(models.Model):
 
@@ -60,7 +60,6 @@ class UserProfile(models.Model):
     def __str__(self):
         return self.user.username
 
-
 class Review(models.Model):
 
     COMMENT_MAX_LENGTH = 512
@@ -70,25 +69,22 @@ class Review(models.Model):
     movie_id = models.ForeignKey(Movie, on_delete=models.CASCADE)
 
     comment = models.TextField(max_length=COMMENT_MAX_LENGTH)
-    header = models.CharField(max_length=HEADER_MAX_LENGTH)
+    header = models.TextField(max_length=HEADER_MAX_LENGTH)
     rating = models.DecimalField(max_digits=3, decimal_places=2, null=True)
     date = models.DateTimeField(auto_now_add=True, blank=False)
     
     def __str__(self):
         return self.header
 
-
 class MovieToWatch(models.Model):
 
-    username = models.ForeignKey(User, to_field="username", on_delete=models.CASCADE)
+    username = models.ForeignKey(User, on_delete=models.CASCADE)
     movie_id = models.ForeignKey(Movie, on_delete=models.CASCADE)
-
 
 class MovieGenre(models.Model):
 
     genre_name = models.ForeignKey(Genre, on_delete=models.CASCADE)
     movie_id = models.ForeignKey(Movie, on_delete=models.CASCADE)
-
 
 class ContactMessage(models.Model):
 
@@ -99,8 +95,8 @@ class ContactMessage(models.Model):
 
     sender_email = models.CharField(max_length=EMAIL_MAX_LENGTH, blank=False)
     sender_name = models.CharField(max_length=NAME_MAX_LENGTH, blank=False)
-    subject = models.CharField(max_length=SUBJECT_MAX_LENGTH, blank=False)
-    message = models.CharField(max_length=MESSAGE_MAX_LENGTH, blank=False)
+    subject = models.TextField(max_length=SUBJECT_MAX_LENGTH, blank=False)
+    message = models.TextField(max_length=MESSAGE_MAX_LENGTH, blank=False)
     date = models.DateTimeField(auto_now_add=True, blank=False)
     
     def __str__(self):

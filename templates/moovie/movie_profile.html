@@ -1,0 +1,30 @@
+{% extends 'moovie/base.html' %}
+{% load staticfiles %}
+
+{% block title_block %}
+    {% if movie %}
+        {{ movie.name }}
+    {% else %}
+        Unknown Movie
+    {% endif %}
+{% endblock %}
+
+{% block body_block %}
+    {% if movie %}
+        <h1>{{ movie.name }}</h1>
+        <div>
+            <h2>Movie Info</h2>
+        </div>
+        <div>
+            <h2>User Reviews</h2>
+        </div>
+        {% if user.is_authenticated %}
+        <div>
+            <h2>Write a Review</h2>
+            <form action="">review input form</form>
+        </div>
+        {% endif %}
+    {% else %}
+        The specified movie does not exist.
+    {% endif %}
+{% endblock %}

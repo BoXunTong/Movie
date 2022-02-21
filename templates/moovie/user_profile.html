@@ -1,0 +1,30 @@
+{% extends 'moovie/base.html' %}
+{% load staticfiles %}
+
+{% block title_block %}
+    {% if user %}
+        {{ user.name }}
+    {% else %}
+        Unknown User
+    {% endif %}
+{% endblock %}
+
+{% block body_block %}
+    {% if user %}
+        <h1>{{ user.name }}</h1>
+        <div>
+            <h2>User Info</h2>
+            {% if user.is_authenticated %}
+            <a href="">Edit profile</a>
+            {% endif %}
+        </div>
+        <div>
+            <h2>My Reviews</h2>
+        </div>
+        <div>
+            <h2>Wishlist</h2>
+        </div>
+    {% else %}
+        The specified movie does not exist.
+    {% endif %}
+{% endblock %}

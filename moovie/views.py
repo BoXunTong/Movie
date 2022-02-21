@@ -10,11 +10,11 @@ def index(request):
 def contact_us(request):
     return render(request, 'moovie/contact.html', context = {})
 
-def show_movie_profile(request, movie_name_slug):
+def show_movie_profile(request, movie_id):
     context_dict = {}
     try:
         # is there a movie with this slug?
-        movie = Movie.objects.get(slug=movie_name_slug)
+        movie = Movie.objects.get(id=movie_id)
         context_dict['movie'] = movie
 
         directors = getDirectorsForMovie(movie)

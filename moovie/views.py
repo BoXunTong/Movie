@@ -5,7 +5,16 @@ from moovie.models import Movie, DirectorMovie, Review, Genre, Person, MovieGenr
 from moovie.models import ActorMovie, DirectorMovie
 
 def index(request):
-    return render(request, 'moovie/index.html', context={})
+    context_dict = {}
+    
+    # movies_by_rating = Movie.objects.all()
+    movies_by_rating = Movie.objects.order_by('-average_rating')[:5]
+    movies_by_release = Movie.objects.order_by('-release_date')[:5]
+
+    context_dict['movies_by_rating'] = movies_by_rating
+    context_dict['movies_by_release'] = movies_by_release
+
+    return render(request, 'moovie/index.html', context=context_dict)
 
 def contact_us(request):
     return render(request, 'moovie/contact.html', context = {})
@@ -17,17 +26,18 @@ def show_movie_profile(request, movie_id):
         movie = Movie.objects.get(id=movie_id)
         context_dict['movie'] = movie
 
-        directors = getDirectorsForMovie(movie)
+        directors = get_directors_for_movie(movie)
         context_dict['directors'] = directors
 
-        stars = getActorsForMovie(movie)
+        stars = get_actors_for_movie(movie)
         context_dict['stars'] = stars
 
-        genres = getGenresForMovie(movie)
+        genres = get_genres_for_movie(movie)
         context_dict['genres'] = genres
 
         reviews = Review.objects.filter(movie_id=movie)
         context_dict['reviews'] = reviews
+        
     except Movie.DoesNotExist:
         context_dict['movie'] = None
         context_dict['directors'] = None
@@ -58,26 +68,30 @@ def edit_profile(request):
     # this is the profile of the logged in user (with edit functionality)
     return render(request, 'moovie/edit_profile.html', context = {})
 
-def getDirectorsForMovie(movie):
+def get_directors_for_movie(movie):
     directorMovies = DirectorMovie.objects.filter(movie_id=movie)
     directors = []
-    for director in directorMovies:
-        directors.append(Person.objects.get(person_id=director.person_id))
+    for director_movie in directorMovies:
+        person_id = director_movie.person_id.id
+        directors.append(Person.objects.get(id=person_id))
     return directors
 
-def getActorsForMovie(movie):
+def get_actors_for_movie(movie):
     # do we need to limit this to only the 'top' actors?
     # how to determine 'top'?
     actorMovies = ActorMovie.objects.filter(movie_id=movie)
     actors = []
-    for actor in actorMovies:
-        actors.append(Person.objects.get(person_id=actor.person_id))
+    for actor_movie in actorMovies:
+        person_id = actor_movie.person_id.id
+        actors.append(Person.objects.get(id=person_id))
     return actors
 
-def getGenresForMovie(movie):
+def get_genres_for_movie(movie):
     movieGenres = MovieGenre.objects.filter(movie_id=movie)
     genres = []
-    for genre in movieGenres:
-        genres.append(Genre.objects.get(name=genre.genre_name))
+    for movie_genre in movieGenres:
+        # genres.append(Genre.objects.get(name=genre.genre_name))
+        genres.append(movie_genre.genre_name)
+    return genres
 
 

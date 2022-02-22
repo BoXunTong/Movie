@@ -11,9 +11,9 @@
 
 {% block body_block %}
     {% if movie %}
-        <h1>{{ movie.name }}</h1>
+        <h1>{{ movie.title }}</h1>
         <div>
-            <p>{{ movie.release_date }}</p>
+            <p>Released: {{ movie.release_date }}</p>
             <p>
                 Directed by:{% for director in directors %} 
                     <a href="SEARCHBYDIRECTOR">{{ director.name }} </a>
@@ -24,14 +24,14 @@
                     <a href="SEARCHBYACTOR">{{ star.name }}</a>
                 {% endfor %}
             </p>
-            <p>{{ movie.description }}</p>
+            <p>Description: {{ movie.description }}</p>
             <p>
-                {% for genre in genres %}
+                Genre tags: {% for genre in genres %}
                     <a href="SEARCHBYGENRE"> {{ genre.name }}</a>
                 {% endfor %}
             </p>
             <img src="{{ movie.image }}" alt="">
-            <p>{{ movie.average_rating }}</p>
+            <p>Average rating: {{ movie.average_rating }}</p>
         </div>
         <div>
             <h2>User Reviews</h2>

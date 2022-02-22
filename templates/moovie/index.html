@@ -11,9 +11,31 @@
         <h2>Search Bar Placeholder</h2>
     </div>
     <div>
-        <h2>Most Liked</h2>
+        <h2>Highest Rated</h2>
+        {% if movies_by_rating %}
+        <ul>
+            {% for movie in movies_by_rating %}
+            <li>
+                <a href="{% url 'moovie:show_movie_profile' movie.id %}">{{ movie.title }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        There are no movies present
+        {% endif %}
     </div>
     <div>
         <h2>New and Upcoming Movies</h2>
+        {% if movies_by_release %}
+        <ul>
+            {% for movie in movies_by_release %}
+            <li>
+                <a href="{% url 'moovie:show_movie_profile' movie.id %}">{{ movie.title }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        There are no movies present
+        {% endif %}
     </div>
 {% endblock %}

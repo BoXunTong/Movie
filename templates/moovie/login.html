@@ -1,0 +1,14 @@
+{% extends 'moovie/base.html' %}
+{% load staticfiles %}
+
+{% block title_block %}
+Log In
+{% endblock %}
+
+{% block body_block %}
+<h1>Log in to your account</h1>
+<div>
+    <form action="">A LOG IN FORM</form>
+    <p>Dont have an account? <a href="{% url 'moovie:sign_up' %}">Sign up here!</a></p>
+</div>
+{% endblock %}

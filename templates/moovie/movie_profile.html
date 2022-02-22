@@ -1,0 +1,53 @@
+{% extends 'moovie/base.html' %}
+{% load staticfiles %}
+
+{% block title_block %}
+    {% if movie %}
+        {{ movie.name }}
+    {% else %}
+        Unknown Movie
+    {% endif %}
+{% endblock %}
+
+{% block body_block %}
+    {% if movie %}
+        <h1>{{ movie.title }}</h1>
+        <div>
+            <p>Released: {{ movie.release_date }}</p>
+            <p>
+                Directed by:{% for director in directors %} 
+                    <a href="SEARCHBYDIRECTOR">{{ director.name }} </a>
+                {% endfor %}
+            </p>
+            <p>
+                Starring:{% for star in stars %}
+                    <a href="SEARCHBYACTOR">{{ star.name }}</a>
+                {% endfor %}
+            </p>
+            <p>Description: {{ movie.description }}</p>
+            <p>
+                Genre tags: {% for genre in genres %}
+                    <a href="SEARCHBYGENRE"> {{ genre.name }}</a>
+                {% endfor %}
+            </p>
+            <img src="{{ movie.image }}" alt="">
+            <p>Average rating: {{ movie.average_rating }}</p>
+        </div>
+        <div>
+            <h2>User Reviews</h2>
+            {% for review in reviews %}
+                <h3>{{ review.header }}</h3>
+                <p>rating: {{ review.rating }}/5</p>
+                <p>{{ review.comment }}</p>
+            {% endfor %}
+        </div>
+        {% if user.is_authenticated %}
+        <div>
+            <h2>Write a Review</h2>
+            <form action="">review input form</form>
+        </div>
+        {% endif %}
+    {% else %}
+        The specified movie does not exist.
+    {% endif %}
+{% endblock %}

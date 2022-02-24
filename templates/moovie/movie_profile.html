@@ -12,26 +12,30 @@
 {% block body_block %}
     {% if movie %}
         <h1>{{ movie.title }}</h1>
-        <div>
-            <p>Released: {{ movie.release_date }}</p>
-            <p>
-                Directed by:{% for director in directors %} 
-                    <a href="SEARCHBYDIRECTOR">{{ director.name }} </a>
-                {% endfor %}
-            </p>
-            <p>
-                Starring:{% for star in stars %}
-                    <a href="SEARCHBYACTOR">{{ star.name }}</a>
-                {% endfor %}
-            </p>
-            <p>Description: {{ movie.description }}</p>
-            <p>
-                Genre tags: {% for genre in genres %}
-                    <a href="SEARCHBYGENRE"> {{ genre.name }}</a>
-                {% endfor %}
-            </p>
-            <img src="{{ movie.image }}" alt="">
-            <p>Average rating: {{ movie.average_rating }}</p>
+        <div id="wrapper">
+            <div id="left">
+                <p>Released: {{ movie.release_date }}</p>
+                <p>
+                    Directed by: {% for director in directors %} 
+                        <a href="SEARCHBYDIRECTOR">{{ director.name }} {{director.surname}} </a>
+                    {% endfor %}
+                </p>
+                <p>
+                    Starring: {% for star in stars %}
+                        <a href="SEARCHBYACTOR">{{ star.name }} {{star.surname}} </a>
+                    {% endfor %}
+                </p>
+                <p>Description: {{ movie.description }}</p>
+                <p>
+                    Genre tags: {% for genre in genres %}
+                        <a href="SEARCHBYGENRE"> {{ genre.name }}</a>
+                    {% endfor %}
+                </p>
+            </div>
+            <div id="right">
+                <img src="{{ MEDIA_URL }}{{ movie.image }}" alt="">
+                <p>Average rating: {{ movie.average_rating }}</p>
+            </div>
         </div>
         <div>
             <h2>User Reviews</h2>
@@ -44,7 +48,22 @@
         {% if user.is_authenticated %}
         <div>
             <h2>Write a Review</h2>
-            <form action="">review input form</form>
+            <form id="review_form" method="post" action="{% url 'moovie:add_review' movie.id %}"
+            enctype="multipart/form-data">
+
+            {% csrf_token %}
+            {% for hidden in form.hidden_fields %}
+                {{ hidden }}
+            {% endfor %}
+            {% for field in form.visible_fields %}
+                {{ field.errors }}
+                {{ field.help_text }}
+                {{ field }}
+            {% endfor %}
+            <input type="hidden" name="username" value="{{user.username}}">
+            <!-- Provide a button to click to submit the form. -->
+            <input type="submit" name="submit" value="Review" />
+        </form>
         </div>
         {% endif %}
     {% else %}

@@ -1,6 +1,7 @@
 # from __future__ import generator_stop
-from django.shortcuts import render
-from moovie.models import Movie, DirectorMovie, Review, Genre, Person, MovieGenre, ActorMovie
+from django.shortcuts import render, redirect, reverse
+from moovie.models import Movie, DirectorMovie, Review, Genre, Person, MovieGenre, ActorMovie, User
+from moovie.forms import ReviewForm
 
 from moovie.models import ActorMovie, DirectorMovie
 
@@ -22,7 +23,6 @@ def contact_us(request):
 def show_movie_profile(request, movie_id):
     context_dict = {}
     try:
-        # is there a movie with this slug?
         movie = Movie.objects.get(id=movie_id)
         context_dict['movie'] = movie
 
@@ -37,6 +37,8 @@ def show_movie_profile(request, movie_id):
 
         reviews = Review.objects.filter(movie_id=movie)
         context_dict['reviews'] = reviews
+
+        context_dict['form'] = ReviewForm()
         
     except Movie.DoesNotExist:
         context_dict['movie'] = None
@@ -94,4 +96,34 @@ def get_genres_for_movie(movie):
         genres.append(movie_genre.genre_name)
     return genres
 
+def add_review(request, movie_id):
+    form = ReviewForm()
+
+    # A HTTP POST?
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+
+        # Have we been provided with a valid form?
+        if form.is_valid():
+            # Save the new category to the database.
+            review = form.save(commit=False)
+            review.movie_id = Movie.objects.get(id=movie_id)
+            print(request.GET.get('username'))
+            review.username = User.objects.get(username=request.POST.get('username'))
+
+            review.save()
+            # Now that the category is saved, we could confirm this.
+            # For now, just redirect the user back to the index view.
+            return redirect(reverse('moovie:show_movie_profile',
+                                        kwargs={'movie_id':
+                                                movie_id}))
+        else:
+            # The supplied form contained errors -
+            # just print them to the terminal.
+            print(form.errors)
+
+    # Will handle the bad form, new form, or no form supplied cases.
+    # Render the form with error messages (if any).
+    context_dict = {'form': form, 'movie_id': movie_id}
+    return render(request, '/moovie/movie_profile.html', context = context_dict)
 

@@ -26,7 +26,7 @@ class MovieToWatchAdmin(admin.ModelAdmin):
     list_display = ('username', 'movie_id')
 
 class ContactMessageAdmin(admin.ModelAdmin):
-    list_display = ('subject',)
+    list_display = ('sender_email', 'sender_name', 'subject', 'message', 'date')
 
 class GenreAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug':('name',)}

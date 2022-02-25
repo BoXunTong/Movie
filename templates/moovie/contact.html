@@ -8,6 +8,21 @@ Contact Us
 {% block body_block %}
 <h1>Contact Us</h1>
 <div>
-    <p>All of our contact details.</p>
+    <h2>Write a Message</h2>
+    <form id="contact_form" method="post" action="{% url 'moovie:contact_us' %}"
+    enctype="multipart/form-data">
+
+    {% csrf_token %}
+    {% for hidden in form.hidden_fields %}
+        {{ hidden }}
+    {% endfor %}
+    {% for field in form.visible_fields %}
+        {{ field.errors }} </br>
+        {{ field.help_text }} </br>
+        {{ field }} </br>
+    {% endfor %}
+    </br>
+    <input type="submit" name="submit" value="Send Message" />
+    </form>
 </div>
 {% endblock %}

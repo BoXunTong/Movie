@@ -17,7 +17,7 @@ def populate():
     add_user_profile(user2, 25, 'profile_images/user1.jpg', '2 bio')
 
     # Movie and actors test
-    movie1 = add_movie('Harry Potter and the Philosophers Stone', 152, datetime.datetime(2001, 11, 16), 'First movie of the series.', Decimal(4.71), "movie_images/HarryPotter1.jpg")
+    movie1 = add_movie('Harry Potter and the Philosophers Stone', 152, datetime.datetime(2001, 11, 16), 'First movie of the series.', Decimal(5.00), "movie_images/HarryPotter1.jpg")
     person = add_person("Daniel", 'Radcliffe', 'person_images/Daniel_Radcliffe.jpg', 'Actor')
     person2 = add_person("Emma", "Watson", 'person_images/Emma_Watson.jpg', 'Actor')
     person3 = add_person('Chris', 'Columbus', 'person_images/Chris_Columbus.jpg', 'Director')
@@ -25,14 +25,15 @@ def populate():
     add_actor_movie(movie1, person2)
     add_director_movie(movie1, person3)
 
-    movie2 = add_movie('Harry Potter and the Prisoner of Azkaban', 142, datetime.datetime(2004, 6, 4), 'Some description', Decimal(4.56), 'movie_images/HarryPotter3.jpg')
+    movie2 = add_movie('Harry Potter and the Prisoner of Azkaban', 142, datetime.datetime(2004, 6, 4), 'Some description', Decimal(5.00), 'movie_images/HarryPotter3.jpg')
     person4 = add_person('Alfonso', 'Cuarón', 'person_images/Alfonso_Cuarón.jpg', 'Director')
     add_actor_movie(movie2, person)
     add_actor_movie(movie2, person2)
     add_director_movie(movie2, person4)
 
     # user review test
-    add_review(user1, movie1, 'comment test', 'header test', Decimal(4.2))
+    add_review(user1, movie1, 'comment test', 'header test', Decimal(5.00))
+    add_review(user2, movie2, 'comment test', 'header test', Decimal(5.00))
 
     # Movie to watch test
     add_movie_to_watch(user1, movie1)

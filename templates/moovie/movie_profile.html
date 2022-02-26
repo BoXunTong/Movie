@@ -44,7 +44,7 @@
             <h2 id="user-reviews-heading">User Reviews</h2>
             {% for review_with_user_info in reviews_with_user_info %}
                 <div id="review">
-                    <div class="left" id="review-users">
+                    <div class="left">
                         <img class="profile-picture" src="{{ MEDIA_URL }}{{ review_with_user_info.user.picture }}" alt="Profile Picture"> </br>
                         <a href="#"> {{ review_with_user_info.user }}</a>
                     </div>

@@ -160,8 +160,5 @@ def add_review(request, movie_id):
 def calculate_and_save_new_rating(movie_id, new_rating):
     movie = Movie.objects.get(id=movie_id)
     review_count = Review.objects.filter(movie_id=movie_id).count()
-    print(review_count)
-    print(new_rating)
     movie.average_rating = (movie.average_rating * review_count + new_rating) / (review_count + 1)
-    print(review_count)
     movie.save() 

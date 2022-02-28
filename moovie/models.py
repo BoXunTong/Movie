@@ -9,7 +9,9 @@ class Movie(models.Model):
     release_date = models.DateTimeField(blank=False)
     description = models.TextField(max_length=256)
     average_rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.00)
-    image = models.ImageField(upload_to='movie_images', default = 'movie_images/placeholder.png')
+    image = models.ImageField(upload_to='movie_images', default='movie_images/placeholder.png')
+    # Add an image field as movie's poster
+    poster = models.ImageField(upload_to='poster_images', default='poster_images/placeholder.png')
     create_date = models.DateTimeField(auto_now_add=True, blank=False)
     
     def __str__(self):

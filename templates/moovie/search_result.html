@@ -1,13 +1,44 @@
-{% extends 'moovie/base.html' %}
+{% extends 'rango/base.html' %}
 {% load staticfiles %}
 
 {% block title_block %}
-Search Results
-{% endblock %}
+    {% if result %}
+        {{ result_list }}
+    {% else %}
+        Unknown Category
+    {% endif %}
+{% endblock title_block %}
 
 {% block body_block %}
-<h1>Search Results</h1>
-<div>
-    <p>All search results appear here</p>
-</div>
-{% endblock %}
+
+    <h1>Search Results for:</h1>
+
+    <div>
+        {% if result %}
+        <div class="list group">
+            {% for result in result_list %}
+            <div class="list-group-item">
+                <img>
+                    {{result.poster}}
+                </img>
+                <h3 class="list-group-item-heading">
+                    <a href="#">
+                        {{result.movie}}
+                    </a>
+                </h3>
+                <p class="list-group-item-text">
+                    {{ result.director }}
+                </p>
+                <p class="list-group-item-text">
+                    {{ result.release_date }}
+                </p>
+                <button type="submit" name="submit">Add to List</button>
+                <button type="submit" name="submit">Comment</button>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        The specified movie does not exist.
+        {% endif %}
+    </div>
+{% endblock body_block %}

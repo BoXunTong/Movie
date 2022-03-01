@@ -2,35 +2,82 @@
 {% load staticfiles %}
 
 <html>
-    <head>
-        <title>
-            Moovie -
-            {% block title_block %}
-                Hi!
+     <head>
+         <meta charset="UTF-8">
+         <meta http-equiv="X-UA-Compatible" content="IE=edge">
+         <meta name="viewport" content="width=device-width", initial-scale='1.0'>
+         <title>Homepage</title>
+         
+         <!--GOOGLE FONT -->
+         <link rel="preconnect" href="https://fonts.gstatic.com">
+         <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+         <!-- OWL CAROUSEL -->
+         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.
+         carousel.min.css" integrity="sha512-tS3S5qG0BlhnQROyJXvNjeEM4UpMXHrQfTGmbQ1gKmelCxlSEBUaxhRBj/
+         EFTzpbP4RVSrpEikbmdJobCvhE3g==" crossorigin="anonymous" />
+         <!-- BOX ICONS -->
+         <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+         <!-- APP CSS -->
+         <link rel="stylesheet" href="/css/grid.css">
+         <link rel="stylesheet" href="/css/app.css">
+
+     </head>
+     <body>
+            <!-- NAV -->
+            <div class="nav-wrapper">
+                <div class="container">
+                    <div class="nav">
+                        <a href="#" class="logo">
+                            <i class='bx bx-movie-play bx-tada'></i>Mo<span class="main-color">o</span>vie
+                        </a>
+
+                        <form class="form-inline" id="user-form" method="post" action="{% url 'moovie:show_search_result' %}">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <input class="form-control" type="text" size="50" name="query" value="{{ query }}" id="query" />
+                            </div>
+                            <button class="btn btn-primary" type="submit" name="submit">Search</button>
+                        </form>
+
+                        <ul class="nav-menu" id="nar-menu">
+                            <li><a href="#">Contact Us</a></li>
+                            <li><a href="#">My Profile</a></li>
+                            <li>
+                                <a href="#" class="btn btn-hover">
+                                    <span>Log Out</span> 
+                                </a>
+                            </li>
+                        </ul>
+                        <!-- MOBILE MENU TOGGLE -->
+                        <div class="hamburger-menu" id="hamburger-menu">
+                            <div class="hamburger"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END NAV -->
+            
+
+        <div>
+            {% block body_block %}
             {% endblock %}
-        </title>
-    </head>
-    <body>
-        <div>
-            <nav>
-                <!-- very incomplete nav! needs:
-                        - proper links
-                        - search bar implemented
-                        - (once we have ther user/login functionality)
-                            + different appearance based on log in state
-                 -->
-                <ul>
-                    <li><a href="#">home(logo?)</a></li>
-                    <li><a href="#">search bar</a></li>
-                    <li><a href="#">contact us</a></li>
-                    <li><a href="#">my profile</a></li>
-                    <li><a href="#">log out</a></li>
-                </ul>
-            </nav>
         </div>
-        <div>
-        {% block body_block %}
-        {% endblock %}
-        </div>
-    </body>
+        <footer>
+            <div>
+                <a href="{% url 'moovie:about' %}">About Us</a>
+            </div>
+        </footer>
+
+        <!-- SCRIPT -->
+        <!-- JQUERY -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj
+        +3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+        <!-- OWL CAROUSEL -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js" 
+        integrity="sha512-bPs7Ae6pVvhOSiIcyUClR7/q2OAsRiovw4vAkX+zJbw3ShAeeqezq50RIIcIURq7Oa20rW2n2q
+        +fyXBNcU9lrw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <!-- APP-SCRIPT -->
+        <script src="/js/app.js"></script>
+
+     </body>
 </html>

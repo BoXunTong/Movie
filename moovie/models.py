@@ -12,7 +12,7 @@ class Movie(models.Model):
     image = models.ImageField(upload_to='movie_images', default = 'movie_images/placeholder.png')
     create_date = models.DateTimeField(auto_now_add=True, blank=False)
     
-    def __str__(self):
+    def __str__(self): 
         return str(self.id) + '-' + self.title
 
 class Genre(models.Model):

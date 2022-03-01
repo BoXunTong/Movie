@@ -1,9 +1,13 @@
 {% extends 'moovie/base.html' %}
 {% load staticfiles %}
 
+{% block static_file_block %}
+    <link rel="stylesheet" href="{% static 'css/movie_profile.css' %}" />
+{% endblock %}
+
 {% block title_block %}
     {% if movie %}
-        {{ movie.name }}
+        {{ movie.title }}
     {% else %}
         Unknown Movie
     {% endif %}
@@ -11,41 +15,66 @@
 
 {% block body_block %}
     {% if movie %}
-        <h1>{{ movie.title }}</h1>
-        <div>
-            <p>Released: {{ movie.release_date }}</p>
-            <p>
-                Directed by:{% for director in directors %} 
-                    <a href="SEARCHBYDIRECTOR">{{ director.name }} </a>
-                {% endfor %}
-            </p>
-            <p>
-                Starring:{% for star in stars %}
-                    <a href="SEARCHBYACTOR">{{ star.name }}</a>
-                {% endfor %}
-            </p>
-            <p>Description: {{ movie.description }}</p>
-            <p>
-                Genre tags: {% for genre in genres %}
-                    <a href="SEARCHBYGENRE"> {{ genre.name }}</a>
-                {% endfor %}
-            </p>
-            <img src="{{ movie.image }}" alt="">
-            <p>Average rating: {{ movie.average_rating }}</p>
+        <h1 id="movie-title">{{ movie.title }}</h1>
+
+        <div class="wrapper">
+            <div class="left">
+                <p>Released: {{ movie.release_date|date:"d M Y" }}</p>
+                <p>Directed by: {% for director in directors %} 
+                                    <a href="SEARCHBYDIRECTOR">{{ director.name }} {{director.surname}} </a>
+                                {% endfor %}
+                </p>
+                <p>Starring: {% for star in stars %}
+                                    <a href="SEARCHBYACTOR">{{ star.name }} {{star.surname}} </a>
+                                {% endfor %}
+                </p>
+                <p>Description: {{ movie.description }}</p>
+                <p>Genre tags: {% for genre in genres %}
+                                    <a href="SEARCHBYGENRE"> {{ genre.name }}</a>
+                                {% endfor %}
+                </p>
+            </div>
+            <div class="left">
+                <img class="movie-image" src="{{ MEDIA_URL }}{{ movie.image }}" alt="Movie Image">
+                <p>Average rating: {{ movie.average_rating }}/5.00</p>
+            </div>
         </div>
-        <div>
-            <h2>User Reviews</h2>
-            {% for review in reviews %}
-                <h3>{{ review.header }}</h3>
-                <p>rating: {{ review.rating }}/5</p>
-                <p>{{ review.comment }}</p>
+
+        <div class="wrapper" id="review-list">
+            <h2 id="user-reviews-heading">User Reviews</h2>
+            {% for review_with_user_info in reviews_with_user_info %}
+                <div id="review">
+                    <div class="left">
+                        <img class="profile-picture" src="{{ MEDIA_URL }}{{ review_with_user_info.user.picture }}" alt="Profile Picture"> </br>
+                        <a href="#"> {{ review_with_user_info.user }}</a>
+                    </div>
+                    <div class="left" id="review-comments">
+                        <h3>{{ review_with_user_info.review.header }}</h3>
+                        <p>{{ review_with_user_info.review.comment }}</p>
+                        <p>rating: {{ review_with_user_info.review.rating|floatformat:0 }}/5</p>
+                    </div>
+                </div>
             {% endfor %}
         </div>
+
         {% if user.is_authenticated %}
-        <div>
-            <h2>Write a Review</h2>
-            <form action="">review input form</form>
-        </div>
+            <div class="wrapper" id="review-form">
+                <h2>Write a Review</h2>
+                <form id="review_form" method="post" action="{% url 'moovie:add_review' movie.id %}"enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% for hidden in form.hidden_fields %}
+                        {{ hidden }}
+                    {% endfor %}
+                    {% for field in form.visible_fields %}
+                        {{ field.errors }} </br>
+                        {{ field.help_text }} </br>
+                        {{ field }} </br>
+                    {% endfor %}
+
+                    <input type="hidden" name="username" value="{{user.username}}">
+                    <input type="submit" class="submit" value="Submit" />
+                </form>
+            </div>
         {% endif %}
     {% else %}
         The specified movie does not exist.

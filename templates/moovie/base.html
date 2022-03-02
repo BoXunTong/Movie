@@ -14,6 +14,8 @@
         {% endblock %}
     </title>
     <link href="{% static "css/bootstrap.min.css" %}" rel="stylesheet" crossorigin="anonymous">
+    <link href="{% static "css/carousel.css" %}" rel="stylesheet">
+
 
     <style>
         .bd-placeholder-img {
@@ -28,7 +30,19 @@
         }
     </style>
 
-    <link href="{% static "css/carousel.css" %}" rel="stylesheet">
+    <!-- GOOGLE FONTS -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;700;900&display=swap"
+          rel="stylesheet">
+    <!-- OWL CAROUSEL -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"
+          integrity="sha512-tS3S5qG0BlhnQROyJXvNjeEM4UpMXHrQfTGmbQ1gKmelCxlSEBUaxhRBj/EFTzpbP4RVSrpEikbmdJobCvhE3g=="
+          crossorigin="anonymous"/>
+    <!-- BOX ICONS -->
+    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+    <!-- APP CSS -->
+    <link rel="stylesheet" href="{% static "test/grid.css" %}">
+    <link rel="stylesheet" href="{% static "test/app.css" %}">
 </head>
 <body>
 <header>
@@ -50,16 +64,17 @@
 
             </ul>
             <div>
-                <select class="custom-select ml-auto" id="inlineFormCustomSelect">
+
+
+            </div>
+            <form class="form-inline mt-1 mt-md-0 ml-0" action=".">
+                <select name="search_dropdown" class="custom-select ml-auto" id="inlineFormCustomSelect">
                     <option selected>Choose..</option>
                     <option value="Title">Title</option>
                     <option value="Director">Director</option>
                     <option value="Genre">Genre</option>
                 </select>
                 <br/>
-
-            </div>
-            <form class="form-inline mt-1 mt-md-0 ml-0" action=".">
                 <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
             </form>
@@ -77,6 +92,9 @@
                         <a class="nav-link" href="#">Logout</a>
                     </li>
                 {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Sign up</a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Login</a>
                     </li>
@@ -120,6 +138,12 @@
 <script src="{% static "js/bootstrap/bootstrap.bundle.min.js" %}"
         integrity="sha384-zDnhMsjVZfS3hiP7oCBRmfjkQC4fzxVxFhBx8Hkz2aZX8gEvA/jsP3eXRCvzTofP"
         crossorigin="anonymous"></script>
+<!-- OWL CAROUSEL -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"
+        integrity="sha512-bPs7Ae6pVvhOSiIcyUClR7/q2OAsRiovw4vAkX+zJbw3ShAeeqezq50RIIcIURq7Oa20rW2n2q+fyXBNcU9lrw=="
+        crossorigin="anonymous"></script>
+<!-- APP SCRIPT -->
+<script src="{% static "test/app.js" %}"></script>
 
 </body>
 </html>

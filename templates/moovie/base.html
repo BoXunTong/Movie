@@ -5,9 +5,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
-    <meta name="generator" content="Jekyll v3.8.5">
+
     <link rel="icon" href="https://via.placeholder.com/64">
     <title>
         Moovie -
@@ -58,22 +56,33 @@
                     <option value="Director">Director</option>
                     <option value="Genre">Genre</option>
                 </select>
-                <br />
+                <br/>
 
             </div>
-            <form class="form-inline mt-1 mt-md-0 ml-0">
-                    <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                </form>
+            <form class="form-inline mt-1 mt-md-0 ml-0" action=".">
+                <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </form>
 
 
             <ul class="navbar-nav mr-0">
                 <li class="nav-item">
                     <a class="nav-link" href="#">Contact us</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Login</a>
-                </li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">My Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Logout</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Login</a>
+                    </li>
+                {% endif %}
+
+
             </ul>
 
         </div>

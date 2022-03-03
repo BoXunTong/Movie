@@ -1,5 +1,8 @@
 # from __future__ import generator_stop
 from ast import keyword
+from cgi import print_form
+from platform import release
+from turtle import title
 from xmlrpc.server import SimpleXMLRPCDispatcher
 from django.shortcuts import render
 from moovie.models import Movie, DirectorMovie, Review, Genre, Person, MovieGenre, ActorMovie
@@ -49,73 +52,80 @@ def show_movie_profile(request, movie_id):
 
     return render(request, 'moovie/movie_profile.html', context=context_dict)
 
-'''
-def show_search_result(request, movie_id):
-    context_dict = {}
-    try:
-        movie = Movie.objects.get(id=movie_id)
-        context_dict['movie'] = movie
-        directors = get_directors_for_movie(movie)
-        context_dict['directors'] = directors
 
-    except Movie.DoesNotExist:
-        context_dict['movie'] = None
-        context_dict['directors'] = None
-
-    return render(request, 'moovie/search_result.html', context = context_dict)
-'''
-def get_movie_from_person(keyword, max_results=0, starts_with=''):
-    person_list = []
+def get_movie_from_person(search_terms, keyword, max_results=0):
+    person_list_name = []
+    person_list_surname = []
     movie_list = []
-    if starts_with:
-        person_list = Person.objects.filter(name__istartswith=starts_with)
-    for person in person_list:
-        if keyword == 'director':
-            diretors = DirectorMovie.objects.filter(person_id=person)
+    if search_terms:
+        person_list_name = Person.objects.filter(name=search_terms)
+        person_list_surname = Person.objects.filter(surname=search_terms)
+    for person_name in person_list_name:
+        if keyword == 2:
+            directors = DirectorMovie.objects.filter(person_id=person_name)
             for director in directors:
                 movie_id = director.movie_id.id
                 movie_list.append(Movie.objects.get(id=movie_id))
-        elif keyword == 'actor':
-            actors = ActorMovie.objects.filter(person_id=person)
+        elif keyword == 3:
+            actors = ActorMovie.objects.filter(person_id=person_name)
             for actor in actors:
                 movie_id = actor.movie_id.id
                 movie_list.append(Movie.objects.get(id=movie_id))
+    print(movie_list)
+    for person_surname in person_list_surname:
+        if keyword == 2:
+            directors = DirectorMovie.objects.filter(person_id=person_surname)
+            for director in directors:
+                movie_id = director.movie_id.id
+                movie_list.append(Movie.objects.get(id=movie_id))
+        elif keyword == 3:
+            actors = ActorMovie.objects.filter(person_id=person_surname)
+            for actor in actors:
+                movie_id = actor.movie_id.id
+                movie_list.append(Movie.objects.get(id=movie_id))
+    print(person_list_name)
+    print(person_list_surname)
+    print(movie_list)
     return movie_list       
 
-def get_movie_list(max_results=0, starts_with=''):
+def get_movie_list(search_terms, max_results=0):
     movie_list = []
-    if starts_with:
-        movie_list = Movie.objects.filter(name__istartswith=starts_with)
+    if search_terms:
+        movie_list = Movie.objects.filter(title=search_terms)
     if max_results > 0:
         if len(movie_list) > max_results:
             movie_list = movie_list[:max_results]
     return movie_list
 
-def run_query(search_terms,keyword):
-    if(keyword == 'movie'):
-        search_results = get_movie_list()
-    elif(keyword == 'director' | keyword == 'actor'):
-        search_results = get_movie_from_person(keyword)
+def run_query(search_terms, keyword):
+    search_results = []
+    if(keyword == 1):
+        search_results = get_movie_list(search_terms)
+    else:
+        search_results = get_movie_from_person(search_terms,keyword)
     results = []
+
     for result in search_results:
         results.append({
-            'title':result['movie'],
-            'image':result['poster'],
-            'director':result['director'],
-            'release_date':result['release_date']
+            'title':result.title,
+            'image':result.image,
+            # 'director':result.director,
+            'release_date':result.release_date
         })
-    return
+    return results
 
 
 def show_search_result(request):
     context_dict = {}
     if request.method == 'POST':
         query = request.POST['query'].strip()
-        keyword = request.POST['keyword'].strip()
+        # keyword = request.POST['keyword'].strip()
+        keyword = 3
         if query:
             context_dict['result_list'] = run_query(query,keyword)
+            #context_dict['result_list'] = run_query(query)
             context_dict['query'] = query
-    return render(request, 'moovie/search_result.html', context_dict)
+    return render(request, 'moovie/search_result.html', context=context_dict)
 
 def show_user_profile(request):
     # this is the publicly visible profile of any user

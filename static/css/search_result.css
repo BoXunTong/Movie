@@ -1,0 +1,28 @@
+.search-result-area {
+    padding-top: 30px;
+}
+
+.container {
+    max-width: 1140px;
+    margin: 0 auto;
+}
+
+.pb-20 {
+    padding-bottom: 20px;
+}
+
+.result-bg {
+    background: url('/media/{{ result.image }}') no-repeat center / cover;
+    height: 350px;
+    }
+
+.release-date {
+    position: absolute;
+    left: 60px;
+    top: 0;
+    background: #f09819;
+    padding: 20px;
+    }
+         
+        
+    

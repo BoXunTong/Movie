@@ -1,5 +1,6 @@
 from django import forms
-from moovie.models import Review, ContactMessage
+from django.contrib.auth.models import User
+from moovie.models import Review, ContactMessage, UserProfile
 
 
 class ReviewForm(forms.ModelForm):
@@ -11,6 +12,7 @@ class ReviewForm(forms.ModelForm):
         model = Review
         fields = ('header', 'comment', 'rating',)
 
+
 class ContactMessageForm(forms.ModelForm):
     sender_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Your Name *"}), max_length=ContactMessage.NAME_MAX_LENGTH, help_text="Full Name")
     sender_email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': "Your Email *"}), max_length=ContactMessage.EMAIL_MAX_LENGTH, help_text="Email")
@@ -20,3 +22,18 @@ class ContactMessageForm(forms.ModelForm):
     class Meta:
         model = ContactMessage
         exclude = ('date',)
+
+
+
+class UserForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput())
+
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'password',)
+
+
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ('website', 'picture',)

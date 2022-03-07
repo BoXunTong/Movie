@@ -1,9 +1,7 @@
 # from __future__ import generator_stop
 from django.shortcuts import render, redirect, reverse
-from moovie.models import Movie, DirectorMovie, Review, Genre, Person, MovieGenre, ActorMovie, User, UserProfile
-from moovie.forms import ReviewForm, ContactMessageForm
-
-from moovie.models import ActorMovie, DirectorMovie
+from moovie.models import *
+from moovie.forms import *
 
 def index(request):
     context_dict = {}
@@ -128,11 +126,9 @@ def get_reviews_with_user_info_for_movie(movie):
 def add_review(request, movie_id):
     form = ReviewForm()
 
-    # A HTTP POST?
     if request.method == 'POST':
         form = ReviewForm(request.POST)
-
-        # Have we been provided with a valid form?
+        
         if form.is_valid():
             
             review = form.save(commit=False)
@@ -142,18 +138,12 @@ def add_review(request, movie_id):
             calculate_and_save_new_rating(movie_id, review.rating)
             review.save()
 
-            # Now that the category is saved, we could confirm this.
-            # For now, just redirect the user back to the index view.
             return redirect(reverse('moovie:show_movie_profile',
                                         kwargs={'movie_id':
                                                 movie_id}))
         else:
-            # The supplied form contained errors -
-            # just print them to the terminal.
             print(form.errors)
 
-    # Will handle the bad form, new form, or no form supplied cases.
-    # Render the form with error messages (if any).
     context_dict = {'form': form, 'movie_id': movie_id}
     return render(request, 'moovie/movie_profile.html', context = context_dict)
 

@@ -1,21 +1,15 @@
 {% extends 'moovie/base.html' %}
 {% load staticfiles %}
 
-{% block static_file_block %}
-    <link rel="stylesheet" href="{% static 'css/contact.css' %}" />
-{% endblock %}
-
 {% block title_block %}
     Contact Us
 {% endblock %}
 
 {% block body_block %}
-    <div id="contact-us">
-        <h1>Contact Us</h1>
-        <p>We love questions and feedback to improve your experience!</p>
-
-        <div class="wrapper" id="contact-us-form">
-            <h2>Send us a message</h2>
+    <section class="mb-4">
+        <h1 class="h1-responsive font-weight-bold text-center my-4">Contact Us</h1>
+        <p class="text-center w-responsive mx-auto mb-5">We love questions and feedback to improve your experience!</p>
+        <div class="container">
             <form id="contact_form" method="post" action="{% url 'moovie:contact_us' %}" enctype="multipart/form-data">
                 {% csrf_token %}
                 {% for hidden in form.hidden_fields %}
@@ -27,8 +21,8 @@
                     {{ field }} </br>
                 {% endfor %}
 
-                <input type="submit" class="submit" value="Submit" />
+                <input type="submit" class="btn btn-primary" value="Send" />
             </form>
         </div>
-    </div>
+    </section>
 {% endblock %}

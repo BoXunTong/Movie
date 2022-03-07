@@ -9,5 +9,6 @@ urlpatterns = [
     path('movie/<slug:movie_id>/', views.show_movie_profile, name='show_movie_profile'),
     path('login/', views.user_login, name='login'),
     path('register/', views.register, name='register'),
+    path('logout/', views.user_logout, name='logout'),
 
 ]

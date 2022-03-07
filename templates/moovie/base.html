@@ -17,6 +17,7 @@
     <link href="{% static "css/carousel.css" %}" rel="stylesheet">
     <link href="{% static "css/style.css" %}" rel="stylesheet">
 
+
     <style>
         .bd-placeholder-img {
             font-size: 1.125rem;
@@ -89,14 +90,14 @@
                         <a class="nav-link" href="#">My Profile</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Logout</a>
+                        <a class="nav-link" href="{% url 'moovie:logout' %}">Logout</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'moovie:register' %}">Sign up</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'moovie:login' %}">Login</a>
-                    </li>
+{#                    <li class="nav-item">#}
+{#                        <a class="nav-link" href="{% url 'moovie:register' %}">Sign up</a>#}
+{#                    </li>#}
+{#                    <li class="nav-item">#}
+{#                        <a class="nav-link" href="{% url 'moovie:login' %}">Login</a>#}
+{#                    </li>#}
 {#                    <div class="w3l_sign_in_register">#}
 {#                        <ul>#}
 {#                            <li ><a href="#" data-toggle="modal" data-target="#myModal">Login</a></li>#}
@@ -105,12 +106,11 @@
 {#                    </div>#}
                 {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Sign up</a>
+                        <a class="nav-link" href="{% url 'moovie:register' %}">Sign up</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Login</a>
+                        <a class="nav-link" href="{% url 'moovie:login' %}">Login</a>
                     </li>
-
                 {% endif %}
 
 

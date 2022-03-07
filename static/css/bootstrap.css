@@ -7716,6 +7716,10 @@ button.bg-dark:focus {
   width: 75% !important;
 }
 
+.w-70 {
+  width: 70% !important;
+}
+
 .w-100 {
   width: 100% !important;
 }

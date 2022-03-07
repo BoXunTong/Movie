@@ -2,13 +2,17 @@
 {% load staticfiles %}
 
 {% block title_block %}
-Log In
+    Login
 {% endblock %}
 
 {% block body_block %}
-<h1>Log in to your account</h1>
-<div>
-    <form action="">A LOG IN FORM</form>
-    <p>Dont have an account? <a href="{% url 'moovie:sign_up' %}">Sign up here!</a></p>
-</div>
+    <h1>Login to Moovie</h1>
+    <form id="login_form" method="post" action="{% url 'moovie:login' %}">
+        {% csrf_token %}
+        Username: <input type="text" name="username" value="" size="50" />
+        <br />
+        Password: <input type="password" name="password" value="" size="50" />
+        <br />
+        <input type="submit" value="submit" />
+    </form>
 {% endblock %}

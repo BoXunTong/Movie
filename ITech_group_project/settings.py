@@ -32,7 +32,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -44,6 +43,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'moovie',
 ]
+
+PASSWORD_HASHERS = ('django.contrib.auth.hashers.PBKDF2PasswordHasher',
+                    'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
+                    # 'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
+                    # 'django.contrib.auth.hashers.BCryptPasswordHasher'
+                    )
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -76,7 +81,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ITech_group_project.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
@@ -87,7 +91,6 @@ DATABASES = {
     }
 }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
 
@@ -97,6 +100,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {'min_length': 6}
     },
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
@@ -105,7 +109,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
@@ -119,7 +122,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/

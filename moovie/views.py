@@ -13,7 +13,7 @@ class IndexView(View):
         context_dict = {}
         highest_rate_movie = Movie.objects.order_by('-average_rating')[0]
         movies_by_rating = Movie.objects.order_by('-average_rating')[1:5]
-        movies_by_release = Movie.objects.order_by('-release_date')[:5]
+        movies_by_release = Movie.objects.order_by('-release_date')[:6]
 
         context_dict['highest_rate_movie'] = highest_rate_movie
         context_dict['movies_by_rating'] = movies_by_rating

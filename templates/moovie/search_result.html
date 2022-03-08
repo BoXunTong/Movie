@@ -2,54 +2,54 @@
 {% load staticfiles %}
 
 {% block title_block %}
-    {% if result_list %}
-        {{ result_list.name }}
-    {% else %}
-        Unknown Movie
-    {% endif %}
+    Search Result
 {% endblock %}
 
-<link href="{% static 'css/search_result.css' %}" rel="stylesheet">
+
 
 {% block body_block %}
-<section class="search-result-area">
+<link href="{% static 'css/search_result.css' %}" rel="stylesheet">
+<div class="breadcomb-area">
+    <div class="container">
+        <p>Search Results for: {{query}}</p>      
+    </div>
+</div>
+<!-- Breadcomb area End-->
+<!-- Contact area Start-->
+<div class="contact-area">
     <div class="container">
         <div class="row">
-            <div class="col-lg-12">
-                <div class="section-title pb-20">
-                    <p>Search Results for: {{query}}</p>
-                </div>
-            </div>
-        </div>
-        <hr />
-        <div class="row">
-            <div class="col-lg-12">
-                {% if result_list %}
-                {% for result in result_list %}
-                <div class="single-result">
-                    <!--
-                        <div class="result-bg"></div>
-                    -->
-                    <img src="/media/{{ result.image }}" alt="Picture of Movie" no-repeat center cover height="350px"/>
-                    <div class="release-date">
-                        {{ result.release_date }}
+            {% if result_list %}
+            {% for result in result_list %}
+            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                <div class="contact-list">
+                    <div class="contact-win">
+                        <div class="contact-win">
+                            <div class="contact-img">
+                                <img src="{{ MEDIA_URL }}{{ result.image }}" alt="{{ result.title }}" />
+                            </div>
+                        </div>
+                        <div class="contact-ctn">
+                            <div class="contact-ad-hd">
+                                <p>{{result.title}}</p>
+                                <p class="ctn-ads">{{result.release_date}}</p> 
+                            </div> 
+                        </div>
+                        <div class="social-st-list">
+                            <div class="social-sn">
+                                <a href="#">Add to List</a>
+                            </div>
+                        </div>
                     </div>
-                    <div class="result-content">
-                        <h1>
-                            <a href="#">{{result.title}}</a>
-                        </h1>
-                    </div>
-                    <a href="#">Add to List</a>
                 </div>
-                {% endfor %}
-                {% else %}
-                    The specified movie does not exist.
-                {% endif %}
-            </div>
+            </div>       
+            {% endfor %}
+            {% else %}
+                The specified movie does not exist.
+            {% endif %}
         </div>
-
     </div>
-</section>
+</div>
     
     <!--
     <div>
@@ -79,4 +79,5 @@
         {% endif %}
     </div>
     -->
+    <script src="{% static 'js/bootstrap/bootstrap.min.js' %}" type="text/javascript" charset="utf-8"></script>
 {% endblock body_block %}

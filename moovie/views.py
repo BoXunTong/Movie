@@ -1,25 +1,23 @@
-# from __future__ import generator_stop
-from ast import keyword
-from cgi import print_form
-from platform import release
-from turtle import title
-from xmlrpc.server import SimpleXMLRPCDispatcher
 from django.shortcuts import render
-from moovie.models import Movie, DirectorMovie, Review, Genre, Person, MovieGenre, ActorMovie
+from moovie.models import Movie, DirectorMovie, Review, Person, MovieGenre, ActorMovie
+from django.views import View
 
 from moovie.models import ActorMovie, DirectorMovie
 
-def index(request):
-    context_dict = {}
-    
-    # movies_by_rating = Movie.objects.all()
-    movies_by_rating = Movie.objects.order_by('-average_rating')[:5]
-    movies_by_release = Movie.objects.order_by('-release_date')[:5]
+# Index view class
+class IndexView(View):
+    def get(self, request):
+        context_dict = {}
+        highest_rate_movie = Movie.objects.order_by('-average_rating')[0]
+        movies_by_rating = Movie.objects.order_by('-average_rating')[1:5]
+        movies_by_release = Movie.objects.order_by('-release_date')[:5]
 
-    context_dict['movies_by_rating'] = movies_by_rating
-    context_dict['movies_by_release'] = movies_by_release
+        context_dict['highest_rate_movie'] = highest_rate_movie
+        context_dict['movies_by_rating'] = movies_by_rating
+        context_dict['movies_by_release'] = movies_by_release
 
-    return render(request, 'moovie/index.html', context=context_dict)
+        return render(request, 'moovie/index.html', context_dict)
+
 
 def contact_us(request):
     return render(request, 'moovie/contact.html', context = {})
@@ -71,8 +69,7 @@ def get_movie_from_person(search_terms, keyword, max_results=0):
             for actor in actors:
                 movie_id = actor.movie_id.id
                 movie_list.append(Movie.objects.get(id=movie_id))
-    print(movie_list)
-    for person_surname in person_list_surname:
+    """for person_surname in person_list_surname:
         if keyword == 2:
             directors = DirectorMovie.objects.filter(person_id=person_surname)
             for director in directors:
@@ -83,9 +80,7 @@ def get_movie_from_person(search_terms, keyword, max_results=0):
             for actor in actors:
                 movie_id = actor.movie_id.id
                 movie_list.append(Movie.objects.get(id=movie_id))
-    print(person_list_name)
-    print(person_list_surname)
-    print(movie_list)
+    """
     return movie_list       
 
 def get_movie_list(search_terms, max_results=0):
@@ -119,20 +114,31 @@ def show_search_result(request):
     context_dict = {}
     if request.method == 'POST':
         query = request.POST['query'].strip()
-        # keyword = request.POST['keyword'].strip()
-        keyword = 3
+        keyword = request.POST['search_dropdown']
+        print(keyword)
+        print(query)
+        if keyword == 'Title':
+            keyword = 1
+        elif keyword == 'Director':
+            keyword = 2
+        else:
+            keyword = 3
         if query:
             context_dict['result_list'] = run_query(query,keyword)
             #context_dict['result_list'] = run_query(query)
-            context_dict['query'] = query
+            context_dict['query'] = query 
+
+        
     return render(request, 'moovie/search_result.html', context=context_dict)
 
 def show_user_profile(request):
     # this is the publicly visible profile of any user
     return render(request, 'moovie/user_profile.html', context = {})
 
-def about_us(request):
-    return render(request, 'moovie/about.html', context = {})
+# About us view class
+class AboutUsView(View):
+    def get(self, request):
+        return render(request, 'moovie/about.html', context={})
 
 def user_login(request):
     return render(request, 'moovie/login.html', context = {})

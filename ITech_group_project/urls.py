@@ -20,7 +20,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('', views.index, name='index'),
+    path('', views.IndexView.as_view(), name='index'),
     path('moovie/', include('moovie.urls')),
     # The above maps any URLs starting with rango/ to be handled by rango.
     path('admin/', admin.site.urls),

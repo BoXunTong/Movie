@@ -1,19 +1,26 @@
 # from __future__ import generator_stop
+
+from django.views import View
 from django.shortcuts import render, redirect, reverse
 from moovie.models import *
 from moovie.forms import *
 
-def index(request):
-    context_dict = {}
-    
-    # movies_by_rating = Movie.objects.all()
-    movies_by_rating = Movie.objects.order_by('-average_rating')[:5]
-    movies_by_release = Movie.objects.order_by('-release_date')[:5]
 
-    context_dict['movies_by_rating'] = movies_by_rating
-    context_dict['movies_by_release'] = movies_by_release
 
-    return render(request, 'moovie/index.html', context=context_dict)
+# Index view class
+class IndexView(View):
+    def get(self, request):
+        context_dict = {}
+        highest_rate_movie = Movie.objects.order_by('-average_rating')[0]
+        movies_by_rating = Movie.objects.order_by('-average_rating')[1:5]
+        movies_by_release = Movie.objects.order_by('-release_date')[:6]
+
+        context_dict['highest_rate_movie'] = highest_rate_movie
+        context_dict['movies_by_rating'] = movies_by_rating
+        context_dict['movies_by_release'] = movies_by_release
+
+        return render(request, 'moovie/index.html', context_dict)
+
 
 def contact_us(request):
     form = ContactMessageForm()
@@ -75,8 +82,11 @@ def show_user_profile(request):
     # this is the publicly visible profile of any user
     return render(request, 'moovie/user_profile.html', context = {})
 
-def about_us(request):
-    return render(request, 'moovie/about.html', context = {})
+# About us view class
+class AboutUsView(View):
+    def get(self, request):
+        return render(request, 'moovie/about.html', context={})
+
 
 def user_login(request):
     return render(request, 'moovie/login.html', context = {})

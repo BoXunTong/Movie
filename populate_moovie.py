@@ -17,7 +17,8 @@ def populate():
     add_user_profile(user2, 25, 'profile_images/user1.jpg', '2 bio')
 
     # Movie and actors test
-    movie1 = add_movie('Harry Potter and the Philosophers Stone', 152, datetime.datetime(2001, 11, 16), 'First movie of the series.', Decimal(5.00), "movie_images/HarryPotter1.jpg")
+
+    movie1 = add_movie('Harry Potter and the Philosophers Stone', 152, datetime.datetime(2001, 11, 16), 'First movie of the series.', Decimal(4.71), "movie_images/HarryPotter1.jpg", 'poster_images/HarryPotter1.jpg')
     person = add_person("Daniel", 'Radcliffe', 'person_images/Daniel_Radcliffe.jpg', 'Actor')
     person2 = add_person("Emma", "Watson", 'person_images/Emma_Watson.jpg', 'Actor')
     person3 = add_person('Chris', 'Columbus', 'person_images/Chris_Columbus.jpg', 'Director')
@@ -25,11 +26,18 @@ def populate():
     add_actor_movie(movie1, person2)
     add_director_movie(movie1, person3)
 
-    movie2 = add_movie('Harry Potter and the Prisoner of Azkaban', 142, datetime.datetime(2004, 6, 4), 'Some description', Decimal(5.00), 'movie_images/HarryPotter3.jpg')
+
+    movie2 = add_movie('Harry Potter and the Prisoner of Azkaban', 142, datetime.datetime(2004, 6, 4), 'Some description', Decimal(4.56), 'movie_images/HarryPotter3.jpg', 'poster_images/poster-placeholder.png')
     person4 = add_person('Alfonso', 'Cuarón', 'person_images/Alfonso_Cuarón.jpg', 'Director')
     add_actor_movie(movie2, person)
     add_actor_movie(movie2, person2)
     add_director_movie(movie2, person4)
+
+    # test
+    movie3 = add_movie('007 SkyFall', 143, datetime.datetime(2012, 10, 23), 'Description', Decimal(3.98), 'movie_images/007_SkyFall.jpg', 'poster_images/007_SkyFall.jpg')
+    movie4 = add_movie('I, Robot', 115, datetime.datetime(2004, 7, 16), 'Description', Decimal(4.12), 'movie_images/i_robot.jpg', 'poster_images/i_robot.jpg')
+    movie5 = add_movie('Matrix Resurrection', 148, datetime.datetime(2021, 12, 16), 'Description', Decimal(3.45), 'movie_images/matrix_resurrections.jpg', 'poster_images/matrix_resurrections.jpg')
+    movie6 = add_movie('Justice League', 120, datetime.datetime(2017, 11, 13), 'Description', Decimal(4.89), 'movie_images/justice_league.jpg', 'poster_images/justice_league.png')
 
     # user review test
     add_review(user1, movie1, 'comment test', 'header test', Decimal(5.00))
@@ -50,11 +58,12 @@ def populate():
     # Contact message test
     add_contact_message('example@gmail.com', 'Anonymous', 'test', 'test', datetime.datetime)
 
-def add_movie(title, duration, release_date, description, average_rating, image):
+def add_movie(title, duration, release_date, description, average_rating, image, poster):
     movie = Movie.objects.get_or_create(title=title, duration=duration, release_date=release_date)[0]
     movie.description = description
     movie.average_rating = average_rating
     movie.image = image
+    movie.poster = poster
     movie.save()
     return movie
 

@@ -6,36 +6,116 @@
 {% endblock %}
 
 {% block body_block %}
-    <h1>Homepage</h1>
-    <div>
-        <h2>Search Bar Placeholder</h2>
+    <div id="most-popular" class="carousel slide" data-ride="carousel">
+        <ol class="carousel-indicators">
+            <li data-target="#carousel-control" data-slide-to="0" class="active"></li>
+            <li data-target="#carousel-control" data-slide-to="1"></li>
+            <li data-target="#carousel-control" data-slide-to="2"></li>
+            <li data-target="#carousel-control" data-slide-to="3"></li>
+            <li data-target="#carousel-control" data-slide-to="4"></li>
+        </ol>
+        <div class="carousel-inner">
+            {% if highest_rate_movie %}
+                <div class="carousel-item active">
+
+                    <a href="{% url 'moovie:show_movie_profile' highest_rate_movie.id %}">
+                        <div class="container">
+                            <div class="carousel-caption text-lg-left">
+                                <h1 style="color: floralwhite">{{ highest_rate_movie.title }}</h1>
+                                <p>{{ highest_rate_movie.description }}</p>
+                            </div>
+                        </div>
+                        <img style="object-fit: contain" src="{{ MEDIA_URL }}{{ highest_rate_movie.poster }}"
+                             class="d-block m-auto h-100" alt="{{ highest_rate_movie.title }}">
+                    </a>
+
+                    <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"
+                         preserveAspectRatio="xMidYMid slice" focusable="false" role="img">
+                        <rect fill="#000" width="100%" height="100%"/>
+                    </svg>
+
+                </div>
+                {% for movie in movies_by_rating %}
+                    <div class="carousel-item">
+
+                        <a href="{% url 'moovie:show_movie_profile' movie.id %}">
+                            <div class="container">
+                                <div class="carousel-caption text-lg-left">
+                                    <h1 style="color: floralwhite">{{ movie.title }}</h1>
+                                    <p>{{ movie.description }}</p>
+                                </div>
+                            </div>
+                            <img style="object-fit:contain" src="{{ MEDIA_URL }}{{ movie.poster }}"
+                                 class="d-block m-auto h-100"
+                                 alt="{{ movie.title }}">
+
+                        </a>
+                        <svg class="bd-placeholder-img vh-100" width="100%" height="100%"
+                             xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false"
+                             role="img">
+                            <rect fill="#000" width="100%" height="100%"/>
+                        </svg>
+
+
+                    </div>
+                {% endfor %}
+
+            {% endif %}
+
+
+            <a class="carousel-control-prev" href="#most-popular" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#most-popular" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="false"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
     </div>
-    <div>
-        <h2>Highest Rated</h2>
-        {% if movies_by_rating %}
-        <ul>
-            {% for movie in movies_by_rating %}
-            <li>
-                <a href="{% url 'moovie:show_movie_profile' movie.id %}">{{ movie.title }}</a>
-            </li>
-            {% endfor %}
-        </ul>
-        {% else %}
-        There are no movies present
-        {% endif %}
+
+    <!-- Here comes the Upcoming and new movie -->
+    <div class="section">
+        <div class="container">
+            <div class="section-header">
+                Upcoming and New Movies
+            </div>
+            <div class="movies-slide carousel-nav-center owl-carousel">
+                <!-- each movie item -->
+                {% if movies_by_release %}
+                    {% for movie in movies_by_release %}
+                        <a href="#" class="movie-item">
+                            <img src="{{ MEDIA_URL }}{{ movie.image }}" alt="{{ movie.title }}">
+                            <div class="movie-item-content">
+                                <div class="movie-item-title">
+                                    {{ movie.title }}
+                                </div>
+                                <div class="movie-infos">
+                                    <i class="bx bxs-star"></i>
+                                    <span>{{ movie.average_rating }}</span>
+                                </div>
+                                <div class="movie-info">
+                                    <i class="bx bxs-time"></i>
+                                    <span>{{ movie.duration }}</span>
+                                </div>
+                            </div>
+                        </a>
+                    {% endfor %}
+
+                {% else %}
+                    <a href="#" class="movie-item">
+                        <img src="{{ MEDIA_URL }}movie_images/placeholder.png" alt="">
+                        <div class="movie-item-content">
+                            <div class="movie-item-title">
+                                N/A
+                            </div>
+                        </div>
+                    </a>
+
+                {% endif %}
+            </div>
+        </div>
     </div>
-    <div>
-        <h2>New and Upcoming Movies</h2>
-        {% if movies_by_release %}
-        <ul>
-            {% for movie in movies_by_release %}
-            <li>
-                <a href="{% url 'moovie:show_movie_profile' movie.id %}">{{ movie.title }}</a>
-            </li>
-            {% endfor %}
-        </ul>
-        {% else %}
-        There are no movies present
-        {% endif %}
-    </div>
+
+
 {% endblock %}

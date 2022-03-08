@@ -43,7 +43,6 @@ class GenreAdmin(admin.ModelAdmin):
 
 
 admin.site.register(UserProfile, UserProfileAdmin)
-admin.site.register(UserProfile)
 admin.site.register(Movie, MovieAdmin)
 admin.site.register(MovieGenre, MovieGenreAdmin)
 admin.site.register(Person, PersonAdmin)

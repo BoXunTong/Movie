@@ -5,8 +5,19 @@
     Register
 {% endblock %}
 
+
+
 {% block body_block %}
     <h1>Register for Moovie</h1>
+
+    {% if messages %}
+        <script>
+            {% for msg in messages %}
+                alert('{{ msg.message }}');
+            {% endfor %}
+        </script>
+    {% endif %}
+
     {% if registered %}
         Moovie says: <strong>thank you for registering!</strong>
         <a href="{% url 'moovie:index' %}">Return to the homepage.</a><br />

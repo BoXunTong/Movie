@@ -3,14 +3,14 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.views import View
 from moovie.forms import UserForm, UserProfileForm
-from moovie.models import Movie, DirectorMovie, Review, Genre, Person, MovieGenre, ActorMovie
+from moovie.models import Movie, DirectorMovie, Review, Genre, Person, MovieGenre, ActorMovie, User
 from moovie.models import ActorMovie, DirectorMovie
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 from django.urls import reverse
 from django.shortcuts import redirect
-
-
+from django.contrib import messages
+from tkinter import messagebox #弹窗库
 # Index view class
 class IndexView(View):
     def get(self, request):
@@ -51,6 +51,7 @@ def register(request):
             user.set_password(user.password)
             user.save()
 
+            messages.success(request, "Congratulation! Welcome to Moovie!")
             # Now sort out the UserProfile instance.
             # Since we need to set the user attribute ourselves,
             # we set commit=False. This delays saving the model
@@ -73,16 +74,18 @@ def register(request):
             # Update our variable to indicate that the template
             # registration was successful.
             registered = True
+
         else:
             # Invalid form or forms - mistakes or something else?
             # Print problems to the terminal.
-
+            messages.error(request, "Something Wrong, please try again later...")
             # print(user_form.errors, profile_form.errors)
             print(user_form.errors)
     else:
         # Not a HTTP POST, so we render our form using two ModelForm instances.
         # These forms will be blank, ready for user input.
         user_form = UserForm()
+        messages.error(request, "Something Wrong, please try again later...")
         # profile_form = UserProfileForm()
 
     # Render the template depending on the context.
@@ -93,6 +96,7 @@ def register(request):
 
 def user_login(request):
     # If the request is a HTTP POST, try to pull out the relevant information.
+    #m=User.objects.get(USERNAME=request.POST['username'])
     if request.method == 'POST':
         # Gather the username and password provided by the user.
         # This information is obtained from the login form.
@@ -116,15 +120,20 @@ def user_login(request):
             if user.is_active:
                 # If the account is valid and active, we can log the user in.
                 # We'll send the user back to the homepage.
+                messagebox.showinfo("Welecome", "Login successfully!")
+                #messages.success(request, "Login Successfully, Welcome!")
+                print("Login OK!")
                 login(request, user)
                 return redirect(reverse('moovie:index'))
             else:
                 # An inactive account was used - no logging in!
+                #messages.error(request, "Something Wrong, please try again later...")
                 return HttpResponse("Your moovie account is disabled.")
         else:
             # Bad login details were provided. So we can't log the user in.
             # print(f"Invalid login details: {username}, {password}")
             detail_is_invalid = True,
+            #messages.error(request, "Something Wrong, please try again later...")
             return HttpResponse("Invalid login details supplied.")
 
     # The request is not a HTTP POST, so display the login form.

@@ -16,7 +16,7 @@
     <link href="{% static "css/bootstrap.min.css" %}" rel="stylesheet" crossorigin="anonymous">
     <link href="{% static "css/carousel.css" %}" rel="stylesheet">
     <link href="{% static "css/style.css" %}" rel="stylesheet">
-
+    <link href="{% static "css/bootstrap.css" %}" rel="stylesheet">
 
     <style>
         .bd-placeholder-img {
@@ -145,6 +145,50 @@
     {% endblock %}
 </div>
 
+<!-- footer -->
+<div class="footer">
+    <div class="container">
+        <div class="w3ls_footer_grid">
+            <div class="col-md-6 w3ls_footer_grid_left">
+                <div class="w3ls_footer_grid_left1">
+                    <h2>Subscribe to us</h2>
+                    <div class="w3ls_footer_grid_left1_pos">
+                        <form action="#" method="post">
+                            <input type="email" name="email" placeholder="Your email..." required="">
+                            <input type="submit" value="Send">
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 w3ls_footer_grid_right">
+                <a href="index.html"><h2>Moovies<span>Moovies</span></h2></a>
+            </div>
+            <div class="clearfix"> </div>
+        </div>
+        <div class="col-md-5 w3ls_footer_grid1_left">
+            <p>&copy; 2022 Moovies. Design by <a href="http://w3layouts.com/">IT team</a></p>
+        </div>
+        <div class="col-md-7 w3ls_footer_grid1_right">
+            <ul>
+                <li>
+                    <a href="genres.html">Login</a>
+                </li>
+                <li>
+                    <a href="faq.html">Sign up</a>
+                </li>
+                <li>
+                    <a href="horror.html">About us</a>
+                </li>
+                <li>
+                    <a href="genres.html">Contact us</a>
+                </li>
+            </ul>
+        </div>
+        <div class="clearfix"> </div>
+    </div>
+</div>
+<!-- //footer -->
+
 <script src="{% static "js/jquery-3.3.1.min.js" %}"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>
@@ -158,6 +202,8 @@
         crossorigin="anonymous"></script>
 <!-- APP SCRIPT -->
 <script src="{% static "test/app.js" %}"></script>
+
+
 
 </body>
 </html>

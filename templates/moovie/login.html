@@ -7,7 +7,13 @@
 
 {% block body_block %}
     <h1>Login to Moovie</h1>
-
+    {% if messages %}
+        <script>
+            {% for msg in messages %}
+                alert('{{ msg.message }}');
+            {% endfor %}
+        </script>
+    {% endif %}
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -58,6 +64,7 @@
                 </section>
             </div>
         </div>
+
 
 
 

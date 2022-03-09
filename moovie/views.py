@@ -64,7 +64,7 @@ def show_movie_profile(request, movie_id):
         reviews_with_user_info = get_reviews_with_user_info_for_movie(movie)
         context_dict['reviews_with_user_info'] = reviews_with_user_info
 
-        context_dict['form'] = ReviewForm()
+        context_dict['form'] = get_users_review_if_exists(request, movie)
         
     except Movie.DoesNotExist:
         context_dict['movie'] = None
@@ -133,19 +133,36 @@ def get_reviews_with_user_info_for_movie(movie):
         reviews_with_user_info.append({'review':review, 'user': user_profile})
     return reviews_with_user_info
 
+def get_users_review_if_exists(request, movie):
+    try:
+        if request.user.is_authenticated:
+            review = Review.objects.get(movie_id=movie, username=request.user)
+            review_form = ReviewForm(instance=review)
+            return review_form
+        else:
+            ReviewForm()
+    except Review.DoesNotExist:
+        return ReviewForm()
+
+
 def add_review(request, movie_id):
     form = ReviewForm()
 
     if request.method == 'POST':
-        form = ReviewForm(request.POST)
+        user = User.objects.get(username=request.POST.get('username'))
+        user_has_an_existing_comment = False
+        if Review.objects.filter(movie_id=movie_id, username=user).count() == 0:
+            form = ReviewForm(request.POST)
+        else:
+            form = ReviewForm(request.POST, instance=Review.objects.get(movie_id=movie_id, username=user))
+            user_has_an_existing_comment = True
         
         if form.is_valid():
-            
             review = form.save(commit=False)
             review.movie_id = Movie.objects.get(id=movie_id)
-            review.username = User.objects.get(username=request.POST.get('username'))
+            review.username = user
 
-            calculate_and_save_new_rating(movie_id, review.rating)
+            calculate_and_save_new_rating(movie_id, review, user_has_an_existing_comment)
             review.save()
 
             return redirect(reverse('moovie:show_movie_profile',
@@ -157,8 +174,14 @@ def add_review(request, movie_id):
     context_dict = {'form': form, 'movie_id': movie_id}
     return render(request, 'moovie/movie_profile.html', context = context_dict)
 
-def calculate_and_save_new_rating(movie_id, new_rating):
+def calculate_and_save_new_rating(movie_id, review, user_has_an_existing_comment):
     movie = Movie.objects.get(id=movie_id)
     review_count = Review.objects.filter(movie_id=movie_id).count()
-    movie.average_rating = (movie.average_rating * review_count + new_rating) / (review_count + 1)
+
+    if user_has_an_existing_comment:
+        existing_review = Review.objects.get(movie_id=movie_id, username=review.username)
+        movie.average_rating = (movie.average_rating * review_count - existing_review.rating + review.rating) / review_count
+    else:
+        movie.average_rating = (movie.average_rating * review_count + review.rating) / (review_count +1)
+
     movie.save() 

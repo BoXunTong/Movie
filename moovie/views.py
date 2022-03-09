@@ -31,12 +31,14 @@ def register(request):
     # whether the registration was successful.
     # Set to False initially. Code changes value to
     # True when registration succeeds.
+
     registered = False
 
     # If it's a HTTP POST, we're interested in processing form data.
     if request.method == 'POST':
         # Attempt to grab information from the raw form information.
         # Note that we make use of both UserForm and UserProfileForm.
+
         user_form = UserForm(request.POST)
         # profile_form = UserProfileForm(request.POST)
 
@@ -51,7 +53,8 @@ def register(request):
             user.set_password(user.password)
             user.save()
 
-            messages.success(request, "Congratulation! Welcome to Moovie!")
+            #messages.success(request, "Congratulation! Welcome to Moovie!")
+            messagebox.showinfo("Welcome", "Now you are one of us!")
             # Now sort out the UserProfile instance.
             # Since we need to set the user attribute ourselves,
             # we set commit=False. This delays saving the model
@@ -74,20 +77,20 @@ def register(request):
             # Update our variable to indicate that the template
             # registration was successful.
             registered = True
-
+            return redirect(reverse('moovie:index'))
         else:
             # Invalid form or forms - mistakes or something else?
             # Print problems to the terminal.
-            messages.error(request, "Something Wrong, please try again later...")
+            messagebox.showerror("Sorry！", "Something Wrong, please try again later...")
             # print(user_form.errors, profile_form.errors)
             print(user_form.errors)
+
     else:
         # Not a HTTP POST, so we render our form using two ModelForm instances.
         # These forms will be blank, ready for user input.
-        user_form = UserForm()
-        messages.error(request, "Something Wrong, please try again later...")
-        # profile_form = UserProfileForm()
 
+        user_form = UserForm()
+        # profile_form = UserProfileForm()
     # Render the template depending on the context.
     return render(request, 'moovie/register.html',
                   # context={'user_form': user_form, 'profile_form': profile_form, 'registered': registered})
@@ -128,13 +131,17 @@ def user_login(request):
             else:
                 # An inactive account was used - no logging in!
                 #messages.error(request, "Something Wrong, please try again later...")
-                return HttpResponse("Your moovie account is disabled.")
+                messagebox.showinfo("Welecome", "Login successfully!")
+                #return HttpResponse("Your moovie account is disabled.")
+                return redirect(reverse('moovie:login'))
         else:
             # Bad login details were provided. So we can't log the user in.
             # print(f"Invalid login details: {username}, {password}")
             detail_is_invalid = True,
             #messages.error(request, "Something Wrong, please try again later...")
-            return HttpResponse("Invalid login details supplied.")
+            messagebox.showinfo("Welecome", "Login successfully!")
+            #return HttpResponse("Invalid login details supplied.")
+            return redirect(reverse('moovie:login'))
 
     # The request is not a HTTP POST, so display the login form.
     # This scenario would most likely be a HTTP GET.

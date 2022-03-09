@@ -81,6 +81,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'moovie:contact_us' %}">Contact us</a>
                 </li>
+                <li>
+                    <a class="nav-link" href="{% url 'moovie:about-us' %}">About us</a>
+                </li>
                 {% if user.is_authenticated %}
                     <li class="nav-item">
                         <a class="nav-link" href="#">My Profile</a>

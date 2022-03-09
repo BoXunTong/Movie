@@ -1,5 +1,7 @@
+
 <!DOCTYPE html>
 {% load staticfiles %}
+
 
 <html lang="en">
 <head>
@@ -13,7 +15,7 @@
             Hi!
         {% endblock %}
     </title>
-    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" crossorigin="anonymous">
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
     <link href="{% static 'css/carousel.css' %}" rel="stylesheet">
 
 
@@ -41,47 +43,43 @@
     <!-- BOX ICONS -->
     <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
     <!-- APP CSS -->
-    <link rel="stylesheet" href="{% static 'test/grid.css' %}">
-    <link rel="stylesheet" href="{% static 'test/app.css' %}">
+    <link rel="stylesheet" href="{% static 'css/grid.css' %}">
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
 </head>
 <body>
 <header>
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
         <a class="navbar-brand" href="{% url 'moovie:index' %}">Moo.vie</a>
-        <button class="navbar-toggler" type="button" data-toogle="collapse" data-target="#navbarCollapse"
-                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+
         <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="navbar-nav mr-auto">
+            <ul class="navbar-nav">
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'moovie:index' %}">
                         Home
                         <span class="sr-only">(current)</span>
                     </a>
                 </li>
-
-
             </ul>
-            <div>
 
-
-            </div>
-            <form class="form-inline mt-1 mt-md-0 ml-0" method="post" action="{% url 'moovie:show_search_result' %}">
-                {%csrf_token%}
-                <select name="search_dropdown" class="custom-select ml-auto" id="inlineFormCustomSelect">
+            <div class="ml-auto">
+                <form class="form-inline mt-1 mt-md-0 ml-0" method="post" action="{% url 'moovie:show_search_result' %}">
+                    {%csrf_token%}
+                <select name="search_dropdown" class="custom-select " id="inlineFormCustomSelect">
                     <option selected>Choose..</option>
                     <option value="Title">Title</option>
                     <option value="Director">Director</option>
                     <option value="Genre">Genre</option>
                 </select>
-                <br/>
+
                 <input class="form-control mr-sm-2" type="text" name="query" value="{{ query }}" placeholder="Search" id="query" aria-label="Search">
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
             </form>
 
+            </div>
 
-            <ul class="navbar-nav mr-0">
+
+
+            <ul class="navbar-nav">
                 <li class="nav-item">
                     <a class="nav-link" href="#">Contact us</a>
                 </li>
@@ -108,43 +106,22 @@
 
     </nav>
 </header>
-{#<div>#}
-{#    #}
-{#    <nav>#}
-{#        <!-- very incomplete nav! needs:#}
-{#                - proper links#}
-{#                - search bar implemented#}
-{#                - (once we have ther user/login functionality)#}
-{#                    + different appearance based on log in state#}
-{#         -->#}
-{#        <ul>#}
-{#            <li><a href="#">home(logo?)</a></li>#}
-{#            <li><a href="#">search bar</a></li>#}
-{#            <li><a href="#">contact us</a></li>#}
-{#            <li><a href="#">my profile</a></li>#}
-{#            <li><a href="#">log out</a></li>#}
-{#        </ul>#}
-{#    </nav>#}
-{#</div>#}
+
 
 <div>
     {% block body_block %}
     {% endblock %}
 </div>
 
-<script src="{% static 'js/jquery-3.3.1.min.js' %}"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
+
+<script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
 <script>window.jQuery || document.write('<script src="{% static "js/jquery-slim.min.js" %}"><\/script>')</script>
 <script src="{% static 'js/bootstrap/bootstrap.bundle.min.js' %}"
-        integrity="sha384-zDnhMsjVZfS3hiP7oCBRmfjkQC4fzxVxFhBx8Hkz2aZX8gEvA/jsP3eXRCvzTofP"
         crossorigin="anonymous"></script>
 <!-- OWL CAROUSEL -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"
-        integrity="sha512-bPs7Ae6pVvhOSiIcyUClR7/q2OAsRiovw4vAkX+zJbw3ShAeeqezq50RIIcIURq7Oa20rW2n2q+fyXBNcU9lrw=="
-        crossorigin="anonymous"></script>
+<script src="{% static 'js/owl.carousel.min.js' %}"></script>
 <!-- APP SCRIPT -->
-<script src="{% static 'test/app.js' %}"></script>
+<script src="{% static 'js/app.js' %}"></script>
 
 </body>
 </html>

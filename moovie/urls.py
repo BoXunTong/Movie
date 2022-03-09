@@ -9,4 +9,5 @@ urlpatterns = [
     path('about-us/', views.AboutUsView.as_view(), name='about-us'),
     path('movie/<slug:movie_id>/', views.show_movie_profile, name='show_movie_profile'),
     path('search_result/', views.show_search_result, name='show_search_result')
+
 ]

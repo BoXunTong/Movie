@@ -84,7 +84,7 @@
                 <!-- each movie item -->
                 {% if movies_by_release %}
                     {% for movie in movies_by_release %}
-                        <a href="#" class="movie-item">
+                        <a href="{% url 'moovie:show_movie_profile' movie.id %}" class="movie-item">
                             <img src="{{ MEDIA_URL }}{{ movie.image }}" alt="{{ movie.title }}">
                             <div class="movie-item-content">
                                 <div class="movie-item-title">

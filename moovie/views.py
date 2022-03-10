@@ -7,6 +7,8 @@ from django.views import View
 from django.shortcuts import render, redirect, reverse
 from moovie.models import *
 from moovie.forms import *
+from django.http import HttpResponse
+
 
 # Index view class
 class IndexView(View):
@@ -198,6 +200,9 @@ def show_movie_profile(request, movie_id):
 
         genres = get_genres_for_movie(movie)
         context_dict['genres'] = genres
+
+        if request.user.is_authenticated:
+            context_dict['already_added_to_watchlist'] = MovieToWatch.objects.filter(username=request.user, movie_id= movie_id).count()
 
         reviews_with_user_info = get_reviews_with_user_info_for_movie(movie)
         context_dict['reviews_with_user_info'] = reviews_with_user_info
@@ -424,4 +429,18 @@ def calculate_and_save_new_rating(movie_id, review, user_has_an_existing_comment
     else:
         movie.average_rating = (movie.average_rating * review_count + review.rating) / (review_count + 1)
 
-    movie.save()
+    movie.save() 
+
+class AddToWatchlistView(View):
+    def get(self, request):
+        movie_id = request.GET['movie_id']
+        MovieToWatch.objects.create(username=request.user, movie_id= Movie.objects.get(id=movie_id))
+        
+        return HttpResponse()
+
+class RemoveFromWatchlistView(View):
+    def get(self, request):
+        movie_id = request.GET['movie_id']
+        MovieToWatch.objects.get(username=request.user, movie_id= Movie.objects.get(id=movie_id)).delete()
+        
+        return HttpResponse()

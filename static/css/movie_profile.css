@@ -1,0 +1,11 @@
+.profile-picture {
+    width: 100%;    
+    max-height: 250px;
+    max-width: 200px;
+}
+
+.review-scrollable {
+    min-height: 350px;
+    max-height: 700px;
+    overflow-y: scroll;
+  }

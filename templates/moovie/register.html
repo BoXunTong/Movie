@@ -5,11 +5,11 @@
     Register
 {% endblock %}
 
-
+<link href="{% static "css/style.css" %}" rel="stylesheet">
+<link href="{% static "css/bootstrap.css" %}" rel="stylesheet">
 
 {% block body_block %}
-    <h1>Register for Moovie</h1>
-
+    <h1 class="h1-responsive font-weight-bold text-center my-4">Register for Moovie</h1>
     {% if messages %}
         <script>
             {% for msg in messages %}
@@ -19,10 +19,10 @@
     {% endif %}
 
     {% if registered %}
-        Moovie says: <strong>thank you for registering!</strong>
+        <p class="text-center w-responsive mx-auto mb-5">Moovie says: <strong>thank you for registering!</strong></p>>
         <a href="{% url 'moovie:index' %}">Return to the homepage.</a><br />
     {% else %}
-        Rango says: <strong>register here!</strong><br />
+        <p class="text-center w-responsive mx-auto mb-5">Rango says: <strong>register here!</strong></p>
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">

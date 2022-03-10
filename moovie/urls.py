@@ -10,5 +10,8 @@ urlpatterns = [
     path('movie/<int:movie_id>/', views.show_movie_profile, name='show_movie_profile'),
     path('movie/<int:movie_id>/review/', views.add_review, name='add_review'),
     path('contact/', views.contact_us, name='contact_us'),
+    path('login/', views.user_login, name='login'),
+    path('register/', views.register, name='register'),
+    path('logout/', views.user_logout, name='logout'),
 
 ]

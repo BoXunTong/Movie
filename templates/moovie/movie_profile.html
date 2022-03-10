@@ -10,23 +10,23 @@
 {% endblock %}
 
 {% block body_block %}
-    <section class="container p-5">
+    <section class="container p-5 ">
         {% if movie %}
             <h1 class="h1-responsive font-weight-bold text-left my-4">{{ movie.title }}</h1>
             <div class="media">
                 <div class="media-body">
                     <p>Released: {{ movie.release_date|date:"d M Y" }}</p>
                     <p>Directed by: {% for director in directors %} 
-                                        <a href="SEARCHBYDIRECTOR">{{ director.name }} {{director.surname}} </a>
+                                        <a href="{% url 'moovie:search_tag' 'Director' director.name %}">{{ director.name }} {{director.surname}} </a>
                                     {% endfor %}
                     </p>
                     <p>Starring: {% for star in stars %}
-                                        <a href="SEARCHBYACTOR">{{ star.name }} {{star.surname}} </a>
+                                        <a href="{% url 'moovie:search_tag' 'Actor' star.name %}">{{ star.name }} {{star.surname}} </a>
                                     {% endfor %}
                     </p>
                     <p>Description: {{ movie.description }}</p>
                     <p>Genre tags: {% for genre in genres %}
-                                        <a href="SEARCHBYGENRE"> {{ genre.name }}</a>
+                                        <a href="{% url 'moovie:search_tag' 'Genre' genre.name %}"> {{ genre.name }}</a>
                                     {% endfor %}
                     </p>
                     {% if user.is_authenticated %}

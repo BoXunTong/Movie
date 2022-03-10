@@ -10,9 +10,9 @@
 {% endblock %}
 
 {% block body_block %}
-    <section class="container">
+    <section class="container p-5">
         {% if movie %}
-            <h1 class="h1-responsive font-weight-bold text-center my-4">{{ movie.title }}</h1>
+            <h1 class="h1-responsive font-weight-bold text-left my-4">{{ movie.title }}</h1>
             <div class="media">
                 <div class="media-body">
                     <p>Released: {{ movie.release_date|date:"d M Y" }}</p>
@@ -29,6 +29,18 @@
                                         <a href="SEARCHBYGENRE"> {{ genre.name }}</a>
                                     {% endfor %}
                     </p>
+                    {% if user.is_authenticated %}
+                        <p class="mt-5">Watchlist: </p>
+                        {% if already_added_to_watchlist == 0 %}
+                            <a class="position-absolute" id="add_to_watchlist" data-url="{% url 'moovie:add_to_watchlist' %}" href="javascript:add_to_watchlist_function('{{ movie.id }}')">
+                                <img src="/static/icons/plus-circle.svg" alt="Add to Watchlist" width="32" height="32">
+                            </a>
+                        {% else %}
+                            <a id="remove_from_watchlist" class="position-absolute" data-url="{% url 'moovie:remove_from_watchlist' %}" href="javascript:remove_from_watchlist_function('{{ movie.id }}')">
+                                <img src="/static/icons/check-circle.svg" alt="Remove from Watchlist" width="32" height="32">
+                            </a>
+                        {% endif %}
+                    {% endif %}
                 </div>
                 <div class="col-md-8 float-right">
                     <img class="" src="{{ MEDIA_URL }}{{ movie.poster }}" alt="Movie Image">
@@ -36,12 +48,12 @@
                 </div>
             </div>
 
-            <div class="pre-scrollable mt-5">
+            <div class="review-scrollable mt-5">
                 <h2>User Reviews</h2>
                 {% for review_with_user_info in reviews_with_user_info %}
                     <div class="media border-bottom border-top mb-5">
                         <figure class="figure">
-                            <img class="mr-3" src="{{ MEDIA_URL }}{{ review_with_user_info.user.picture }}" alt="Profile Picture">
+                            <img class="mr-3 profile-picture" src="{{ MEDIA_URL }}{{ review_with_user_info.user.picture }}" alt="Profile Picture">
                             <figcaption class="figure-caption text-center" href="#">{{ review_with_user_info.user }}</figcaption>
                         </figure>
                         <div class="media-body">
@@ -54,7 +66,7 @@
             </div>
 
             {% if user.is_authenticated %}
-                <div class="mt-5">
+                <div class="mt-5 p-3 table-bordered">
                     <h2>Write a Review</h2>
                     <form id="review_form" method="post" action="{% url 'moovie:add_review' movie.id %}" enctype="multipart/form-data">
                         {% csrf_token %}

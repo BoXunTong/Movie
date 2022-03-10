@@ -6,11 +6,11 @@ from moovie.models import Review, ContactMessage, UserProfile
 class ReviewForm(forms.ModelForm):
     header = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Please enter a header."}), max_length=Review.HEADER_MAX_LENGTH, help_text="Header")
     comment = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control md-textarea', 'placeholder': "Please write your comment."}), max_length=Review.COMMENT_MAX_LENGTH, help_text="Comment")
-    rating = forms.IntegerField(max_value=5, min_value=1, initial=1, help_text="Rating")
+    rating = forms.IntegerField(widget=forms.NumberInput(attrs={'type':'range', 'class':'custom-range', 'min':'0', 'max':'5'}), help_text="Rating")
 
     class Meta:
         model = Review
-        fields = ('header', 'comment', 'rating',)
+        fields = ('header', 'rating', 'comment',)
 
 
 class ContactMessageForm(forms.ModelForm):

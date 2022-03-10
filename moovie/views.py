@@ -1,6 +1,6 @@
 
 # from __future__ import generator_stop
-from tkinter import messagebox
+from tkinter import messagebox, mainloop
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.views import View
@@ -81,13 +81,13 @@ def register(request):
             # Invalid form or forms - mistakes or something else?
             # Print problems to the terminal.
             messagebox.showerror("Sorry！", "Something Wrong, please try again later...")
+            mainloop()
             # print(user_form.errors, profile_form.errors)
             print(user_form.errors)
 
     else:
         # Not a HTTP POST, so we render our form using two ModelForm instances.
         # These forms will be blank, ready for user input.
-
         user_form = UserForm()
         # profile_form = UserProfileForm()
     # Render the template depending on the context.
@@ -123,6 +123,7 @@ def user_login(request):
                 # If the account is valid and active, we can log the user in.
                 # We'll send the user back to the homepage.
                 messagebox.showinfo("Welecome", "Login successfully!")
+                mainloop()
                 # messages.success(request, "Login Successfully, Welcome!")
                 print("Login OK!")
                 login(request, user)
@@ -131,6 +132,7 @@ def user_login(request):
                 # An inactive account was used - no logging in!
                 # messages.error(request, "Something Wrong, please try again later...")
                 messagebox.showerror("Sorry！", "Something Wrong, please try again later...")
+                mainloop()
                 # return HttpResponse("Your moovie account is disabled.")
                 return redirect(reverse('moovie:login'))
         else:
@@ -139,6 +141,7 @@ def user_login(request):
             detail_is_invalid = True,
             # messages.error(request, "Something Wrong, please try again later...")
             messagebox.showerror("Sorry！", "Something Wrong, please try again later...")
+            mainloop()
             # return HttpResponse("Invalid login details supplied.")
             return redirect(reverse('moovie:login'))
 

@@ -131,7 +131,7 @@ def user_login(request):
             else:
                 # An inactive account was used - no logging in!
                 #messages.error(request, "Something Wrong, please try again later...")
-                messagebox.showinfo("Welecome", "Login successfully!")
+                messagebox.showerror("Sorry！", "Something Wrong, please try again later...")
                 #return HttpResponse("Your moovie account is disabled.")
                 return redirect(reverse('moovie:login'))
         else:
@@ -139,7 +139,7 @@ def user_login(request):
             # print(f"Invalid login details: {username}, {password}")
             detail_is_invalid = True,
             #messages.error(request, "Something Wrong, please try again later...")
-            messagebox.showinfo("Welecome", "Login successfully!")
+            messagebox.showerror("Sorry！", "Something Wrong, please try again later...")
             #return HttpResponse("Invalid login details supplied.")
             return redirect(reverse('moovie:login'))
 

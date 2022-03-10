@@ -61,84 +61,41 @@
                             <span class="sr-only">(current)</span>
                         </a>
                     </li>
-
-
                 </ul>
-                <div>
-
-
-                </div>
-                <form class="form-inline mt-1 mt-md-0 ml-0" action=".">
-                    <select name="search_dropdown" class="custom-select ml-auto" id="inlineFormCustomSelect">
-                        <option selected>Choose..</option>
-                        <option value="Title">Title</option>
-                        <option value="Director">Director</option>
-                        <option value="Genre">Genre</option>
-                    </select>
-                    <br/>
-                    <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                </form>
-
-
-                <ul class="navbar-nav mr-0">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Contact us</a>
-                    </li>
-                    {% if user.is_authenticated %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">My Profile</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'moovie:logout' %}">Logout</a>
-                        </li>
-    {#                    <li class="nav-item">#}
-    {#                        <a class="nav-link" href="{% url 'moovie:register' %}">Sign up</a>#}
-    {#                    </li>#}
-    {#                    <li class="nav-item">#}
-    {#                        <a class="nav-link" href="{% url 'moovie:login' %}">Login</a>#}
-    {#                    </li>#}
-    {#                    <div class="w3l_sign_in_register">#}
-    {#                        <ul>#}
-    {#                            <li ><a href="#" data-toggle="modal" data-target="#myModal">Login</a></li>#}
-    {##}
-    {#                        </ul>#}
-    {#                    </div>#}
-                    {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'moovie:register' %}">Sign up</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'moovie:login' %}">Login</a>
-                        </li>
-                    {% endif %}
-
-
-                </ul>
-
             </div>
-
+            <form class="form-inline mt-1 mt-md-0 ml-0" action=".">
+                <select name="search_dropdown" class="custom-select ml-auto" id="inlineFormCustomSelect">
+                    <option selected>Choose..</option>
+                    <option value="Title">Title</option>
+                    <option value="Director">Director</option>
+                    <option value="Genre">Genre</option>
+                </select>
+                <br/>
+                <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </form>
+            <ul class="navbar-nav mr-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Contact us</a>
+                </li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">My Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'moovie:logout' %}">Logout</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'moovie:register' %}">Sign up</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'moovie:login' %}">Login</a>
+                    </li>
+                {% endif %}
+            </ul>
         </nav>
-
     </header>
-    {#<div>#}
-    {#    #}
-    {#    <nav>#}
-    {#        <!-- very incomplete nav! needs:#}
-    {#                - proper links#}
-    {#                - search bar implemented#}
-    {#                - (once we have ther user/login functionality)#}
-    {#                    + different appearance based on log in state#}
-    {#         -->#}
-    {#        <ul>#}
-    {#            <li><a href="#">home(logo?)</a></li>#}
-    {#            <li><a href="#">search bar</a></li>#}
-    {#            <li><a href="#">contact us</a></li>#}
-    {#            <li><a href="#">my profile</a></li>#}
-    {#            <li><a href="#">log out</a></li>#}
-    {#        </ul>#}
-    {#    </nav>#}
-    {#</div>#}
 
     <div>
         {% block body_block %}
@@ -173,16 +130,16 @@
             <div class="col-md-7 w3ls_footer_grid1_right">
                 <ul>
                     <li>
-                        <a href="genres.html">Login</a>
+                        <a href="{% url 'moovie:login' %}">Login</a>
                     </li>
                     <li>
-                        <a href="faq.html">Sign up</a>
+                        <a href="{% url 'moovie:register' %}">Sign up</a>
                     </li>
                     <li>
-                        <a href="horror.html">About us</a>
+                        <a href="{% url 'moovie:about-us' %}">About us</a>
                     </li>
                     <li>
-                        <a href="genres.html">Contact us</a>
+                        <a href="#">Contact us</a>
                     </li>
                 </ul>
             </div>

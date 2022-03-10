@@ -1,0 +1,45 @@
+.breadcomb-area{
+	margin-bottom:30px;
+}
+
+
+.contact-list{
+    padding:20px;
+	background:#fff;
+}
+
+.contact-win{
+    display: flex;
+}
+
+.contact-img img {
+    border-radius: 100%;
+    margin: 50px 0px;
+}
+
+.contact-ctn .ctn-ads{
+	font-size:14px;
+	color:#888;
+	margin-bottom: 0px;
+}
+
+.contact-ad-hd{
+	margin: 15px 0px;
+}
+
+.contact-ctn p{
+    font-size:14px;
+	color:#333;
+	line-height:24px;
+}
+
+.social-st-list{
+    display: flex;
+}
+
+.social-sn {
+    margin-right: 15px;
+}
+
+
+  

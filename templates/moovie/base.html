@@ -61,16 +61,21 @@
                 </li>
             </ul>
 
-            <div class="ml-auto">
-                <form class="form-inline mt-1 mt-md-0 ml-0" action=".">
+            <div class="mx-auto col-6">
+                <form class="form-inline mt-1 mt-md-0 ml-0" method="post" action="{% url 'moovie:show_search_result' %}">
+                    {% csrf_token %}
                 <select name="search_dropdown" class="custom-select " id="inlineFormCustomSelect">
                     <option selected>Choose..</option>
                     <option value="Title">Title</option>
+                    <option value="Actor">Actor</option>
                     <option value="Director">Director</option>
-                    <option value="Genre">Genre</option>
                 </select>
+                {% if query %}
+                    <input class="form-control mr-sm-2 col-6" type="text" value="{{ query }}" aria-label="Search">
+                {% else %}
+                    <input class="form-control mr-sm-2 col-6" type="text" placeholder="Search" aria-label="Search">
+                {% endif %}
 
-                <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
             </form>
 

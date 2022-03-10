@@ -299,6 +299,20 @@ def run_query(search_terms, keyword):
         })
     return results
 
+def search_tag(request, search_type, query):
+    context_dict = {}
+    
+    if search_type == 'Genre':
+        keyword = 1
+    elif search_type == 'Director':
+        keyword = 2
+    elif search_type == 'Actor':
+        keyword = 3
+
+    if query:
+        context_dict['result_list'] = run_query(query, keyword)
+        context_dict['query'] = query 
+    return render(request, 'moovie/search_result.html', context=context_dict)
 
 def show_search_result(request):
     context_dict = {}

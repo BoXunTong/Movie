@@ -308,7 +308,7 @@ def show_search_result(request):
             keyword = 4
         '''
         if query:
-            context_dict['result_list'] = run_query(query,keyword)
+            context_dict['result_list'] = run_query(query, keyword)
             #context_dict['result_list'] = run_query(query)
             context_dict['query'] = query 
     return render(request, 'moovie/search_result.html', context=context_dict)

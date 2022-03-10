@@ -3,51 +3,77 @@
 
 {% block title_block %}
     {% if movie %}
-        {{ movie.name }}
+        {{ movie.title }}
     {% else %}
         Unknown Movie
     {% endif %}
 {% endblock %}
 
 {% block body_block %}
-    {% if movie %}
-        <h1>{{ movie.title }}</h1>
-        <div>
-            <p>Released: {{ movie.release_date }}</p>
-            <p>
-                Directed by:{% for director in directors %} 
-                    <a href="SEARCHBYDIRECTOR">{{ director.name }} </a>
+    <section class="container">
+        {% if movie %}
+            <h1 class="h1-responsive font-weight-bold text-center my-4">{{ movie.title }}</h1>
+            <div class="media">
+                <div class="media-body">
+                    <p>Released: {{ movie.release_date|date:"d M Y" }}</p>
+                    <p>Directed by: {% for director in directors %} 
+                                        <a href="SEARCHBYDIRECTOR">{{ director.name }} {{director.surname}} </a>
+                                    {% endfor %}
+                    </p>
+                    <p>Starring: {% for star in stars %}
+                                        <a href="SEARCHBYACTOR">{{ star.name }} {{star.surname}} </a>
+                                    {% endfor %}
+                    </p>
+                    <p>Description: {{ movie.description }}</p>
+                    <p>Genre tags: {% for genre in genres %}
+                                        <a href="SEARCHBYGENRE"> {{ genre.name }}</a>
+                                    {% endfor %}
+                    </p>
+                </div>
+                <div class="col-md-8 float-right">
+                    <img class="" src="{{ MEDIA_URL }}{{ movie.poster }}" alt="Movie Image">
+                    <p>Average rating: {{ movie.average_rating }}/5.00</p>
+                </div>
+            </div>
+
+            <div class="pre-scrollable mt-5">
+                <h2>User Reviews</h2>
+                {% for review_with_user_info in reviews_with_user_info %}
+                    <div class="media border-bottom border-top mb-5">
+                        <figure class="figure">
+                            <img class="mr-3" src="{{ MEDIA_URL }}{{ review_with_user_info.user.picture }}" alt="Profile Picture">
+                            <figcaption class="figure-caption text-center" href="#">{{ review_with_user_info.user }}</figcaption>
+                        </figure>
+                        <div class="media-body">
+                            <h5 class="mt-0">{{ review_with_user_info.review.header }}</h5>
+                            <p>{{ review_with_user_info.review.comment }}</p>
+                            <p>rating: {{ review_with_user_info.review.rating|floatformat:0 }}/5</p>
+                        </div>
+                    </div>
                 {% endfor %}
-            </p>
-            <p>
-                Starring:{% for star in stars %}
-                    <a href="SEARCHBYACTOR">{{ star.name }}</a>
-                {% endfor %}
-            </p>
-            <p>Description: {{ movie.description }}</p>
-            <p>
-                Genre tags: {% for genre in genres %}
-                    <a href="SEARCHBYGENRE"> {{ genre.name }}</a>
-                {% endfor %}
-            </p>
-            <img src="{{ movie.image }}" alt="">
-            <p>Average rating: {{ movie.average_rating }}</p>
-        </div>
-        <div>
-            <h2>User Reviews</h2>
-            {% for review in reviews %}
-                <h3>{{ review.header }}</h3>
-                <p>rating: {{ review.rating }}/5</p>
-                <p>{{ review.comment }}</p>
-            {% endfor %}
-        </div>
-        {% if user.is_authenticated %}
-        <div>
-            <h2>Write a Review</h2>
-            <form action="">review input form</form>
-        </div>
+            </div>
+
+            {% if user.is_authenticated %}
+                <div class="mt-5">
+                    <h2>Write a Review</h2>
+                    <form id="review_form" method="post" action="{% url 'moovie:add_review' movie.id %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {% for hidden in form.hidden_fields %}
+                            {{ hidden }}
+                        {% endfor %}
+                        {% for field in form.visible_fields %}
+                            {{ field.errors }} </br>
+                            {{ field.help_text }} </br>
+                            {{ field }} </br>
+                        {% endfor %}
+
+                        <input type="hidden" name="username" value="{{user.username}}">
+                        <input type="submit" class="btn btn-primary mt-5 mb-5" value="Send" />
+                    </form>
+                </div>
+            {% endif %}
+        {% else %}
+            The specified movie does not exist.
         {% endif %}
-    {% else %}
-        The specified movie does not exist.
-    {% endif %}
+    </section>
 {% endblock %}

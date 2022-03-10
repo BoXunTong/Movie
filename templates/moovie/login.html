@@ -2,18 +2,66 @@
 {% load staticfiles %}
 
 {% block title_block %}
-Log In
+    Login
 {% endblock %}
 
 {% block body_block %}
-<h1>Log in to your account</h1>
-<h2>User</h2>
-<div>
-    <form action="">A LOG IN FORM</form>
-    <p>Dont have an account? <a href="{% url 'moovie:sign_up' %}">Sign up here!</a></p>
-</div>
-<h2>Admin</h2> <!-- admin don't need register? --> 
-<div>
-    <form action="">A LOG IN FORM</form>
-</div>
+    <h1 class="h1-responsive font-weight-bold text-center my-4">Login to Moovie</h1>
+    {% if messages %}
+        <script>
+            {% for msg in messages %}
+                alert('{{ msg.message }}');
+            {% endfor %}
+        </script>
+    {% endif %}
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    Sign In
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <section>
+                    <div class="modal-body">
+                        <div class="w3_login_module">
+                            <div class="module form-module">
+                                <div class="toggle"><i class="fa fa-times fa-pencil"></i>
+                                    <div class="tooltip"></div>
+                                </div>
+                                <div class="form">
+                                    <h3>Login to your account</h3>
+                                    <form id="login_form" method="post" action="{% url 'moovie:login' %}">
+                                        {% csrf_token %}
+{#                                        <input type="text" name="username" placeholder="Username" required="">#}
+{#                                        <input type="password" name="password" placeholder="Password" required="">#}
+{#                                        <input type="submit" value="Login">#}
+                                        <input type="text" name="username" value="" placeholder="Username" />
+                                        <input type="password" name="password" value="" placeholder="Password" />
+                                        <input type="submit" value="submit" />
+                                    </form>
+                                </div>
+{#                                    <form id="login_form" method="post" action="{% url 'moovie:login' %}">#}
+{#                                        {% csrf_token %}#}
+{#                                        Username: <input type="text" name="username" value="" size="50" />#}
+{#                                        <br />#}
+{#                                        Password: <input type="password" name="password" value="" size="50" />#}
+{#                                        <br />#}
+{#                                        <input type="submit" value="submit" />#}
+{#                                    </form>#}
+{#                                <div class="form">#}
+{#                                    <h3>Create an account</h3>#}
+{#                                    <form action="#" method="post">#}
+{#                                        <input type="text" name="Username" placeholder="Username" required="">#}
+{#                                        <input type="password" name="Password" placeholder="Password" required="">#}
+{#                                        <input type="email" name="Email" placeholder="Email Address" required="">#}
+{#                                        <input type="text" name="Phone" placeholder="Phone Number" required="">#}
+{#                                        <input type="submit" value="Register">#}
+{#                                    </form>#}
+{#                                </div>#}
+                                <div class="cta"><a href="#">Forgot your password?</a></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
 {% endblock %}

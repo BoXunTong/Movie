@@ -2,12 +2,27 @@
 {% load staticfiles %}
 
 {% block title_block %}
-Contact Us
+    Contact Us
 {% endblock %}
 
 {% block body_block %}
-<h1>Contact Us</h1>
-<div>
-    <p>All of our contact details.</p>
-</div>
+    <section class="mb-4">
+        <h1 class="h1-responsive font-weight-bold text-center my-4">Contact Us</h1>
+        <p class="text-center w-responsive mx-auto mb-5">We love questions and feedback to improve your experience!</p>
+        <div class="container">
+            <form id="contact_form" method="post" action="{% url 'moovie:contact_us' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% for hidden in form.hidden_fields %}
+                    {{ hidden }}
+                {% endfor %}
+                {% for field in form.visible_fields %}
+                    {{ field.errors }} </br>
+                    {{ field.help_text }} </br>
+                    {{ field }} </br>
+                {% endfor %}
+
+                <input type="submit" class="btn btn-primary" value="Send" />
+            </form>
+        </div>
+    </section>
 {% endblock %}

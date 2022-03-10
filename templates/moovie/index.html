@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block body_block %}
-    <div id="carousel-control" class="carousel slide" data-ride="carousel">
+    <div id="most-popular" class="carousel slide" data-ride="carousel">
         <ol class="carousel-indicators">
             <li data-target="#carousel-control" data-slide-to="0" class="active"></li>
             <li data-target="#carousel-control" data-slide-to="1"></li>
@@ -17,43 +17,58 @@
         <div class="carousel-inner">
             {% if highest_rate_movie %}
                 <div class="carousel-item active">
+
+                    <a href="{% url 'moovie:show_movie_profile' highest_rate_movie.id %}">
+                        <div class="container">
+                            <div class="carousel-caption text-lg-left">
+                                <h1 style="color: floralwhite">{{ highest_rate_movie.title }}</h1>
+                                <p>{{ highest_rate_movie.description }}</p>
+                            </div>
+                        </div>
+                        <img style="object-fit: contain" src="{{ MEDIA_URL }}{{ highest_rate_movie.poster }}"
+                             class="d-block m-auto h-100" alt="{{ highest_rate_movie.title }}">
+                    </a>
+
                     <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"
                          preserveAspectRatio="xMidYMid slice" focusable="false" role="img">
-                        <rect fill="#778" width="100%" height="100%"/>
+                        <rect fill="#000" width="100%" height="100%"/>
                     </svg>
-                    <img style="object-fit:contain" src="{{ MEDIA_URL }}{{ highest_rate_movie.poster }}"
-                         class="d-block h-100" alt="{{ highest_rate_movie.title }}">
-                    <div class="container">
-                        <div class="carousel-caption text-lg-left">
-                            <h1 style="color: floralwhite">{{ highest_rate_movie.title }}</h1>
-                            <p>{{ highest_rate_movie.description }}</p>
-                        </div>
-                    </div>
+
                 </div>
                 {% for movie in movies_by_rating %}
                     <div class="carousel-item">
-                        <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"
-                             preserveAspectRatio="xMidYMid slice" focusable="false" role="img">
-                            <rect fill="#778" width="100%" height="100%"/>
-                        </svg>
-                        <img style="object-fit:contain" src="{{ MEDIA_URL }}{{ movie.poster }}" class="d-block"
-                             alt="{{ movie.title }}">
-                        <div class="container">
-                            <div class="carousel-caption text-lg-center">
-                                <h1 style="color: floralwhite">{{ movie.title }}</h1>
-                                <p>{{ movie.description }}</p>
+
+                        <a href="{% url 'moovie:show_movie_profile' movie.id %}">
+                            <div class="container">
+                                <div class="carousel-caption text-lg-left">
+                                    <h1 style="color: floralwhite">{{ movie.title }}</h1>
+                                    <p>{{ movie.description }}</p>
+                                </div>
                             </div>
-                        </div>
+                            <img style="object-fit:contain" src="{{ MEDIA_URL }}{{ movie.poster }}"
+                                 class="d-block m-auto h-100"
+                                 alt="{{ movie.title }}">
+
+                        </a>
+                        <svg class="bd-placeholder-img vh-100" width="100%" height="100%"
+                             xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false"
+                             role="img">
+                            <rect fill="#000" width="100%" height="100%"/>
+                        </svg>
+
+
                     </div>
                 {% endfor %}
 
             {% endif %}
 
-            <a class="carousel-control-prev" href="#carousel-control" role="button" data-slide="prev">
+
+
+            <a class="carousel-control-prev" href="#most-popular" role="button" data-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="sr-only">Previous</span>
             </a>
-            <a class="carousel-control-next" href="#carousel-control" role="button" data-slide="next">
+            <a class="carousel-control-next" href="#most-popular" role="button" data-slide="next">
                 <span class="carousel-control-next-icon" aria-hidden="false"></span>
                 <span class="sr-only">Next</span>
             </a>
@@ -70,7 +85,7 @@
                 <!-- each movie item -->
                 {% if movies_by_release %}
                     {% for movie in movies_by_release %}
-                        <a href="#" class="movie-item">
+                        <a href="{% url 'moovie:show_movie_profile' movie.id %}" class="movie-item">
                             <img src="{{ MEDIA_URL }}{{ movie.image }}" alt="{{ movie.title }}">
                             <div class="movie-item-content">
                                 <div class="movie-item-title">
@@ -97,7 +112,6 @@
                             </div>
                         </div>
                     </a>
-
                 {% endif %}
             </div>
         </div>

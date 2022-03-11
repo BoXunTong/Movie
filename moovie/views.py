@@ -1,5 +1,6 @@
 
 # from __future__ import generator_stop
+from platform import release
 from tkinter import messagebox, mainloop
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -8,7 +9,6 @@ from django.shortcuts import render, redirect, reverse
 from moovie.models import *
 from moovie.forms import *
 from django.http import HttpResponse
-
 
 # Index view class
 class IndexView(View):
@@ -23,7 +23,6 @@ class IndexView(View):
         context_dict['movies_by_release'] = movies_by_release
 
         return render(request, 'moovie/index.html', context_dict)
-
 
 def register(request):
     # A boolean value for telling the template
@@ -95,7 +94,6 @@ def register(request):
                   # context={'user_form': user_form, 'profile_form': profile_form, 'registered': registered})
                   context={'user_form': user_form, 'registered': registered})
 
-
 def user_login(request):
     # If the request is a HTTP POST, try to pull out the relevant information.
     # m=User.objects.get(USERNAME=request.POST['username'])
@@ -152,14 +150,12 @@ def user_login(request):
         # blank dictionary object...
         return render(request, 'moovie/login.html')
 
-
 @login_required
 def user_logout(request):
     # Since we know the user is logged in, we can now just log them out.
     logout(request)
     # Take the user back to the homepage.
     return redirect(reverse('moovie:index'))
-
 
 def contact_us(request):
     form = ContactMessageForm()
@@ -184,7 +180,6 @@ def contact_us(request):
     # Render the form with error messages (if any).
     context_dict = {'form': form}
     return render(request, 'moovie/contact.html', context=context_dict)
-
 
 def show_movie_profile(request, movie_id):
     context_dict = {}
@@ -217,7 +212,6 @@ def show_movie_profile(request, movie_id):
         context_dict['reviews_with_user_info'] = None
 
     return render(request, 'moovie/movie_profile.html', context=context_dict)
-
 
 def get_movie_from_person(search_terms, keyword, max_results=0):
     person_list_name = []
@@ -253,18 +247,6 @@ def get_movie_from_person(search_terms, keyword, max_results=0):
     movie_list = set(movie_list)
     return movie_list   
 
-'''
-def get_movie_from_genre(search_terms):
-    movie_list = []
-    print(search_terms)
-    if search_terms:
-        movie_id_list = MovieGenre.objects.filter(genre_name=search_terms)
-    for movie_id in movie_id_list:
-        movie_list.append(Movie.objects.get(id=movie_id))
-    return movie_list
-''' 
-
-
 def get_movie_list(search_terms, max_results=0):
     movie_list = []
     if search_terms:
@@ -280,22 +262,24 @@ def run_query(search_terms, keyword):
         search_results = get_movie_list(search_terms)
     else:
         search_results = get_movie_from_person(search_terms,keyword)
-    '''
-    else:
-        search_results = get_movie_from_genre(search_terms)
-    '''
     results = []
 
     for result in search_results:
         director = get_directors_for_movie(result)
         director = str(director)
         director = director[12:-2]
+        genre = get_genres_for_movie(result)
+        genre = str(genre)
+        genre = genre[9:18] + genre[28:36]
+        release_date = str(result.release_date)
+        release_date = release_date[:-15]
         results.append({
             'id':result.id,
             'title':result.title,
             'image':result.image,
             'director':director,
-            'release_date':result.release_date
+            'release_date':release_date,
+            'genre':genre
         })
     return results
 
@@ -325,10 +309,6 @@ def show_search_result(request):
             keyword = 2
         elif keyword == 'Actor':
             keyword = 3
-        '''
-        else:
-            keyword = 4
-        '''
         if query:
             context_dict['result_list'] = run_query(query, keyword)
             #context_dict['result_list'] = run_query(query)
@@ -339,18 +319,15 @@ def show_user_profile(request):
     # this is the publicly visible profile of any user
     return render(request, 'moovie/user_profile.html', context={})
 
-
 # About us view class
 class AboutUsView(View):
     def get(self, request):
         return render(request, 'moovie/about.html', context={})
 
-
 # @login_required
 def edit_profile(request):
     # this is the profile of the logged in user (with edit functionality)
     return render(request, 'moovie/edit_profile.html', context={})
-
 
 def get_directors_for_movie(movie):
     directorMovies = DirectorMovie.objects.filter(movie_id=movie)
@@ -359,7 +336,6 @@ def get_directors_for_movie(movie):
         person_id = director_movie.person_id.id
         directors.append(Person.objects.get(id=person_id))
     return directors
-
 
 def get_actors_for_movie(movie):
     # do we need to limit this to only the 'top' actors?
@@ -371,7 +347,6 @@ def get_actors_for_movie(movie):
         actors.append(Person.objects.get(id=person_id))
     return actors
 
-
 def get_genres_for_movie(movie):
     movieGenres = MovieGenre.objects.filter(movie_id=movie)
     genres = []
@@ -380,7 +355,6 @@ def get_genres_for_movie(movie):
         genres.append(movie_genre.genre_name)
     return genres
 
-
 def get_reviews_with_user_info_for_movie(movie):
     reviews = Review.objects.filter(movie_id=movie)
     reviews_with_user_info = []
@@ -388,7 +362,6 @@ def get_reviews_with_user_info_for_movie(movie):
         user_profile = UserProfile.objects.get(user=review.username)
         reviews_with_user_info.append({'review': review, 'user': user_profile})
     return reviews_with_user_info
-
 
 def get_users_review_if_exists(request, movie):
     try:
@@ -400,7 +373,6 @@ def get_users_review_if_exists(request, movie):
             ReviewForm()
     except Review.DoesNotExist:
         return ReviewForm()
-
 
 def add_review(request, movie_id):
     form = ReviewForm()
@@ -431,7 +403,6 @@ def add_review(request, movie_id):
     context_dict = {'form': form, 'movie_id': movie_id}
     return render(request, 'moovie/movie_profile.html', context=context_dict)
 
-
 def calculate_and_save_new_rating(movie_id, review, user_has_an_existing_comment):
     movie = Movie.objects.get(id=movie_id)
     review_count = Review.objects.filter(movie_id=movie_id).count()
@@ -458,3 +429,5 @@ class RemoveFromWatchlistView(View):
         MovieToWatch.objects.get(username=request.user, movie_id= Movie.objects.get(id=movie_id)).delete()
         
         return HttpResponse()
+
+

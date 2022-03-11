@@ -1,12 +1,14 @@
 
 # from __future__ import generator_stop
-from tkinter import messagebox
+from platform import release
+from tkinter import messagebox, mainloop
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.views import View
 from django.shortcuts import render, redirect, reverse
 from moovie.models import *
 from moovie.forms import *
+from django.http import HttpResponse
 
 # Index view class
 class IndexView(View):
@@ -21,7 +23,6 @@ class IndexView(View):
         context_dict['movies_by_release'] = movies_by_release
 
         return render(request, 'moovie/index.html', context_dict)
-
 
 def register(request):
     # A boolean value for telling the template
@@ -79,20 +80,19 @@ def register(request):
             # Invalid form or forms - mistakes or something else?
             # Print problems to the terminal.
             messagebox.showerror("Sorry！", "Something Wrong, please try again later...")
+            mainloop()
             # print(user_form.errors, profile_form.errors)
             print(user_form.errors)
 
     else:
         # Not a HTTP POST, so we render our form using two ModelForm instances.
         # These forms will be blank, ready for user input.
-
         user_form = UserForm()
         # profile_form = UserProfileForm()
     # Render the template depending on the context.
     return render(request, 'moovie/register.html',
                   # context={'user_form': user_form, 'profile_form': profile_form, 'registered': registered})
                   context={'user_form': user_form, 'registered': registered})
-
 
 def user_login(request):
     # If the request is a HTTP POST, try to pull out the relevant information.
@@ -121,6 +121,7 @@ def user_login(request):
                 # If the account is valid and active, we can log the user in.
                 # We'll send the user back to the homepage.
                 messagebox.showinfo("Welecome", "Login successfully!")
+                mainloop()
                 # messages.success(request, "Login Successfully, Welcome!")
                 print("Login OK!")
                 login(request, user)
@@ -129,6 +130,7 @@ def user_login(request):
                 # An inactive account was used - no logging in!
                 # messages.error(request, "Something Wrong, please try again later...")
                 messagebox.showerror("Sorry！", "Something Wrong, please try again later...")
+                mainloop()
                 # return HttpResponse("Your moovie account is disabled.")
                 return redirect(reverse('moovie:login'))
         else:
@@ -137,6 +139,7 @@ def user_login(request):
             detail_is_invalid = True,
             # messages.error(request, "Something Wrong, please try again later...")
             messagebox.showerror("Sorry！", "Something Wrong, please try again later...")
+            mainloop()
             # return HttpResponse("Invalid login details supplied.")
             return redirect(reverse('moovie:login'))
 
@@ -147,14 +150,12 @@ def user_login(request):
         # blank dictionary object...
         return render(request, 'moovie/login.html')
 
-
 @login_required
 def user_logout(request):
     # Since we know the user is logged in, we can now just log them out.
     logout(request)
     # Take the user back to the homepage.
     return redirect(reverse('moovie:index'))
-
 
 def contact_us(request):
     form = ContactMessageForm()
@@ -180,7 +181,6 @@ def contact_us(request):
     context_dict = {'form': form}
     return render(request, 'moovie/contact.html', context=context_dict)
 
-
 def show_movie_profile(request, movie_id):
     context_dict = {}
     try:
@@ -196,6 +196,9 @@ def show_movie_profile(request, movie_id):
         genres = get_genres_for_movie(movie)
         context_dict['genres'] = genres
 
+        if request.user.is_authenticated:
+            context_dict['already_added_to_watchlist'] = MovieToWatch.objects.filter(username=request.user, movie_id= movie_id).count()
+
         reviews_with_user_info = get_reviews_with_user_info_for_movie(movie)
         context_dict['reviews_with_user_info'] = reviews_with_user_info
 
@@ -209,7 +212,6 @@ def show_movie_profile(request, movie_id):
         context_dict['reviews_with_user_info'] = None
 
     return render(request, 'moovie/movie_profile.html', context=context_dict)
-
 
 def get_movie_from_person(search_terms, keyword, max_results=0):
     person_list_name = []
@@ -245,18 +247,6 @@ def get_movie_from_person(search_terms, keyword, max_results=0):
     movie_list = set(movie_list)
     return movie_list   
 
-'''
-def get_movie_from_genre(search_terms):
-    movie_list = []
-    print(search_terms)
-    if search_terms:
-        movie_id_list = MovieGenre.objects.filter(genre_name=search_terms)
-    for movie_id in movie_id_list:
-        movie_list.append(Movie.objects.get(id=movie_id))
-    return movie_list
-''' 
-
-
 def get_movie_list(search_terms, max_results=0):
     movie_list = []
     if search_terms:
@@ -272,25 +262,26 @@ def run_query(search_terms, keyword):
         search_results = get_movie_list(search_terms)
     else:
         search_results = get_movie_from_person(search_terms,keyword)
-    '''
-    else:
-        search_results = get_movie_from_genre(search_terms)
-    '''
     results = []
 
     for result in search_results:
         director = get_directors_for_movie(result)
         director = str(director)
         director = director[12:-2]
+        genre = get_genres_for_movie(result)
+        genre = str(genre)
+        genre = genre[9:18] + genre[28:36]
+        release_date = str(result.release_date)
+        release_date = release_date[:-15]
         results.append({
             'id':result.id,
             'title':result.title,
             'image':result.image,
             'director':director,
-            'release_date':result.release_date
+            'release_date':release_date,
+            'genre':genre
         })
     return results
-
 
 def show_search_result(request):
     context_dict = {}
@@ -303,12 +294,8 @@ def show_search_result(request):
             keyword = 2
         elif keyword == 'Actor':
             keyword = 3
-        '''
-        else:
-            keyword = 4
-        '''
         if query:
-            context_dict['result_list'] = run_query(query,keyword)
+            context_dict['result_list'] = run_query(query, keyword)
             #context_dict['result_list'] = run_query(query)
             context_dict['query'] = query 
     return render(request, 'moovie/search_result.html', context=context_dict)
@@ -317,18 +304,15 @@ def show_user_profile(request):
     # this is the publicly visible profile of any user
     return render(request, 'moovie/user_profile.html', context={})
 
-
 # About us view class
 class AboutUsView(View):
     def get(self, request):
         return render(request, 'moovie/about.html', context={})
 
-
 # @login_required
 def edit_profile(request):
     # this is the profile of the logged in user (with edit functionality)
     return render(request, 'moovie/edit_profile.html', context={})
-
 
 def get_directors_for_movie(movie):
     directorMovies = DirectorMovie.objects.filter(movie_id=movie)
@@ -337,7 +321,6 @@ def get_directors_for_movie(movie):
         person_id = director_movie.person_id.id
         directors.append(Person.objects.get(id=person_id))
     return directors
-
 
 def get_actors_for_movie(movie):
     # do we need to limit this to only the 'top' actors?
@@ -349,7 +332,6 @@ def get_actors_for_movie(movie):
         actors.append(Person.objects.get(id=person_id))
     return actors
 
-
 def get_genres_for_movie(movie):
     movieGenres = MovieGenre.objects.filter(movie_id=movie)
     genres = []
@@ -358,7 +340,6 @@ def get_genres_for_movie(movie):
         genres.append(movie_genre.genre_name)
     return genres
 
-
 def get_reviews_with_user_info_for_movie(movie):
     reviews = Review.objects.filter(movie_id=movie)
     reviews_with_user_info = []
@@ -366,7 +347,6 @@ def get_reviews_with_user_info_for_movie(movie):
         user_profile = UserProfile.objects.get(user=review.username)
         reviews_with_user_info.append({'review': review, 'user': user_profile})
     return reviews_with_user_info
-
 
 def get_users_review_if_exists(request, movie):
     try:
@@ -378,7 +358,6 @@ def get_users_review_if_exists(request, movie):
             ReviewForm()
     except Review.DoesNotExist:
         return ReviewForm()
-
 
 def add_review(request, movie_id):
     form = ReviewForm()
@@ -409,7 +388,6 @@ def add_review(request, movie_id):
     context_dict = {'form': form, 'movie_id': movie_id}
     return render(request, 'moovie/movie_profile.html', context=context_dict)
 
-
 def calculate_and_save_new_rating(movie_id, review, user_has_an_existing_comment):
     movie = Movie.objects.get(id=movie_id)
     review_count = Review.objects.filter(movie_id=movie_id).count()
@@ -421,4 +399,20 @@ def calculate_and_save_new_rating(movie_id, review, user_has_an_existing_comment
     else:
         movie.average_rating = (movie.average_rating * review_count + review.rating) / (review_count + 1)
 
-    movie.save()
+    movie.save() 
+
+class AddToWatchlistView(View):
+    def get(self, request):
+        movie_id = request.GET['movie_id']
+        MovieToWatch.objects.create(username=request.user, movie_id= Movie.objects.get(id=movie_id))
+        
+        return HttpResponse()
+
+class RemoveFromWatchlistView(View):
+    def get(self, request):
+        movie_id = request.GET['movie_id']
+        MovieToWatch.objects.get(username=request.user, movie_id= Movie.objects.get(id=movie_id)).delete()
+        
+        return HttpResponse()
+
+

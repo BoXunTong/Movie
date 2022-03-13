@@ -4,24 +4,27 @@ from django.shortcuts import reverse
 from decimal import *
 from http import HTTPStatus
 import datetime
+from django.test.client import RequestFactory
+from .views import AddToWatchlistView, RemoveFromWatchlistView
 
 class MovieTests(TestCase):
     def setUp(self):
-        movie = Movie.objects.create(title="The Lord of The Rings", duration=192, release_date=datetime.datetime(2001, 11, 16), average_rating=Decimal(5.00))
+        self.factory = RequestFactory()
+        self.movie = Movie.objects.create(title="The Lord of The Rings", duration=192, release_date=datetime.datetime(2001, 11, 16), average_rating=Decimal(5.00))
 
-        director = Person.objects.create(name='Peter', surname='Jackson', person_type='Director')
-        DirectorMovie.objects.create(movie_id=movie, person_id=director)
+        self.director = Person.objects.create(name='Peter', surname='Jackson', person_type='Director')
+        DirectorMovie.objects.create(movie_id=self.movie, person_id=self.director)
 
-        actor = Person.objects.create(name='Orlando', surname='Bloom', person_type='Actor')
-        ActorMovie.objects.create(movie_id=movie, person_id=actor)
+        self.actor = Person.objects.create(name='Orlando', surname='Bloom', person_type='Actor')
+        ActorMovie.objects.create(movie_id=self.movie, person_id=self.actor)
 
-        genre = Genre.objects.create(name='Fantastic')
-        MovieGenre.objects.create(movie_id=movie, genre_name=genre)
+        self.genre = Genre.objects.create(name='Fantastic')
+        MovieGenre.objects.create(movie_id=self.movie, genre_name=self.genre)
 
-        user = User.objects.create(username='test_user')
-        UserProfile.objects.create(user=user)
+        self.user = User.objects.create(username='test_user', password="3654789")
+        UserProfile.objects.create(user=self.user)
 
-        Review.objects.create(username=user, movie_id=movie, rating=Decimal(5.00))
+        Review.objects.create(username=self.user, movie_id=self.movie, rating=Decimal(5.00))
 
     def test_if_show_movie_retrieves_correct_info_when_all_data_exists(self):
         response = self.client.get(reverse('moovie:show_movie_profile', kwargs={'movie_id': 1}), follow=True)
@@ -87,11 +90,27 @@ class MovieTests(TestCase):
         self.assertEqual("Fantastic", response.context['genres'][0].name)
         self.assertEqual([], response.context['reviews_with_user_info'])
 
-    def test_if_rating_calculation_is_correct(self):
+    def test_if_rating_calculation_is_correct_after_editing(self):
         response = self.client.post(reverse('moovie:add_review', kwargs={'movie_id': 1}), {'username': 'test_user', 'comment':'random comment', 'header': 'random header', 'rating': Decimal(4.00)})
         self.assertEqual(HTTPStatus.FOUND, response.status_code)
-        self.assertEqual(2, Review.objects.filter(movie_id=1).count())
-        self.assertEqual(Decimal(4.50), Movie.objects.get(id=1).average_rating)
+        self.assertEqual(1, Review.objects.filter(movie_id=1).count())
+        self.assertEqual(Decimal(4.00), Movie.objects.get(id=1).average_rating)
+
+    def test_if_movie_added_to_watchlist_correctly(self):
+        request = self.factory.get(reverse('moovie:add_to_watchlist', kwargs={'movie_id': 1}))
+        request.user = self.user
+        response = AddToWatchlistView().get(request, 1)
+        self.assertEqual(HTTPStatus.OK, response.status_code)
+        self.assertEqual(1, MovieToWatch.objects.filter(movie_id=1).count())
+        self.assertEqual(1, MovieToWatch.objects.get(id=1).movie_id.id)
+
+    def test_if_movie_removed_from_watchlist_correctly(self):
+        MovieToWatch.objects.create(username=self.user, movie_id=self.movie)
+        request = self.factory.get(reverse('moovie:remove_from_watchlist', kwargs={'movie_id': 1}))
+        request.user = self.user
+        response = RemoveFromWatchlistView().get(request, 1)
+        self.assertEqual(HTTPStatus.OK, response.status_code)
+        self.assertEqual(0, MovieToWatch.objects.filter(movie_id=1).count())
 
 class ContactMessageTests(TestCase):
     def test_if_data_is_stored_in_database_correctly(self):

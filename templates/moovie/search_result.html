@@ -6,38 +6,65 @@
 {% endblock %}
 
 
-
 {% block body_block %}
-<div>
-    <link href="{% static 'css/search_result.css' %}" rel="stylesheet">
-    <div class="breadcomb-area">
-        <div class="container">
-            <p>Search Results for: {{query}}</p>      
-        </div>
+
+<div class="breadcomb-area">
+    <div class="container">
+            <h3>Search Results for: {{query}}</h3>  
     </div>
-    {% if result_list %}
-        {% for result in result_list %}
-            <div class="media border-bottom border-top mb-5">
-                <figure class="figure">
-                    <img class="mr-3" src="{{ MEDIA_URL }}{{ result.image }}" alt="Picture of Movie">
-                    <figcaption class="figure-caption text-center">
-                        <a href="{% url 'moovie:show_movie_profile' result.id %}">
-                            {{result.title}}
-                        </a>
-                    </figcaption>
-                </figure>
-                <div class="media-body">
-                    <p class="list-group-item-text">
+</div>
+<!--
+{% if result_list %}
+    {% for result in result_list %}
+        <div class="media border-bottom border-top mb-5">
+            <figure class="figure">
+                <img class="mr-3" src="{{ MEDIA_URL }}{{ result.image }}" alt="Picture of Movie">
+                <figcaption class="figure-caption text-center">
+                    <a class="center-show" href="{% url 'moovie:show_movie_profile' result.id %}">
+                        {{result.title}}
+                    </a>
+                </figcaption>
+            </figure>
+            <div class="media-body">
+                <h4 class="list-group-item-text">
+                    {{ result.director }}
+                </h4>
+                <p class="list-group-item-text">
+                    {{ result.release_date }}
+                </p>
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    The specified movie does not exist.
+{% endif %}
+-->
+{% if result_list %}
+    {% for result in result_list %}
+        <div class="container2">
+            <div class="card u-clearfix">
+                <div class="card-media">
+                    <img class="card-media-img" src="{{ MEDIA_URL }}{{ result.image }}" alt="Picture of Movie">
+                    <span class="card-media-tag card-media-tag-orange">{{ result.genre }}</span>
+                </div>
+                <div class="card-body">
+                    <a class="card-body-heading" href="{% url 'moovie:show_movie_profile' result.id %}">
+                        {{ result.title }}
+                    </a>
+                    <h4 class="card-body-description1">
                         {{ result.director }}
-                    </p>
-                    <p class="list-group-item-text">
+                    </h4>
+                    <br>
+                    <p class="card-body-description2">
                         {{ result.release_date }}
                     </p>
                 </div>
             </div>
-        {% endfor %}
-    {% else %}
-        The specified movie does not exist.
-        {% endif %}
-</div>
+        </div>
+    {% endfor %}
+{% else %}
+    The specified movie does not exist.
+{% endif %}      
+
 {% endblock body_block %}
+

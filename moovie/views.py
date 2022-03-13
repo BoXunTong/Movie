@@ -7,16 +7,10 @@ from django.views import View
 from django.shortcuts import render, redirect, reverse
 from moovie.models import *
 from moovie.forms import *
-<<<<<<< HEAD
 from tkinter import *
-from django.contrib import messages
 from django.http import HttpResponse
 from django.contrib import messages
 
-=======
-from django.http import HttpResponse
-from django.contrib import messages
->>>>>>> de4df5674d7e0c603bad83c741a435b0e8dfffe8
 
 # Index view class
 class IndexView(View):
@@ -166,10 +160,7 @@ def user_logout(request):
     # Take the user back to the homepage.
     return redirect(reverse('moovie:index'))
 
-<<<<<<< HEAD
 
-=======
->>>>>>> de4df5674d7e0c603bad83c741a435b0e8dfffe8
 def get_movie_from_person(search_terms, keyword, max_results=0):
     person_list_name = []
     person_list_surname = []
@@ -205,7 +196,6 @@ def get_movie_from_person(search_terms, keyword, max_results=0):
     return movie_list
 
 
-<<<<<<< HEAD
 '''
 def get_movie_from_genre(search_terms):
     movie_list = []
@@ -218,8 +208,6 @@ def get_movie_from_genre(search_terms):
 '''
 
 
-=======
->>>>>>> de4df5674d7e0c603bad83c741a435b0e8dfffe8
 def get_movie_list(search_terms, max_results=0):
     movie_list = []
     if search_terms:
@@ -235,17 +223,7 @@ def run_query(search_terms, keyword):
     if (keyword == 1):
         search_results = get_movie_list(search_terms)
     else:
-<<<<<<< HEAD
-
         search_results = get_movie_from_person(search_terms, keyword)
-    '''
-    else:
-        search_results = get_movie_from_genre(search_terms)
-    '''
-
-=======
-        search_results = get_movie_from_person(search_terms,keyword)
->>>>>>> de4df5674d7e0c603bad83c741a435b0e8dfffe8
     results = []
 
     for result in search_results:
@@ -259,25 +237,15 @@ def run_query(search_terms, keyword):
         release_date = str(result.release_date)
         release_date = release_date[:-15]
         results.append({
-<<<<<<< HEAD
-
-            'id': result.id,
-            'title': result.title,
-            'image': result.image,
-            'director': director,
-            'release_date': release_date,
-            'genre': genre
-
-=======
             'id':result.id,
             'title':result.title,
             'image':result.image,
             'director':director,
             'release_date':release_date,
             'genre':genre
->>>>>>> de4df5674d7e0c603bad83c741a435b0e8dfffe8
         })
     return results
+
 
 def search_tag(request, search_type, query):
     context_dict = {}
@@ -292,21 +260,6 @@ def search_tag(request, search_type, query):
     if query:
         context_dict['result_list'] = run_query(query, keyword)
         context_dict['query'] = query 
-    return render(request, 'moovie/search_result.html', context=context_dict)
-
-def search_tag(request, search_type, query):
-    context_dict = {}
-
-    if search_type == 'Genre':
-        keyword = 1
-    elif search_type == 'Director':
-        keyword = 2
-    elif search_type == 'Actor':
-        keyword = 3
-
-    if query:
-        context_dict['result_list'] = run_query(query, keyword)
-        context_dict['query'] = query
     return render(request, 'moovie/search_result.html', context=context_dict)
 
 
@@ -342,47 +295,28 @@ def edit_profile(request):
     # this is the profile of the logged in user (with edit functionality)
     return render(request, 'moovie/edit_profile.html', context={})
 
-<<<<<<< HEAD
 
-class ReviewView(View):
-    def post(self, request, movie_id):
-        # gets user model.
-        user = User.objects.get(username=request.POST.get('username'))
-        # holds whether the user already has a review for the movie.
-        user_has_an_existing_comment = False
-
-        # checks if there is a review that the user has made previously for the movie.
-=======
 class ReviewView(View):
     def post(self, request, movie_id):
         #gets user model.
         user = User.objects.get(username=request.POST.get('username'))
         #holds whether the user already has a review for the movie.
         user_has_an_existing_comment = False
-        
+
         #checks if there is a review that the user has made previously for the movie.
->>>>>>> de4df5674d7e0c603bad83c741a435b0e8dfffe8
         if Review.objects.filter(movie_id=movie_id, username=user).count() == 0:
             form = ReviewForm(request.POST)
         else:
             form = ReviewForm(request.POST, instance=Review.objects.get(movie_id=movie_id, username=user))
             user_has_an_existing_comment = True
 
-<<<<<<< HEAD
-        # checks if the form is valid.
-=======
         #checks if the form is valid.
->>>>>>> de4df5674d7e0c603bad83c741a435b0e8dfffe8
         if form.is_valid():
             review = form.save(commit=False)
             review.movie_id = Movie.objects.get(id=movie_id)
             review.username = user
 
-<<<<<<< HEAD
-            # calculates the new average rating of the movie considering if the review is new or the user is editing an existing review.
-=======
             #calculates the new average rating of the movie considering if the review is new or the user is editing an existing review.
->>>>>>> de4df5674d7e0c603bad83c741a435b0e8dfffe8
             self.calculate_and_save_new_average_rating(movie_id, review, user_has_an_existing_comment)
             review.save()
             messages.success(request, "Thank you for your review!", fail_silently=True)
@@ -394,28 +328,6 @@ class ReviewView(View):
 
         context_dict = {'form': form, 'movie_id': movie_id}
         return render(request, 'moovie/movie_profile.html', context=context_dict)
-<<<<<<< HEAD
-
-    def calculate_and_save_new_average_rating(self, movie_id, review, user_has_an_existing_comment):
-        # gets movie model.
-        movie = Movie.objects.get(id=movie_id)
-        # counts total number of reviews made for the movie.
-        review_count = Review.objects.filter(movie_id=movie_id).count()
-
-        # checks if the user has an existing comment for the movie.
-        if user_has_an_existing_comment:
-            # gets the existing comment.
-            existing_review = Review.objects.get(movie_id=movie_id, username=review.username)
-            # calculates the new average rating by subtracting the existing rating and adding the new one.
-            movie.average_rating = (
-                                               movie.average_rating * review_count - existing_review.rating + review.rating) / review_count
-        else:
-            # calculates the new average rating by adding the new one.
-            movie.average_rating = (movie.average_rating * review_count + review.rating) / (review_count + 1)
-
-        movie.save()
-=======
->>>>>>> de4df5674d7e0c603bad83c741a435b0e8dfffe8
 
     def calculate_and_save_new_average_rating(self, movie_id, review, user_has_an_existing_comment):
         #gets movie model.
@@ -423,39 +335,6 @@ class ReviewView(View):
         #counts total number of reviews made for the movie.
         review_count = Review.objects.filter(movie_id=movie_id).count()
 
-<<<<<<< HEAD
-class MovieView(View):
-    # shows a movie's profile page with the necessary information.
-    def get(self, request, movie_id):
-        context_dict = {}
-        try:
-            # gets movie model.
-            movie = Movie.objects.get(id=movie_id)
-            context_dict['movie'] = movie
-
-            # gets the directors of the movie.
-            directors = self.get_directors_for_movie(movie)
-            context_dict['directors'] = directors
-
-            # gets the actors of the movie.
-            stars = self.get_actors_for_movie(movie)
-            context_dict['stars'] = stars
-
-            # gets the genres of the movie.
-            genres = self.get_genres_for_movie(movie)
-            context_dict['genres'] = genres
-
-            # gets whether the user added the movie to his/her watchlist before, if authenticated.
-            if request.user.is_authenticated:
-                context_dict['already_added_to_watchlist'] = MovieToWatch.objects.filter(username=request.user,
-                                                                                         movie_id=movie_id).count()
-
-            # gets all the reviews made for the movie with their user information.
-            reviews_with_user_info = self.get_reviews_with_user_info_for_movie(movie)
-            context_dict['reviews_with_user_info'] = reviews_with_user_info
-
-            # gets the user's existing review if exists.
-=======
         #checks if the user has an existing comment for the movie.
         if user_has_an_existing_comment:
             #gets the existing comment.
@@ -466,7 +345,7 @@ class MovieView(View):
             #calculates the new average rating by adding the new one.
             movie.average_rating = (movie.average_rating * review_count + review.rating) / (review_count + 1)
 
-        movie.save() 
+        movie.save()
 
 class MovieView(View):
     #shows a movie's profile page with the necessary information.
@@ -498,7 +377,6 @@ class MovieView(View):
             context_dict['reviews_with_user_info'] = reviews_with_user_info
 
             #gets the user's existing review if exists.
->>>>>>> de4df5674d7e0c603bad83c741a435b0e8dfffe8
             context_dict['form'] = self.get_existing_review_if_exists(request, movie)
 
         except Movie.DoesNotExist:
@@ -511,37 +389,18 @@ class MovieView(View):
 
         return render(request, 'moovie/movie_profile.html', context=context_dict)
 
-<<<<<<< HEAD
-    # gets directors of a given movie.
-    def get_directors_for_movie(self, movie):
-        # gets Director-Movie records for the movie.
-        directorMovies = DirectorMovie.objects.filter(movie_id=movie)
-        directors = []
-
-        # finds directors for each Director-Movie record.
-=======
     #gets directors of a given movie.
     def get_directors_for_movie(self, movie):
         #gets Director-Movie records for the movie.
         directorMovies = DirectorMovie.objects.filter(movie_id=movie)
         directors = []
-        
+
         #finds directors for each Director-Movie record.
->>>>>>> de4df5674d7e0c603bad83c741a435b0e8dfffe8
         for director_movie in directorMovies:
             person_id = director_movie.person_id.id
             directors.append(Person.objects.get(id=person_id))
         return directors
 
-<<<<<<< HEAD
-    # gets actors of a given movie.
-    def get_actors_for_movie(self, movie):
-        # gets Actor-Movie records for the movie.
-        actorMovies = ActorMovie.objects.filter(movie_id=movie)
-        actors = []
-
-        # finds actors for each Actor-Movie record.
-=======
     #gets actors of a given movie.
     def get_actors_for_movie(self, movie):
         #gets Actor-Movie records for the movie.
@@ -549,21 +408,11 @@ class MovieView(View):
         actors = []
 
         #finds actors for each Actor-Movie record.
->>>>>>> de4df5674d7e0c603bad83c741a435b0e8dfffe8
         for actor_movie in actorMovies:
             person_id = actor_movie.person_id.id
             actors.append(Person.objects.get(id=person_id))
         return actors
 
-<<<<<<< HEAD
-    # gets genres of a given movie.
-    def get_genres_for_movie(self, movie):
-        # gets Movie-Genre records for the movie.
-        movieGenres = MovieGenre.objects.filter(movie_id=movie)
-        genres = []
-
-        # finds genres for each Movie-Genre record.
-=======
     #gets genres of a given movie.
     def get_genres_for_movie(self, movie):
         #gets Movie-Genre records for the movie.
@@ -571,20 +420,10 @@ class MovieView(View):
         genres = []
 
         #finds genres for each Movie-Genre record.
->>>>>>> de4df5674d7e0c603bad83c741a435b0e8dfffe8
         for movie_genre in movieGenres:
             genres.append(movie_genre.genre_name)
         return genres
 
-<<<<<<< HEAD
-    # gets all the reviews of a given movie with their user information.
-    def get_reviews_with_user_info_for_movie(self, movie):
-        # gets the reviews.
-        reviews = Review.objects.filter(movie_id=movie)
-        reviews_with_user_info = []
-
-        # find user information for each review.
-=======
     #gets all the reviews of a given movie with their user information.
     def get_reviews_with_user_info_for_movie(self, movie):
         #gets the reviews.
@@ -592,23 +431,15 @@ class MovieView(View):
         reviews_with_user_info = []
 
         #find user information for each review.
->>>>>>> de4df5674d7e0c603bad83c741a435b0e8dfffe8
         for review in reviews:
             user_profile = UserProfile.objects.get(user=review.username)
             reviews_with_user_info.append({'review': review, 'user': user_profile})
         return reviews_with_user_info
 
-<<<<<<< HEAD
-    # gets the user's review for a movie if exists.
-    def get_existing_review_if_exists(self, request, movie):
-        try:
-            # gets the review and creates a review form with the information if the user is auhenticated.
-=======
     #gets the user's review for a movie if exists.
     def get_existing_review_if_exists(self, request, movie):
         try:
             #gets the review and creates a review form with the information if the user is auhenticated.
->>>>>>> de4df5674d7e0c603bad83c741a435b0e8dfffe8
             if request.user.is_authenticated:
                 review = Review.objects.get(movie_id=movie, username=request.user)
                 review_form = ReviewForm(instance=review)
@@ -618,33 +449,19 @@ class MovieView(View):
         except Review.DoesNotExist:
             return ReviewForm()
 
-<<<<<<< HEAD
-
-class ContactUsView(View):
-    # shows the page.
-=======
 class ContactUsView(View):
     #shows the page.
->>>>>>> de4df5674d7e0c603bad83c741a435b0e8dfffe8
     def get(self, request):
         form = ContactMessageForm()
 
         context_dict = {'form': form}
         return render(request, 'moovie/contact.html', context=context_dict)
 
-<<<<<<< HEAD
-    # saves a new message directly into the database.
-    def post(self, request):
-        form = ContactMessageForm(request.POST)
-
-        # checks if the form is valid.
-=======
     #saves a new message directly into the database.
     def post(self, request):
         form = ContactMessageForm(request.POST)
 
         #checks if the form is valid.
->>>>>>> de4df5674d7e0c603bad83c741a435b0e8dfffe8
         if form.is_valid():
             form.save()
             messages.success(request, "Thank you for your message!", fail_silently=True)
@@ -656,31 +473,12 @@ class ContactUsView(View):
         context_dict = {'form': form}
         return render(request, 'moovie/contact.html', context=context_dict)
 
-<<<<<<< HEAD
-
-class AddToWatchlistView(View):
-    # adds a movie to the user's watchlist.
-    def get(self, request, movie_id):
-        MovieToWatch.objects.create(username=request.user, movie_id=Movie.objects.get(id=movie_id))
-        messages.success(request, "The movie is added to your watchlist!", fail_silently=True)
-
-        return HttpResponse()
-
-
-class RemoveFromWatchlistView(View):
-    # removes a movie from the user's watchlist.
-    def get(self, request, movie_id):
-        MovieToWatch.objects.get(username=request.user, movie_id=Movie.objects.get(id=movie_id)).delete()
-        messages.success(request, "The movie is removed from your watchlist!", fail_silently=True)
-
-        return HttpResponse()
-=======
 class AddToWatchlistView(View):
     #adds a movie to the user's watchlist.
     def get(self, request, movie_id):
         MovieToWatch.objects.create(username=request.user, movie_id= Movie.objects.get(id=movie_id))
         messages.success(request, "The movie is added to your watchlist!", fail_silently=True)
-        
+
         return HttpResponse()
 
 class RemoveFromWatchlistView(View):
@@ -688,6 +486,5 @@ class RemoveFromWatchlistView(View):
     def get(self, request, movie_id):
         MovieToWatch.objects.get(username=request.user, movie_id= Movie.objects.get(id=movie_id)).delete()
         messages.success(request, "The movie is removed from your watchlist!", fail_silently=True)
-        
+
         return HttpResponse()
->>>>>>> de4df5674d7e0c603bad83c741a435b0e8dfffe8

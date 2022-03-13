@@ -2,25 +2,7 @@
 {% load staticfiles %}
 
 <html lang="en">
-<<<<<<< HEAD
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <link rel="icon" href="https://via.placeholder.com/64">
-        <title>
-            Moovie -
-            {% block title_block %}
-                Hi!
-            {% endblock %}
-        </title>
-        <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
-        <link href="{% static 'css/carousel.css' %}" rel="stylesheet">
-        <link href="{% static "css/style.css" %}" rel="stylesheet">
-        <link rel="stylesheet" href="{% static "css/contactstyle.css" %}" type="text/css" media="all" />
-    <head>
-=======
 <head>
->>>>>>> de4df5674d7e0c603bad83c741a435b0e8dfffe8
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="icon" href="https://via.placeholder.com/64">
@@ -33,12 +15,10 @@
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
     <link href="{% static 'css/carousel.css' %}" rel="stylesheet">
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
-<<<<<<< HEAD
-    <link rel="stylesheet" href="{% static "css/contactstyle.css" %}" type="text/css" media="all" />
-=======
->>>>>>> de4df5674d7e0c603bad83c741a435b0e8dfffe8
+    <link href="{% static 'css/contactstyle.css' %}" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/movie_profile.css' %}">
     <link href="{% static 'css/search_result.css' %}" rel="stylesheet">
+
 
     <style>
         .bd-placeholder-img {
@@ -67,68 +47,6 @@
     <link rel="stylesheet" href="{% static 'css/grid.css' %}">
     <link rel="stylesheet" href="{% static 'css/app.css' %}">
 </head>
-<<<<<<< HEAD
-    <body>
-        <div class="nav-wrapper">
-            <div class="container">
-                <div class="nav">
-                    <a href="{% url 'moovie:index' %}" class="logo">
-                        <i class="bx bx-movie-play bx-tada main-color" style="color: darkorange"></i>Mo<span class="main-color"
-                                                                                                             style="color: darkorange">ovi</span>e
-                    </a>
-                    <div class="ml-auto">
-                        <form class="form-inline mt-1 mt-md-0 ml-0" method="post"
-                              action="{% url 'moovie:show_search_result' %}">
-                            {% csrf_token %}
-                            <select name="search_dropdown" class="custom-select " id="inlineFormCustomSelect">
-                                <option selected value="Title">Title</option>
-                                <option value="Director">Director</option>
-                                <option value="Actor">Actor</option>
-                            </select>
-
-                            <input class="form-control mr-sm-2" type="text" name="query" value="{{ query }}"
-                                   placeholder="Search" id="query" aria-label="Search">
-                            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                        </form>
-
-                    </div>
-                    <ul class="nav-menu" id="nav-menu">
-                        <li><a href="{% url 'moovie:contact_us' %}">Contact us</a></li>
-                        {% if user.is_authenticated %}
-                            <li><a href="{% url 'moovie:logout' %}">Log out</a></li>
-                            <li>
-                                <a href="#" class="btn btn-hover">
-                                    <span>My Profile</span>
-                                </a>
-                            </li>
-                        {% else %}
-                            <li><a href="{% url 'moovie:register' %}">Sign up</a></li>
-                            <li>
-                                <a href="{% url 'moovie:login' %}" class="btn btn-hover">
-                                    <span>Log in</span>
-                                </a>
-                            </li>
-                        {% endif %}
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-            {% for message in messages %}
-                <div class="container-fluid p-0">
-                    <div class="alert {{ message.tags }} alert-dismissible" role="alert" >
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="True">&times;</span>
-                        </button>
-                        <p class="text-center">{{ message }}</p>
-                    </div>
-                </div>
-            {% endfor %}
-
-        <div>
-            {% block body_block %}
-            {% endblock %}
-=======
 <body>
 <div class="nav-wrapper">
     <div class="container">
@@ -171,80 +89,21 @@
                     </li>
                 {% endif %}
             </ul>
->>>>>>> de4df5674d7e0c603bad83c741a435b0e8dfffe8
         </div>
     </div>
 </div>
 
-<<<<<<< HEAD
-        <!-- footer -->
-        <div class="footer">
-            <div class="container">
-                <div class="w3ls_footer_grid">
-                    <div class="col-md-6 w3ls_footer_grid_right">
-                        <a href="index.html"><h2>Moovies<span>Moovies</span></h2></a>
-                    </div>
-                    <div class="col-md-6 w3ls_footer_grid_left">
-                        <div class="w3ls_footer_grid_left1">
-                            <h2>Subscribe to us</h2>
-                            <div class="w3ls_footer_grid_left1_pos">
-                                <form action="#" method="post">
-                                    <input type="email" name="email" placeholder="Your email..." required="">
-                                    <input type="submit" value="Send">
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="clearfix"></div>
-                </div>
-                <div class="col-md-5 w3ls_footer_grid1_left">
-                    <p>&copy; 2022 Moovies. Design by <a href="{% url 'moovie:about-us' %}">IT team</a></p>
-                </div>
-                <div class="col-md-7 w3ls_footer_grid1_right">
-                    <ul>
-                        <li>
-                            <a href="{% url 'moovie:login' %}">Login</a>
-                        </li>
-                        <li>
-                            <a href="{% url 'moovie:register' %}">Sign up</a>
-                        </li>
-                        <li>
-                            <a href="{% url 'moovie:about-us' %}">About us</a>
-                        </li>
-                        <li>
-                            <a href="{% url 'moovie:contact_us' %}">Contact us</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="clearfix"></div>
-=======
-    {% for message in messages %}
-        <div class="container-fluid p-0">
-            <div class="alert {{ message.tags }} alert-dismissible" role="alert" >
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+{% for message in messages %}
+    <div class="container-fluid p-0">
+        <div class="alert {{ message.tags }} alert-dismissible" role="alert" >
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="True">&times;</span>
-                </button>
-                <p class="text-center">{{ message }}</p>
->>>>>>> de4df5674d7e0c603bad83c741a435b0e8dfffe8
-            </div>
+            </button>
+            <p class="text-center">{{ message }}</p>
         </div>
-    {% endfor %}
+    </div>
+{% endfor %}
 
-<<<<<<< HEAD
-        <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
-        <script>window.jQuery || document.write('<script src="{% static "js/jquery-slim.min.js" %}"><\/script>')</script>
-        <script src="{% static 'js/bootstrap/bootstrap.bundle.min.js' %}"
-                crossorigin="anonymous"></script>
-        <!-- OWL CAROUSEL -->
-        <script src="{% static 'js/owl.carousel.min.js' %}"></script>
-        <!-- APP SCRIPT -->
-        <script src="{% static 'js/app.js' %}"></script>
-        <script src="{% static 'js/moovie-ajax.js' %}"></script>
-
-    </body>
-</html>
-
-=======
 <div>
     {% block body_block %}
     {% endblock %}
@@ -306,5 +165,3 @@
 
 </body>
 </html>
-
->>>>>>> de4df5674d7e0c603bad83c741a435b0e8dfffe8

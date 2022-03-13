@@ -1,4 +1,3 @@
-
 # from __future__ import generator_stop
 from tkinter import messagebox, mainloop
 from django.contrib.auth import authenticate, login, logout
@@ -7,6 +6,9 @@ from django.views import View
 from django.shortcuts import render, redirect, reverse
 from moovie.models import *
 from moovie.forms import *
+from tkinter import *
+from django.contrib import messages
+
 
 # Index view class
 class IndexView(View):
@@ -28,9 +30,7 @@ def register(request):
     # whether the registration was successful.
     # Set to False initially. Code changes value to
     # True when registration succeeds.
-
     registered = False
-
     # If it's a HTTP POST, we're interested in processing form data.
     if request.method == 'POST':
         # Attempt to grab information from the raw form information.
@@ -43,6 +43,8 @@ def register(request):
         # if user_form.is_valid() and profile_form.is_valid():
         if user_form.is_valid():
             # Save the user's form data to the database.
+            messages.success(request, "Congratulation! Welcome to Moovie!")
+
             user = user_form.save()
 
             # Now we hash the password with the set_password method.
@@ -50,8 +52,9 @@ def register(request):
             user.set_password(user.password)
             user.save()
 
-            # messages.success(request, "Congratulation! Welcome to Moovie!")
-            messagebox.showinfo("Welcome", "Now you are one of us!")
+            # messagebox.showinfo("Welcome", "Now you are one of us!")
+            # mainloop()
+            # root.destroy()
             # Now sort out the UserProfile instance.
             # Since we need to set the user attribute ourselves,
             # we set commit=False. This delays saving the model
@@ -73,13 +76,12 @@ def register(request):
 
             # Update our variable to indicate that the template
             # registration was successful.
-            registered = True
-            return redirect(reverse('moovie:index'))
+            # registered = True
+            return redirect(reverse('moovie:login'))
         else:
             # Invalid form or forms - mistakes or something else?
             # Print problems to the terminal.
-            messagebox.showerror("Sorry！", "Something Wrong, please try again later...")
-            mainloop()
+            messages.error(request, "Something Wrong, please try again later...")
             # print(user_form.errors, profile_form.errors)
             print(user_form.errors)
 
@@ -120,26 +122,26 @@ def user_login(request):
             if user.is_active:
                 # If the account is valid and active, we can log the user in.
                 # We'll send the user back to the homepage.
-                messagebox.showinfo("Welecome", "Login successfully!")
-                mainloop()
+                # messagebox.showinfo("Welecome", "Login successfully!")
+                # mainloop()
                 # messages.success(request, "Login Successfully, Welcome!")
-                print("Login OK!")
                 login(request, user)
                 return redirect(reverse('moovie:index'))
             else:
                 # An inactive account was used - no logging in!
                 # messages.error(request, "Something Wrong, please try again later...")
-                messagebox.showerror("Sorry！", "Something Wrong, please try again later...")
-                mainloop()
+                # messagebox.showerror("Sorry！", "Something Wrong, please try again later...")
+                # mainloop()
+                # root.destroy()
                 # return HttpResponse("Your moovie account is disabled.")
+                messages.error(request, 'The user name or password is incorrect')
                 return redirect(reverse('moovie:login'))
         else:
             # Bad login details were provided. So we can't log the user in.
             # print(f"Invalid login details: {username}, {password}")
             detail_is_invalid = True,
-            # messages.error(request, "Something Wrong, please try again later...")
-            messagebox.showerror("Sorry！", "Something Wrong, please try again later...")
-            mainloop()
+            messages.error(request, "Something Wrong, please try again later...")
+            # messagebox.showerror("Sorry！", "Something Wrong, please try again later...")
             # return HttpResponse("Invalid login details supplied.")
             return redirect(reverse('moovie:login'))
 
@@ -148,6 +150,7 @@ def user_login(request):
     else:
         # No context variables to pass to the template system, hence the
         # blank dictionary object...
+        # root.destroy()
         return render(request, 'moovie/login.html')
 
 
@@ -246,7 +249,8 @@ def get_movie_from_person(search_terms, keyword, max_results=0):
                 movie_id = actor.movie_id.id
                 movie_list.append(Movie.objects.get(id=movie_id))
     movie_list = set(movie_list)
-    return movie_list   
+    return movie_list
+
 
 '''
 def get_movie_from_genre(search_terms):
@@ -257,7 +261,7 @@ def get_movie_from_genre(search_terms):
     for movie_id in movie_id_list:
         movie_list.append(Movie.objects.get(id=movie_id))
     return movie_list
-''' 
+'''
 
 
 def get_movie_list(search_terms, max_results=0):
@@ -269,12 +273,13 @@ def get_movie_list(search_terms, max_results=0):
             movie_list = movie_list[:max_results]
     return movie_list
 
+
 def run_query(search_terms, keyword):
     search_results = []
-    if(keyword == 1):
+    if (keyword == 1):
         search_results = get_movie_list(search_terms)
     else:
-        search_results = get_movie_from_person(search_terms,keyword)
+        search_results = get_movie_from_person(search_terms, keyword)
     '''
     else:
         search_results = get_movie_from_genre(search_terms)
@@ -286,11 +291,11 @@ def run_query(search_terms, keyword):
         director = str(director)
         director = director[12:-2]
         results.append({
-            'id':result.id,
-            'title':result.title,
-            'image':result.image,
-            'director':director,
-            'release_date':result.release_date
+            'id': result.id,
+            'title': result.title,
+            'image': result.image,
+            'director': director,
+            'release_date': result.release_date
         })
     return results
 
@@ -312,9 +317,10 @@ def show_search_result(request):
         '''
         if query:
             context_dict['result_list'] = run_query(query, keyword)
-            #context_dict['result_list'] = run_query(query)
-            context_dict['query'] = query 
+            # context_dict['result_list'] = run_query(query)
+            context_dict['query'] = query
     return render(request, 'moovie/search_result.html', context=context_dict)
+
 
 def show_user_profile(request):
     # this is the publicly visible profile of any user
@@ -420,7 +426,7 @@ def calculate_and_save_new_rating(movie_id, review, user_has_an_existing_comment
     if user_has_an_existing_comment:
         existing_review = Review.objects.get(movie_id=movie_id, username=review.username)
         movie.average_rating = (
-                                           movie.average_rating * review_count - existing_review.rating + review.rating) / review_count
+                                       movie.average_rating * review_count - existing_review.rating + review.rating) / review_count
     else:
         movie.average_rating = (movie.average_rating * review_count + review.rating) / (review_count + 1)
 

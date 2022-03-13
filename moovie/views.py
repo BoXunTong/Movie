@@ -295,14 +295,14 @@ class ReviewView(View):
             review.movie_id = Movie.objects.get(id=movie_id)
             review.username = user
 
-            #calculates the new average rating of the movie considering if the review is new or the user is editting an existing review.
+            #calculates the new average rating of the movie considering if the review is new or the user is editing an existing review.
             self.calculate_and_save_new_average_rating(movie_id, review, user_has_an_existing_comment)
             review.save()
-            messages.success(request, "Thank you for your review!" )
+            messages.success(request, "Thank you for your review!", fail_silently=True)
 
             return redirect(reverse('moovie:show_movie_profile', kwargs={'movie_id': movie_id}))
         else:
-            messages.error(request, "Something went wrong with the form!" )
+            messages.error(request, "Something went wrong with the form!", fail_silently=True)
             print(form.errors)
 
         context_dict = {'form': form, 'movie_id': movie_id}
@@ -364,7 +364,7 @@ class MovieView(View):
             context_dict['stars'] = None
             context_dict['genres'] = None
             context_dict['reviews_with_user_info'] = None
-            messages.error(request, "The movie cannot be found!" )
+            messages.error(request, "The movie cannot be found!", fail_silently=True)
 
         return render(request, 'moovie/movie_profile.html', context=context_dict)
 
@@ -443,10 +443,10 @@ class ContactUsView(View):
         #checks if the form is valid.
         if form.is_valid():
             form.save()
-            messages.success(request, "Thanks for your message!" )
+            messages.success(request, "Thank you for your message!", fail_silently=True)
             return redirect(reverse('moovie:contact_us'))
         else:
-            messages.error(request, "Something went wrong with the from!" )
+            messages.error(request, "Something went wrong with the from!", fail_silently=True)
             print(form.errors)
 
         context_dict = {'form': form}
@@ -454,20 +454,16 @@ class ContactUsView(View):
 
 class AddToWatchlistView(View):
     #adds a movie to the user's watchlist.
-    def get(self, request):
-        movie_id = request.GET['movie_id']
+    def get(self, request, movie_id):
         MovieToWatch.objects.create(username=request.user, movie_id= Movie.objects.get(id=movie_id))
-        messages.success(request, "The movie is added to your watchlist!" )
+        messages.success(request, "The movie is added to your watchlist!", fail_silently=True)
         
         return HttpResponse()
 
 class RemoveFromWatchlistView(View):
     #removes a movie from the user's watchlist.
-    def get(self, request):
-        movie_id = request.GET['movie_id']
+    def get(self, request, movie_id):
         MovieToWatch.objects.get(username=request.user, movie_id= Movie.objects.get(id=movie_id)).delete()
-        messages.success(request, "The movie is removed from your watchlist!" )
+        messages.success(request, "The movie is removed from your watchlist!", fail_silently=True)
         
         return HttpResponse()
-
-

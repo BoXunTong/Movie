@@ -35,11 +35,11 @@
                     {% if user.is_authenticated %}
                         <p class="mt-5"> <strong>Watchlist:</strong> </p>
                         {% if already_added_to_watchlist == 0 %}
-                            <a class="position-absolute" id="add_to_watchlist" data-url="{% url 'moovie:add_to_watchlist' %}" href="javascript:add_to_watchlist_function('{{ movie.id }}')">
+                            <a class="position-absolute" id="add_to_watchlist" data-url="{% url 'moovie:add_to_watchlist' movie.id %}" href="javascript:add_to_watchlist_function()">
                                 <img src="/static/icons/plus-circle.svg" alt="Add to Watchlist" width="32" height="32">
                             </a>
                         {% else %}
-                            <a id="remove_from_watchlist" class="position-absolute" data-url="{% url 'moovie:remove_from_watchlist' %}" href="javascript:remove_from_watchlist_function('{{ movie.id }}')">
+                            <a id="remove_from_watchlist" class="position-absolute" data-url="{% url 'moovie:remove_from_watchlist' movie.id %}" href="javascript:remove_from_watchlist_function()">
                                 <img src="/static/icons/check-circle.svg" alt="Remove from Watchlist" width="32" height="32">
                             </a>
                         {% endif %}

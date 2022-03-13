@@ -13,41 +13,46 @@
     <section class="container p-5 ">
         {% if movie %}
             <h1 class="h1-responsive font-weight-bold text-left my-4">{{ movie.title }}</h1>
+            <!-- shows movie's information including its poster. -->
             <div class="media">
                 <div class="media-body">
-                    <p>Released: {{ movie.release_date|date:"d M Y" }}</p>
-                    <p>Directed by: {% for director in directors %} 
+                    <p> <strong> Released: </strong> {{ movie.release_date|date:"d M Y" }}</p>
+                    <p> <strong> Directed by: </strong> {% for director in directors %} 
                                         <a href="{% url 'moovie:search_tag' 'Director' director.name %}">{{ director.name }} {{director.surname}} </a>
                                     {% endfor %}
                     </p>
-                    <p>Starring: {% for star in stars %}
+                    <p> <strong> Starring: </strong> {% for star in stars %}
                                         <a href="{% url 'moovie:search_tag' 'Actor' star.name %}">{{ star.name }} {{star.surname}} </a>
                                     {% endfor %}
                     </p>
-                    <p>Description: {{ movie.description }}</p>
-                    <p>Genre tags: {% for genre in genres %}
+                    <p> <strong>Genre tags: </strong> {% for genre in genres %}
                                         <a href="{% url 'moovie:search_tag' 'Genre' genre.name %}"> {{ genre.name }}</a>
                                     {% endfor %}
                     </p>
+                    <p> <strong> Description: </strong> {{ movie.description }}</p>
+
+                    <!-- enables the watchlist property if the user is authenticated. -->
                     {% if user.is_authenticated %}
-                        <p class="mt-5">Watchlist: </p>
+                        <p class="mt-5"> <strong>Watchlist:</strong> </p>
                         {% if already_added_to_watchlist == 0 %}
-                            <a class="position-absolute" id="add_to_watchlist" data-url="{% url 'moovie:add_to_watchlist' %}" href="javascript:add_to_watchlist_function('{{ movie.id }}')">
+                            <a class="position-absolute" id="add_to_watchlist" data-url="{% url 'moovie:add_to_watchlist' movie.id %}" href="javascript:add_to_watchlist_function()">
                                 <img src="/static/icons/plus-circle.svg" alt="Add to Watchlist" width="32" height="32">
                             </a>
                         {% else %}
-                            <a id="remove_from_watchlist" class="position-absolute" data-url="{% url 'moovie:remove_from_watchlist' %}" href="javascript:remove_from_watchlist_function('{{ movie.id }}')">
+                            <a id="remove_from_watchlist" class="position-absolute" data-url="{% url 'moovie:remove_from_watchlist' movie.id %}" href="javascript:remove_from_watchlist_function()">
                                 <img src="/static/icons/check-circle.svg" alt="Remove from Watchlist" width="32" height="32">
                             </a>
                         {% endif %}
                     {% endif %}
+
                 </div>
                 <div class="col-md-8 float-right">
                     <img class="" src="{{ MEDIA_URL }}{{ movie.poster }}" alt="Movie Image">
-                    <p>Average rating: {{ movie.average_rating }}/5.00</p>
+                    <p> <strong>Average rating:</strong> {{ movie.average_rating }}/5.00</p>
                 </div>
             </div>
 
+            <!-- shows all the reviews made for movie in a scrollable widget. -->
             <div class="review-scrollable mt-5">
                 <h2>User Reviews</h2>
                 {% for review_with_user_info in reviews_with_user_info %}
@@ -65,6 +70,7 @@
                 {% endfor %}
             </div>
 
+            <!-- shows and enables the review form if the user is authenticated. -->
             {% if user.is_authenticated %}
                 <div class="mt-5 p-3 table-bordered">
                     <h2>Write a Review</h2>

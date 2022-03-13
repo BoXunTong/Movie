@@ -3,6 +3,8 @@ from platform import release
 from tkinter import messagebox, mainloop
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.contrib.admin.views.decorators import staff_member_required
 from django.views import View
 from django.shortcuts import render, redirect, reverse
 from moovie.models import *
@@ -472,6 +474,100 @@ class ContactUsView(View):
 
         context_dict = {'form': form}
         return render(request, 'moovie/contact.html', context=context_dict)
+
+class AddMovieView(View):
+    #shows the page.
+    @method_decorator(staff_member_required)
+    def get(self, request):
+        movie_form = AddMovieForm()
+        director_form = AddDirectorForm()
+        actor_form = AddActorForm()
+        genre_form = AddGenreForm()
+
+        context_dict = { 'movie_form': movie_form, 'director_form': director_form, 'actor_form': actor_form, 'genre_form': genre_form }
+        return render(request, 'moovie/add_movie.html', context=context_dict)
+
+    #saves a new movie directly into the database.
+    @method_decorator(staff_member_required)
+    def post(self, request):
+        movie_form = AddMovieForm(request.POST, request.FILES)
+        director_form = AddDirectorForm(request.POST)
+        actor_form = AddActorForm(request.POST)
+        genre_form = AddGenreForm(request.POST)
+
+        try:
+            #checks if the forms are valid.
+            if movie_form.is_valid() and director_form.is_valid() and actor_form.is_valid() and genre_form.is_valid():
+                movie = movie_form.save()
+                self.add_director_to_movie(director_form, movie)
+                self.add_actor_to_movie(actor_form, movie)
+                self.add_genre_to_movie(genre_form, movie)
+
+                messages.success(request, "Movie added!", fail_silently=True)
+                return redirect(reverse('moovie:add_movie'))
+            else:
+                messages.error(request, "Something went wrong with the from!", fail_silently=True)
+                print(movie_form.errors)
+                print(director_form.errors)
+                print(actor_form.errors)
+                print(genre_form.errors)
+        except Exception as ex:
+            message = ex.args
+            messages.error(request, message, fail_silently=True)
+
+        context_dict = { 'movie_form': movie_form, 'director_form': director_form, 'actor_form': actor_form, 'genre_form': genre_form }
+        return render(request, 'moovie/add_movie.html', context=context_dict)
+
+    #adds directors to a movie.
+    def add_director_to_movie(self, director_form, movie):
+        #checks if both fields have commas.
+        if ((',' in director_form.cleaned_data['director_name'] and ',' not in director_form.cleaned_data['director_surname']) 
+            or (',' not in director_form.cleaned_data['director_name'] and ',' in director_form.cleaned_data['director_surname'])):
+            raise Exception('There should be commas in both director name and surname!')
+
+        #splits multiple director names and surnames.        
+        director_names = director_form.cleaned_data['director_name'].split(',')
+        director_surnames = director_form.cleaned_data['director_surname'].split(',')
+
+        #checks if there are equal number of director names and surnames.
+        if len(director_names) != len(director_surnames):
+            raise Exception('The number of director names and surname should be the same!')
+        
+        #saves information for each name.
+        for i in range(len(director_names)):
+            person = Person.objects.get_or_create(name=director_names[i].strip(), surname=director_surnames[i].strip(), person_type='Director')[0]
+            DirectorMovie.objects.create(movie_id=movie, person_id=person)
+
+    #adds actor to a movie.
+    def add_actor_to_movie(self, actor_form, movie):
+        #checks if both fields have commas.
+        if ((',' in actor_form.cleaned_data['actor_name'] and ',' not in actor_form.cleaned_data['actor_surname']) 
+            or (',' not in actor_form.cleaned_data['actor_name'] and ',' in actor_form.cleaned_data['actor_surname'])):
+            raise Exception('There should be commas in both actor name and surname!')
+
+        #splits multiple actor names and surnames.        
+        actor_names = actor_form.cleaned_data['actor_name'].split(',')
+        actor_surnames = actor_form.cleaned_data['actor_surname'].split(',')
+
+        #checks if there are equal number of actor names and surnames.
+        if len(actor_names) != len(actor_surnames):
+            raise Exception('The number of actor names and surname should be the same!')
+        
+        #saves information for each name.
+        for i in range(len(actor_names)):
+            person = Person.objects.get_or_create(name=actor_names[i].strip(), surname=actor_surnames[i].strip(), person_type='Actor')[0]
+            ActorMovie.objects.create(movie_id=movie, person_id=person)
+
+    #adds genre to a movie.
+    def add_genre_to_movie(self, genre_form, movie):
+
+        #splits multiple genres.        
+        genres = genre_form.cleaned_data['genre_name'].split(',')
+        
+        #saves information for each genre.
+        for genre_name in genres:
+            genre = Genre.objects.get_or_create(name=genre_name.strip())[0]
+            MovieGenre.objects.create(genre_name=genre, movie_id=movie)
 
 class AddToWatchlistView(View):
     #adds a movie to the user's watchlist.

@@ -1,0 +1,60 @@
+{% extends 'moovie/base.html' %}
+{% load staticfiles %}
+
+{% block title_block %}
+    Add Movie
+{% endblock %}
+
+{% block body_block %}
+    <section class="mb-4 p-5">
+        <h1 class="h1-responsive font-weight-bold text-center my-4">Add a Movie</h1>
+
+        <!-- shows the movie add form. -->
+        <div class="container">
+            <form id="add_movie_form" method="post" action="{% url 'moovie:add_movie' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <!-- shows the movie's basic information inputs. -->
+                {% for hidden in movie_form.hidden_fields %}
+                    {{ hidden }}
+                {% endfor %}
+                {% for field in movie_form.visible_fields %}
+                    {{ field.errors }} </br>
+                    {{ field.help_text }} </br>
+                    {{ field }} </br>
+                {% endfor %}
+                
+                <!-- shows the movie's director information inputs. -->
+                {% for hidden in director_form.hidden_fields %}
+                    {{ hidden }}
+                {% endfor %}
+                {% for field in director_form.visible_fields %}
+                    {{ field.errors }} </br>
+                    {{ field.help_text }} </br>
+                    {{ field }} </br>
+                {% endfor %}
+
+                <!-- shows the movie's actor information inputs. -->
+                {% for hidden in actor_form.hidden_fields %}
+                    {{ hidden }}
+                {% endfor %}
+                {% for field in actor_form.visible_fields %}
+                    {{ field.errors }} </br>
+                    {{ field.help_text }} </br>
+                    {{ field }} </br>
+                {% endfor %}
+
+                <!-- shows the movie's genre information inputs. -->
+                {% for hidden in genre_form.hidden_fields %}
+                    {{ hidden }}
+                {% endfor %}
+                {% for field in genre_form.visible_fields %}
+                    {{ field.errors }} </br>
+                    {{ field.help_text }} </br>
+                    {{ field }} </br>
+                {% endfor %}
+
+                <input type="submit" class="btn btn-primary" value="Add" />
+            </form>
+        </div>
+    </section>
+{% endblock %}

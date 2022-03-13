@@ -19,16 +19,16 @@ def populate():
     # Movie and actors test
 
     movie1 = add_movie('Harry Potter and the Philosophers Stone', 152, datetime.datetime(2001, 11, 16), 'First movie of the series.', Decimal(4.71), "movie_images/HarryPotter1.jpg", 'poster_images/HarryPotter1.jpg')
-    person = add_person("Daniel", 'Radcliffe', 'person_images/Daniel_Radcliffe.jpg', 'Actor')
-    person2 = add_person("Emma", "Watson", 'person_images/Emma_Watson.jpg', 'Actor')
-    person3 = add_person('Chris', 'Columbus', 'person_images/Chris_Columbus.jpg', 'Director')
+    person = add_person("Daniel", 'Radcliffe', 'Actor')
+    person2 = add_person("Emma", "Watson", 'Actor')
+    person3 = add_person('Chris', 'Columbus', 'Director')
     add_actor_movie(movie1, person)
     add_actor_movie(movie1, person2)
     add_director_movie(movie1, person3)
 
 
     movie2 = add_movie('Harry Potter and the Prisoner of Azkaban', 142, datetime.datetime(2004, 6, 4), 'Some description', Decimal(4.56), 'movie_images/HarryPotter3.jpg', 'poster_images/poster-placeholder.png')
-    person4 = add_person('Alfonso', 'Cuarón', 'person_images/Alfonso_Cuarón.jpg', 'Director')
+    person4 = add_person('Alfonso', 'Cuarón', 'Director')
     add_actor_movie(movie2, person)
     add_actor_movie(movie2, person2)
     add_director_movie(movie2, person4)
@@ -72,8 +72,8 @@ def add_genre(name):
     genre.save()
     return genre
 
-def add_person(name, surname, image, person_type):
-    person = Person.objects.create(name=name, surname=surname, image=image, person_type=person_type)
+def add_person(name, surname, person_type):
+    person = Person.objects.create(name=name, surname=surname, person_type=person_type)
     person.save()
     return person
 

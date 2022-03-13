@@ -4,10 +4,13 @@ from django.contrib.auth.models import User
 
 
 class Movie(models.Model):
-    title = models.TextField(max_length=128, blank=False, unique=True)
+    TITLE_MAX_LENGTH = 128
+    DESCRIPTION_MAX_LENGTH = 256
+
+    title = models.TextField(max_length=TITLE_MAX_LENGTH, blank=False)
     duration = models.IntegerField(default=0)
     release_date = models.DateTimeField(blank=False)
-    description = models.TextField(max_length=256)
+    description = models.TextField(max_length=DESCRIPTION_MAX_LENGTH)
     average_rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.00)
     image = models.ImageField(upload_to='movie_images', default='movie_images/placeholder.png')
     poster = models.ImageField(upload_to='poster_images', default='poster_images/placeholder.png')
@@ -18,7 +21,9 @@ class Movie(models.Model):
 
 
 class Genre(models.Model):
-    name = models.CharField(max_length=32, primary_key=True, unique=True)
+    NAME_MAX_LENGTH = 32
+
+    name = models.CharField(max_length=NAME_MAX_LENGTH, primary_key=True, unique=True)
     slug = models.SlugField(unique=True)
 
     def save(self, *args, **kwargs):
@@ -30,9 +35,11 @@ class Genre(models.Model):
 
 
 class Person(models.Model):
-    name = models.CharField(max_length=64, blank=False)
-    surname = models.CharField(max_length=32, blank=False)
-    image = models.ImageField(upload_to='person_images', default='person_images/placeholder.jpg')
+    NAME_MAX_LENGTH = 64
+    SURNAME_MAX_LENGTH = 32
+
+    name = models.CharField(max_length=NAME_MAX_LENGTH, blank=False)
+    surname = models.CharField(max_length=SURNAME_MAX_LENGTH, blank=False)
     person_type = models.CharField(max_length=16, blank=False)
 
     def __str__(self):

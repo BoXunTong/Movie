@@ -32,7 +32,6 @@ class Genre(models.Model):
 class Person(models.Model):
     name = models.CharField(max_length=64, blank=False)
     surname = models.CharField(max_length=32, blank=False)
-    image = models.ImageField(upload_to='person_images', default='person_images/placeholder.jpg')
     person_type = models.CharField(max_length=16, blank=False)
 
     def __str__(self):

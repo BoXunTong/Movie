@@ -1,4 +1,5 @@
 # from __future__ import generator_stop
+from multiprocessing import context
 from platform import release
 from tkinter import messagebox, mainloop
 from django.contrib.auth import authenticate, login, logout
@@ -163,6 +164,12 @@ def user_logout(request):
     return redirect(reverse('moovie:index'))
 
 class searchResultView(View):
+    def get(self, request):
+        context_dict = {}
+        if request.method == 'get':
+            query = None
+        return render(request, 'moovie/search_result.html', context=context_dict)
+        
     def post(self, request):
         context_dict = {}
         if request.method == 'POST':
@@ -179,6 +186,7 @@ class searchResultView(View):
                 # context_dict['result_list'] = run_query(query)
                 context_dict['query'] = query
         return render(request, 'moovie/search_result.html', context=context_dict)
+
     def get_movie_from_person(self, search_terms, keyword):
         person_list_name = []
         person_list_surname = []

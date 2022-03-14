@@ -18,7 +18,7 @@
                 <div class="row">
                     <div class="col-md-4"></div>
                     <div class="col-md-4 bg-secondary">
-                        <div class="row"><p></p></div>
+                        <div class="row"><p><br></p></div>
                         <div class="row">
                             <div class="col">
                                 <img src="{{ MEDIA_URL }}{{ user_profile.picture }}" alt="Profile picture for {{ user_profile.user.username }}">
@@ -41,6 +41,7 @@
                         <div class="row-md-4 text-center auto">
                             <p><br/><strong>bio</strong><br>{{ user_profile.bio }}</p>
                         </div>
+                        <div class="row"><p><br></p></div>
                     </div>
                     <div class="col-md-4"></div>
                 </div>
@@ -58,13 +59,14 @@
                     <!-- each movie item -->
                     {% if reviews_with_movies %}
                     {% for r in reviews_with_movies %}
-                    <a href="#" class="movie-item">
+                    <a href="{% url 'moovie:show_movie_profile' r.movie.id %}" class="movie-item">
                         <img src="{{ MEDIA_URL }}{{ r.movie.image }}"" alt="poster image for {{ r.movie.title }}">
                         <div class="movie-item-content">
                             <div class="movie-item-title">
                                 {{ r.movie.title }}
                             </div>
                             <div class="movie-infos">
+                                <span>My Rating:</span>
                                 <i class="bx bxs-star"></i>
                                 <span>{{ r.review.rating }}</span>
                             </div>
@@ -102,7 +104,7 @@
                     <!-- each movie item -->
                     {% if wishlist %}
                     {% for movie in wishlist %}
-                    <a href="#" class="movie-item">
+                    <a href="{% url 'moovie:show_movie_profile' movie.id %}" class="movie-item">
                         <img src="{{ MEDIA_URL }}{{ movie.image }}"" alt=" poster image for {{ movie.title }}">
                         <div class="movie-item-content">
                             <div class="movie-item-title">

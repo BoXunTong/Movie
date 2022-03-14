@@ -42,7 +42,7 @@ def populate():
                         'their third year of study, where they delve into the mystery surrounding an escaped prisoner '
                         'who poses a dangerous threat to the young wizard.',
          'average_rating': Decimal(4.56),
-         'image': 'movie_images/HarryPotter3.jpg',
+         'image': 'movie_images/HarryPotter33.jpg',
          'poster': 'poster_images/HarryPotter3.jpg'},
 
         {'title': 'Harry Potter and the Goblet of Fire',
@@ -522,6 +522,7 @@ def populate():
         'Harry Potter and the Deathly Hallows: Part 1': ['Adventure', 'Fantasy'],
         'Harry Potter and the Deathly Hallows: Part 2': ['Adventure', 'Fantasy'],
         '007 SkyFall': ['Action', 'Thriller', 'Crime', 'Adventure'],
+        "Zack Snyder's Justice League": ['Action', 'Thriller', 'Adventure'],
         'I, Robot': ['Action', 'Sci-Fi'],
         'The Matrix Resurrections': ['Action', 'Sci-Fi'],
         'The Avengers': ['Action', 'Fantasy', 'Adventure'],

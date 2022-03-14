@@ -1,5 +1,4 @@
 # from __future__ import generator_stop
-from curses.ascii import isspace
 from platform import release
 from tkinter import messagebox, mainloop
 from django.contrib.auth import authenticate, login, logout

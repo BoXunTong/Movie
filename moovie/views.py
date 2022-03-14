@@ -78,9 +78,26 @@ def show_movie_profile(request, movie_id):
 def show_search_result(request):
     return render(request, 'moovie/search_result.html', context = {})
 
-def show_user_profile(request):
-    # this is the publicly visible profile of any user
-    return render(request, 'moovie/user_profile.html', context = {})
+def show_user_profile(request, username):
+    context_dict = {}
+    try:
+        thisuser = User.objects.get(username=username)
+        user_profile = UserProfile.objects.get(user=thisuser.id)
+        context_dict['user_profile'] = user_profile
+
+        reviews_with_movies = get_reviews_for_user(thisuser)
+        context_dict['reviews_with_movies'] = reviews_with_movies
+
+        wishlist = get_wishlist_for_user(thisuser)
+        context_dict['wishlist'] = wishlist
+
+    except (User.DoesNotExist, UserProfile.DoesNotExist):
+        context_dict['user'] = None
+        context_dict['user_profile'] = None
+        context_dict['reviews_with_movies'] = None
+        context_dict['wishlist'] = None
+
+    return render(request, 'moovie/user_profile.html', context = context_dict)
 
 # About us view class
 class AboutUsView(View):
@@ -132,6 +149,21 @@ def get_reviews_with_user_info_for_movie(movie):
         user_profile = UserProfile.objects.get(user=review.username)
         reviews_with_user_info.append({'review':review, 'user': user_profile})
     return reviews_with_user_info
+
+def get_reviews_for_user(user):
+    reviews = Review.objects.filter(username=user)
+    reviews_with_movies = []
+    for review in reviews:
+        movie_id = review.movie_id
+        reviews_with_movies.append({'review':review, 'movie':movie_id})
+    return reviews_with_movies
+
+def get_wishlist_for_user(user):
+    movies_to_watch = MovieToWatch.objects.filter(username=user)
+    wishlist = []
+    for mov2w in movies_to_watch:
+        wishlist.append(mov2w.movie_id)
+    return wishlist
 
 def get_users_review_if_exists(request, movie):
     try:

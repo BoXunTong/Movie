@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 {% load staticfiles %}
 
-
 <html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
     <link rel="icon" href="https://via.placeholder.com/64">
     <title>
         Moovie -
@@ -16,6 +14,10 @@
     </title>
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
     <link href="{% static 'css/carousel.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'css/contactstyle.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/movie_profile.css' %}">
+    <link href="{% static 'css/search_result.css' %}" rel="stylesheet">
 
 
     <style>
@@ -46,74 +48,111 @@
     <link rel="stylesheet" href="{% static 'css/app.css' %}">
 </head>
 <body>
-<header>
-    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-        <a class="navbar-brand" href="{% url 'moovie:index' %}">Moo.vie</a>
-
-        <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'moovie:index' %}">
-                        Home
-                        <span class="sr-only">(current)</span>
-                    </a>
-                </li>
-            </ul>
-
+<div class="nav-wrapper">
+    <div class="container">
+        <div class="nav">
+            <a href="{% url 'moovie:index' %}" class="logo">
+                <i class="bx bx-movie-play bx-tada main-color"></i>Mo<span class="main-color">ovi</span>e
+            </a>
             <div class="ml-auto">
-                <form class="form-inline mt-1 mt-md-0 ml-0" action=".">
-                <select name="search_dropdown" class="custom-select " id="inlineFormCustomSelect">
-                    <option selected>Choose..</option>
-                    <option value="Title">Title</option>
-                    <option value="Director">Director</option>
-                    <option value="Genre">Genre</option>
-                </select>
+                <form class="form-inline mt-1 mt-md-0 ml-0 mr-5" method="post"
+                      action="{% url 'moovie:show_search_result' %}">
+                    {% csrf_token %}
+                    <select name="search_dropdown" class="custom-select " id="inlineFormCustomSelect">
+                        <option selected value="Title">Title</option>
+                        <option value="Director">Director</option>
+                        <option value="Actor">Actor</option>
+                    </select>
 
-                <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
+                    <input class="form-control mr-sm-2" type="text" name="query" value="{{ query }}"
+                           placeholder="Search" id="query" aria-label="Search">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                </form>
 
             </div>
 
-
-
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'moovie:contact_us' %}">Contact us</a>
-                </li>
-                <li>
-                    <a class="nav-link" href="{% url 'moovie:about-us' %}">About us</a>
-                </li>
+            <ul class="nav-menu ml-5" id="nav-menu">
+                <li><a href="{% url 'moovie:contact_us' %}">Contact us</a></li>
                 {% if user.is_authenticated %}
+                    {% if user.is_staff %}
+                        <li><a href="{% url 'moovie:add_movie' %}">Add Movie</a></li>
+                    {% endif %}
+                    <li><a href="{% url 'moovie:logout' %}">Log out</a></li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'moovie:show_user_profile' user.username %}">My Profile</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Logout</a>
-                    </li>
                 {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Sign up</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Login</a>
+                    <li><a href="{% url 'moovie:register' %}">Sign up</a></li>
+                    <li>
+                        <a href="{% url 'moovie:login' %}" class="btn btn-hover">
+                            <span>Log in</span>
+                        </a>
                     </li>
                 {% endif %}
-
-
             </ul>
-
         </div>
+    </div>
+</div>
 
-    </nav>
-</header>
-
+{% for message in messages %}
+    <div class="container-fluid p-0">
+        <div class="alert {{ message.tags }} alert-dismissible" role="alert" >
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="True">&times;</span>
+            </button>
+            <p class="text-center">{{ message }}</p>
+        </div>
+    </div>
+{% endfor %}
 
 <div>
     {% block body_block %}
     {% endblock %}
 </div>
 
+<!-- footer -->
+<div class="footer">
+    <div class="container">
+        <div class="w3ls_footer_grid">
+            <div class="col-md-6 w3ls_footer_grid_right">
+                <a href="index.html"><h2>Moovies<span>Moovies</span></h2></a>
+            </div>
+            <div class="col-md-6 w3ls_footer_grid_left">
+                <div class="w3ls_footer_grid_left1">
+                    <h2>Subscribe to us</h2>
+                    <div class="w3ls_footer_grid_left1_pos">
+                        <form action="#" method="post">
+                            <input type="email" name="email" placeholder="Your email..." required="">
+                            <input type="submit" value="Send">
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="col-md-5 w3ls_footer_grid1_left">
+            <p>&copy; 2022 Moovies. Design by <a href="{% url 'moovie:about-us' %}">IT team</a></p>
+        </div>
+        <div class="col-md-7 w3ls_footer_grid1_right">
+            <ul>
+                <li>
+                    <a href="{% url 'moovie:login' %}">Login</a>
+                </li>
+                <li>
+                    <a href="{% url 'moovie:register' %}">Sign up</a>
+                </li>
+                <li>
+                    <a href="{% url 'moovie:about-us' %}">About us</a>
+                </li>
+                <li>
+                    <a href="{% url 'moovie:contact_us' %}">Contact us</a>
+                </li>
+            </ul>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<!-- //footer -->
 
 <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
 <script>window.jQuery || document.write('<script src="{% static "js/jquery-slim.min.js" %}"><\/script>')</script>
@@ -123,6 +162,7 @@
 <script src="{% static 'js/owl.carousel.min.js' %}"></script>
 <!-- APP SCRIPT -->
 <script src="{% static 'js/app.js' %}"></script>
+<script src="{% static 'js/moovie-ajax.js' %}"></script>
 
 </body>
 </html>

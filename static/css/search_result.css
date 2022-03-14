@@ -1,0 +1,83 @@
+.breadcomb-area{
+    margin-bottom: 30px;
+}
+
+.container2 {
+    margin: 50px auto;
+    width: 560px;
+}
+
+.card {
+    background-color: #000;
+    border-radius: 2px;
+    margin-bottom: 65px;
+    width: 100%;
+}
+
+.u-clearfix {
+    *zoom: 1;
+}
+
+.card-media {
+    float: left;
+    padding: 0;
+    position: absolute;
+    width: 500px;
+  }
+
+  .card-media-img {
+    width: 200px;
+    height: 141px;
+    float: left;
+    position: relative;
+  }
+
+  .card-media-tag {
+    border-radius: 2px;
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, .22);
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: .4px;
+    padding: 5px 8px;
+    position: absolute;
+    left: 200px;
+    text-transform: uppercase;
+    top: 0;
+  }
+  
+  .card-media-tag-orange {
+    background-color: #FF982C;
+    color: #fff;
+  }
+
+  .card-body {
+    float: left;
+    padding: 25px 0px 0px 22px;
+    width: 415px;
+  }
+  
+  .card-body-heading {
+    color: #6f6f6f;
+    display: inline-block;
+    font-size: 23px;
+    position: relative;
+    left: 180px;
+  }
+
+  .card-body-description1 {
+    color: #6f6f6f;
+    display: inline-block;
+    font-size: 20px;
+    position: relative;
+    left: 180px;
+  }
+
+  .card-body-description2 {
+    color: #6f6f6f;
+    display: inline-block;
+    font-size: 15px;
+    position: relative;
+    left: 180px;
+  }
+

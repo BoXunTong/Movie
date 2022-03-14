@@ -13,32 +13,7 @@
             <h3>Search Results for: {{query}}</h3>  
     </div>
 </div>
-<!--
-{% if result_list %}
-    {% for result in result_list %}
-        <div class="media border-bottom border-top mb-5">
-            <figure class="figure">
-                <img class="mr-3" src="{{ MEDIA_URL }}{{ result.image }}" alt="Picture of Movie">
-                <figcaption class="figure-caption text-center">
-                    <a class="center-show" href="{% url 'moovie:show_movie_profile' result.id %}">
-                        {{result.title}}
-                    </a>
-                </figcaption>
-            </figure>
-            <div class="media-body">
-                <h4 class="list-group-item-text">
-                    {{ result.director }}
-                </h4>
-                <p class="list-group-item-text">
-                    {{ result.release_date }}
-                </p>
-            </div>
-        </div>
-    {% endfor %}
-{% else %}
-    The specified movie does not exist.
-{% endif %}
--->
+
 {% if result_list %}
     {% for result in result_list %}
         <div class="container2">
@@ -51,6 +26,7 @@
                     <a class="card-body-heading" href="{% url 'moovie:show_movie_profile' result.id %}">
                         {{ result.title }}
                     </a>
+                    <br>
                     <h4 class="card-body-description1">
                         {{ result.director }}
                     </h4>

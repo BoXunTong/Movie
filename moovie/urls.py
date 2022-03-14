@@ -8,7 +8,7 @@ urlpatterns = [
 
     path('', views.IndexView.as_view(), name='index'),
     path('about-us/', views.AboutUsView.as_view(), name='about-us'),
-    path('search_result/', views.show_search_result, name='show_search_result'),
+    path('search_result/', views.searchResultView.as_view(), name='show_search_result'),
     path('search-tag/<str:search_type>/<str:query>', views.search_tag, name='search_tag'),
     path('movie/<int:movie_id>/', views.MovieView.as_view(), name='show_movie_profile'),
     path('movie/<int:movie_id>/review/', views.ReviewView.as_view(), name='add_review'),

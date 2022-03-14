@@ -63,7 +63,7 @@ class UserProfile(models.Model):
 
     age = models.IntegerField(default=0)
     bio = models.TextField(max_length=BIO_MAX_LENGTH, blank=True)
-    picture = models.ImageField(upload_to='profile_images', default='profile_images/placeholder.jpg')
+    picture = models.ImageField(upload_to='profile_images/', default='profile_images/placeholder.jpg')
 
     def __str__(self):
         return self.user.username

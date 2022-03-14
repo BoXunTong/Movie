@@ -18,7 +18,7 @@
                 <div class="row">
                     <div class="col-md-4"></div>
                     <div class="col-md-4 bg-secondary">
-                        <div class="row"><p></p></div>
+                        <div class="row"><p><br></p></div>
                         <div class="row">
                             <div class="col">
                                 <img src="{{ MEDIA_URL }}{{ user_profile.picture }}" alt="Profile picture for {{ user_profile.user.username }}">
@@ -41,6 +41,7 @@
                         <div class="row-md-4 text-center auto">
                             <p><br/><strong>bio</strong><br>{{ user_profile.bio }}</p>
                         </div>
+                        <div class="row"><p><br></p></div>
                     </div>
                     <div class="col-md-4"></div>
                 </div>
@@ -65,6 +66,7 @@
                                 {{ r.movie.title }}
                             </div>
                             <div class="movie-infos">
+                                <span>My Rating:</span>
                                 <i class="bx bxs-star"></i>
                                 <span>{{ r.review.rating }}</span>
                             </div>

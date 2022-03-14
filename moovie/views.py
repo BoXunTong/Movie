@@ -305,6 +305,20 @@ def show_user_profile(request, username):
 
     return render(request, 'moovie/user_profile.html', context = context_dict)
 
+def get_reviews_for_user(user):
+    reviews = Review.objects.filter(username=user)
+    reviews_with_movies = []
+    for review in reviews:
+        movie_id = review.movie_id
+        reviews_with_movies.append({'review':review, 'movie':movie_id})
+    return reviews_with_movies
+
+def get_wishlist_for_user(user):
+    movies_to_watch = MovieToWatch.objects.filter(username=user)
+    wishlist = []
+    for mov2w in movies_to_watch:
+        wishlist.append(mov2w.movie_id)
+    return wishlist
 
 # About us view class
 class AboutUsView(View):
@@ -469,20 +483,7 @@ class MovieView(View):
                 ReviewForm()
         except Review.DoesNotExist:
             return ReviewForm()
-    def get_reviews_for_user(user):
-        reviews = Review.objects.filter(username=user)
-        reviews_with_movies = []
-        for review in reviews:
-            movie_id = review.movie_id
-            reviews_with_movies.append({'review':review, 'movie':movie_id})
-        return reviews_with_movies
 
-    def get_wishlist_for_user(user):
-        movies_to_watch = MovieToWatch.objects.filter(username=user)
-        wishlist = []
-        for mov2w in movies_to_watch:
-            wishlist.append(mov2w.movie_id)
-        return wishlist
 
 class ContactUsView(View):
     #shows the page.

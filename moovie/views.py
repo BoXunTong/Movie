@@ -336,7 +336,7 @@ def edit_profile(request):
         form = UserProfileForm(request.POST, request.FILES, instance=curr_user_profile)
 
         if form.is_valid():
-            form.save(commit=True)
+            form.save()
             messages.success(request, "Profile updated!", fail_silently=True)
             return redirect(reverse('moovie:edit_profile'))
         else:

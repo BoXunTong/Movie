@@ -35,9 +35,10 @@ class Genre(models.Model):
 
 
 class Person(models.Model):
+
     NAME_MAX_LENGTH = 64
     SURNAME_MAX_LENGTH = 32
-
+    
     name = models.CharField(max_length=NAME_MAX_LENGTH, blank=False)
     surname = models.CharField(max_length=SURNAME_MAX_LENGTH, blank=False)
     person_type = models.CharField(max_length=16, blank=False)

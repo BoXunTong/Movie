@@ -2,29 +2,142 @@
 {% load staticfiles %}
 
 {% block title_block %}
-    {% if user %}
-        {{ user.name }}
+    {% if user_profile %}
+        {{ user_profile.user.username }}
     {% else %}
         Unknown User
     {% endif %}
 {% endblock %}
 
 {% block body_block %}
-    {% if user %}
-        <h1>{{ user.name }}</h1>
-        <div>
-            <h2>User Info</h2>
-            {% if user.is_authenticated %}
-            <a href="">Edit profile</a>
-            {% endif %}
+    {% if user_profile %}
+
+        <!-- user info section -->
+        <div class="section">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4"></div>
+                    <div class="col-md-4 bg-secondary">
+                        <div class="row"><p></p></div>
+                        <div class="row">
+                            <div class="col">
+                                <img src="{{ MEDIA_URL }}{{ user_profile.picture }}" alt="Profile picture for {{ user_profile.user.username }}">
+                            </div>
+                            <div class="col text-center">
+                                <h1><strong>{{ user_profile.user.username }}</strong></h1> <br>
+                                <!-- number of reviews -->
+                                <strong>{{ reviews_with_movies|length }}</strong> reviews <br>
+                                <!-- number in wishlist -->
+                                <strong>{{ wishlist|length }}</strong> in wishlist
+                                {% if user.username == user_profile.user.username %}
+                                    {% if user.is_authenticated %}
+                                        <br/>
+                                        <br/>
+                                        <a href="#"><strong>Edit profile</strong></a>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="row-md-4 text-center auto">
+                            <p><br/><strong>bio</strong><br>{{ user_profile.bio }}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4"></div>
+                </div>
+            </div>
+
         </div>
-        <div>
-            <h2>My Reviews</h2>
+
+        <!--  reviews section -->
+        <div class="section">
+            <div class="container">
+                <div class="section-header">
+                    My Reviews
+                </div>
+                <div class="movies-slide carousel-nav-center owl-carousel">
+                    <!-- each movie item -->
+                    {% if reviews_with_movies %}
+                    {% for r in reviews_with_movies %}
+                    <a href="#" class="movie-item">
+                        <img src="{{ MEDIA_URL }}{{ r.movie.image }}"" alt="poster image for {{ r.movie.title }}">
+                        <div class="movie-item-content">
+                            <div class="movie-item-title">
+                                {{ r.movie.title }}
+                            </div>
+                            <div class="movie-infos">
+                                <i class="bx bxs-star"></i>
+                                <span>{{ r.review.rating }}</span>
+                            </div>
+                            <div class="movie-info">
+                                <i class="bx bxs-time"></i>
+                                <span>{{ r.movie.duration }} min</span>
+                            </div>
+                        </div>
+                    </a>
+                    {% endfor %}
+
+                    {% else %}
+                    No reviews yet.
+                    <!-- <a href="#" class="movie-item">
+                        <img src="{{ MEDIA_URL }}movie_images/placeholder.png" alt="">
+                        <div class="movie-item-content">
+                            <div class="movie-item-title">
+                                N/A
+                            </div>
+                        </div>
+                    </a> -->
+
+                    {% endif %}
+                </div>
+            </div>
         </div>
-        <div>
-            <h2>Wishlist</h2>
+
+        <!-- wishlist section -->
+        <div class="section">
+            <div class="container">
+                <div class="section-header">
+                    Wishlist
+                </div>
+                <div class="movies-slide carousel-nav-center owl-carousel">
+                    <!-- each movie item -->
+                    {% if wishlist %}
+                    {% for movie in wishlist %}
+                    <a href="#" class="movie-item">
+                        <img src="{{ MEDIA_URL }}{{ movie.image }}"" alt=" poster image for {{ movie.title }}">
+                        <div class="movie-item-content">
+                            <div class="movie-item-title">
+                                {{ movie.title }}
+                            </div>
+                            <div class="movie-infos">
+                                <i class="bx bxs-star"></i>
+                                <span>{{ movie.average_rating }}</span>
+                            </div>
+                            <div class="movie-info">
+                                <i class="bx bxs-time"></i>
+                                <span>{{ movie.duration }} min</span>
+                            </div> 
+                        </div>
+                    </a>
+                    {% endfor %}
+        
+                    {% else %}
+                    Wishlist is empty
+                    <!-- <a href="#" class="movie-item">
+                        <img src="{{ MEDIA_URL }}movie_images/placeholder.png" alt="">
+                        <div class="movie-item-content">
+                            <div class="movie-item-title">
+                                N/A
+                            </div>
+                        </div>
+                    </a> -->
+        
+                    {% endif %}
+                </div>
+            </div>
         </div>
+
     {% else %}
-        The specified movie does not exist.
+    <!-- no user found -->
+        The specified user does not exist.
     {% endif %}
 {% endblock %}

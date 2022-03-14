@@ -37,11 +37,10 @@
     <div class="container">
         <div class="nav">
             <a href="{% url 'moovie:index' %}" class="logo">
-                <i class="bx bx-movie-play bx-tada main-color" style="color: darkorange"></i>Mo<span class="main-color"
-                                                                                                     style="color: darkorange">ovi</span>e
+                <i class="bx bx-movie-play bx-tada main-color"></i>Mo<span class="main-color">ovi</span>e
             </a>
             <div class="ml-auto">
-                <form class="form-inline mt-1 mt-md-0 ml-0" method="post"
+                <form class="form-inline mt-1 mt-md-0 ml-0 mr-5" method="post"
                       action="{% url 'moovie:show_search_result' %}">
                     {% csrf_token %}
                     <select name="search_dropdown" class="custom-select " id="inlineFormCustomSelect">
@@ -56,14 +55,16 @@
                 </form>
 
             </div>
-            <ul class="nav-menu" id="nav-menu">
+
+            <ul class="nav-menu ml-5" id="nav-menu">
                 <li><a href="{% url 'moovie:contact_us' %}">Contact us</a></li>
                 {% if user.is_authenticated %}
+                    {% if user.is_staff %}
+                        <li><a href="{% url 'moovie:add_movie' %}">Add Movie</a></li>
+                    {% endif %}
                     <li><a href="{% url 'moovie:logout' %}">Log out</a></li>
-                    <li>
-                        <a href="#" class="btn btn-hover">
-                            <span>My Profile</span>
-                        </a>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'moovie:show_user_profile' user.username %}">My Profile</a>
                     </li>
                 {% else %}
                     <li><a href="{% url 'moovie:register' %}">Sign up</a></li>

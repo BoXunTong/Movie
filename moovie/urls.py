@@ -13,9 +13,11 @@ urlpatterns = [
     path('movie/<int:movie_id>/', views.MovieView.as_view(), name='show_movie_profile'),
     path('movie/<int:movie_id>/review/', views.ReviewView.as_view(), name='add_review'),
     path('contact/', views.ContactUsView.as_view(), name='contact_us'),
+    path('add-movie/', views.AddMovieView.as_view(), name='add_movie'),
     path('add-to-watchlist/<int:movie_id>/', views.AddToWatchlistView.as_view(), name='add_to_watchlist'),
     path('remove-from-watchlist/<int:movie_id>/', views.RemoveFromWatchlistView.as_view(), name='remove_from_watchlist'),
     path('login/', views.user_login, name='login'),
     path('register/', views.register, name='register'),
-    path('logout/', views.user_logout, name='logout')
+    path('logout/', views.user_logout, name='logout'),
+    path('user/<str:username>/', views.show_user_profile, name='show_user_profile'),
 ]

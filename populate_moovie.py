@@ -330,6 +330,7 @@ def populate():
          'person_type': 'Director'},
     ]
 
+
     i_robot = [
         {'name': 'Will', 'surname': 'Smith',
          'person_type': 'Actor'},

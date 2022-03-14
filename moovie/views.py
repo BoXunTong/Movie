@@ -325,10 +325,23 @@ class AboutUsView(View):
     def get(self, request):
         return render(request, 'moovie/about.html', context={})
 
-# @login_required
+@login_required
 def edit_profile(request):
-    # this is the profile of the logged in user (with edit functionality)
-    return render(request, 'moovie/edit_profile.html', context = {})
+
+    curr_user = request.user
+    curr_user_profile = UserProfile.objects.get(user=curr_user.id)
+    form = UserProfileForm(instance=curr_user_profile)
+
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, instance=curr_user_profile)
+
+        if form.is_valid():
+            form.save(commit=True)
+            return redirect('/moovie/')
+        else:
+            print(form.errors)
+
+    return render(request, 'moovie/edit_profile.html', {'form': form})
 
 
 class ReviewView(View):

@@ -496,6 +496,7 @@ def populate():
         'Harry Potter and the Half-Blood Prince': {'person': harry6},
         'Harry Potter and the Deathly Hallows: Part 1': {'person': harry7},
         'Harry Potter and the Deathly Hallows: Part 2': {'person': harry7},
+        "Zack Snyder's Justice League": {'person': z_justice},
         '007 SkyFall': {'person': sky_fall},
         'I, Robot': {'person': i_robot},
         'The Matrix Resurrections': {'person': matrix4},

@@ -18,5 +18,6 @@ urlpatterns = [
     path('remove-from-watchlist/<int:movie_id>/', views.RemoveFromWatchlistView.as_view(), name='remove_from_watchlist'),
     path('login/', views.user_login, name='login'),
     path('register/', views.register, name='register'),
-    path('logout/', views.user_logout, name='logout')
+    path('logout/', views.user_logout, name='logout'),
+    path('user/<str:username>/', views.show_user_profile, name='show_user_profile'),
 ]

@@ -283,9 +283,42 @@ def show_search_result(request):
     return render(request, 'moovie/search_result.html', context=context_dict)
 
 
-def show_user_profile(request):
-    # this is the publicly visible profile of any user
-    return render(request, 'moovie/user_profile.html', context={})
+
+def show_user_profile(request, username):
+    context_dict = {}
+    try:
+        thisuser = User.objects.get(username=username)
+        user_profile = UserProfile.objects.get(user=thisuser.id)
+        context_dict['user_profile'] = user_profile
+
+        reviews_with_movies = get_reviews_for_user(thisuser)
+        context_dict['reviews_with_movies'] = reviews_with_movies
+
+        wishlist = get_wishlist_for_user(thisuser)
+        context_dict['wishlist'] = wishlist
+
+    except (User.DoesNotExist, UserProfile.DoesNotExist):
+        context_dict['user'] = None
+        context_dict['user_profile'] = None
+        context_dict['reviews_with_movies'] = None
+        context_dict['wishlist'] = None
+
+    return render(request, 'moovie/user_profile.html', context = context_dict)
+
+def get_reviews_for_user(user):
+    reviews = Review.objects.filter(username=user)
+    reviews_with_movies = []
+    for review in reviews:
+        movie_id = review.movie_id
+        reviews_with_movies.append({'review':review, 'movie':movie_id})
+    return reviews_with_movies
+
+def get_wishlist_for_user(user):
+    movies_to_watch = MovieToWatch.objects.filter(username=user)
+    wishlist = []
+    for mov2w in movies_to_watch:
+        wishlist.append(mov2w.movie_id)
+    return wishlist
 
 # About us view class
 class AboutUsView(View):
@@ -295,7 +328,7 @@ class AboutUsView(View):
 # @login_required
 def edit_profile(request):
     # this is the profile of the logged in user (with edit functionality)
-    return render(request, 'moovie/edit_profile.html', context={})
+    return render(request, 'moovie/edit_profile.html', context = {})
 
 
 class ReviewView(View):
@@ -450,6 +483,7 @@ class MovieView(View):
                 ReviewForm()
         except Review.DoesNotExist:
             return ReviewForm()
+
 
 class ContactUsView(View):
     #shows the page.

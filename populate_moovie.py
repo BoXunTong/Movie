@@ -561,22 +561,22 @@ def populate():
             add_movie_genre(movie, genre)
 
     # Add user test
-    user1 = add_user('username1', '12345678', 'example@gmail.com', 'Rogers', 'Choi')
-    user2 = add_user('username2', '87654321', 'example@gmail.com', 'Anne', 'Hathaway')
-    add_user_profile(user1, 25, 'profile_images/user1.jpg', 'my bio')
-    add_user_profile(user2, 25, 'profile_images/user1.jpg', '2 bio')
+    user1 = add_user('choiRogers', '12345678', 'rogers@gmail.com', 'Rogers', 'Choi')
+    user2 = add_user('anneHathaway', '87654321', 'hathaway@gmail.com', 'Anne', 'Hathaway')
+    add_user_profile(user1, 25, 'profile_images/user1.jpg', 'I love coding and hiking.')
+    add_user_profile(user2, 25, 'profile_images/user1.jpg', 'I like reading, walking, and driving')
 
     # user review test
     movie1 = Movie.objects.get(title='Harry Potter and the Philosophers Stone')
     movie2 = Movie.objects.get(title='Harry Potter and the Prisoner of Azkaban')
-    add_review(user1, movie1, 'comment test', 'header test', Decimal(5.00))
-    add_review(user2, movie2, 'comment test', 'header test', Decimal(5.00))
+    add_review(user1, movie1, 'One of the best movies I have ever seen.', 'Best Movie', Decimal(5.00))
+    add_review(user2, movie2, 'I really liked the movie. Cannot wait to see the rest of the series!', 'Wonderful', Decimal(5.00))
 
     # Movie to watch test
     add_movie_to_watch(user1, movie1)
     add_movie_to_watch(user2, movie1)
 
-    add_contact_message('example@gmail.com', 'Anonymous', 'test', 'test', datetime.datetime)
+    add_contact_message('rogers@gmail.com', 'Rogers Choi', 'Feedback', 'I liked the application, it is easy to rate movies!', datetime.datetime)
 
 
 def add_movie(title, duration, release_date, description, average_rating, image, poster):

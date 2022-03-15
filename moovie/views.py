@@ -320,10 +320,25 @@ class AboutUsView(View):
     def get(self, request):
         return render(request, 'moovie/about.html', context={})
 
-# @login_required
+@login_required
 def edit_profile(request):
-    # this is the profile of the logged in user (with edit functionality)
-    return render(request, 'moovie/edit_profile.html', context = {})
+
+    curr_user = request.user
+    curr_user_profile = UserProfile.objects.get(user=curr_user.id)
+    form = UserProfileForm(instance=curr_user_profile)
+
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, request.FILES, instance=curr_user_profile)
+
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Profile updated!", fail_silently=True)
+            return redirect(reverse('moovie:edit_profile'))
+        else:
+            messages.error(request, "Something went wrong with the from!", fail_silently=True)
+            print(form.errors)
+
+    return render(request, 'moovie/edit_profile.html', {'form': form})
 
 
 class ReviewView(View):
@@ -516,7 +531,7 @@ class AddMovieView(View):
         context_dict = { 'movie_form': movie_form, 'director_form': director_form, 'actor_form': actor_form, 'genre_form': genre_form }
         return render(request, 'moovie/add_movie.html', context=context_dict)
 
-    #saves a new movie directly into the database.
+    # saves a new movie directly into the database.
     @method_decorator(staff_member_required)
     def post(self, request):
         movie_form = AddMovieForm(request.POST, request.FILES)

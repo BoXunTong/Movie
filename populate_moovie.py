@@ -233,7 +233,7 @@ def populate():
                         "Moncada.",
          'average_rating': Decimal(4.2),
          'image': 'movie_images/Uncharted.jpg',
-         'poster': 'poster_images/Joker.jpg'},
+         'poster': 'poster_images/Uncharted.jpg'},
     ]
 
     # movie casters and directors

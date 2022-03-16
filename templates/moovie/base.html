@@ -62,10 +62,10 @@
                     {% if user.is_staff %}
                         <li><a href="{% url 'moovie:add_movie' %}">Add Movie</a></li>
                     {% endif %}
-                    <li><a href="{% url 'moovie:logout' %}">Log out</a></li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'moovie:show_user_profile' user.username %}">My Profile</a>
                     </li>
+                    <li><a href="{% url 'moovie:logout' %}">Log out</a></li>
                 {% else %}
                     <li><a href="{% url 'moovie:register' %}">Sign up</a></li>
                     <li>
@@ -98,41 +98,8 @@
 <!-- footer -->
 <div class="footer">
     <div class="container">
-        <div class="w3ls_footer_grid">
-            <div class="col-md-6 w3ls_footer_grid_right">
-                <a href="index.html"><h2>Moovies<span>Moovies</span></h2></a>
-            </div>
-            <div class="col-md-6 w3ls_footer_grid_left">
-                <div class="w3ls_footer_grid_left1">
-                    <h2>Subscribe to us</h2>
-                    <div class="w3ls_footer_grid_left1_pos">
-                        <form action="#" method="post">
-                            <input type="email" name="email" placeholder="Your email..." required="">
-                            <input type="submit" value="Send">
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <div class="clearfix"></div>
-        </div>
         <div class="col-md-5 w3ls_footer_grid1_left">
             <p>&copy; 2022 Moovies. Design by <a href="{% url 'moovie:about-us' %}">IT team</a></p>
-        </div>
-        <div class="col-md-7 w3ls_footer_grid1_right">
-            <ul>
-                <li>
-                    <a href="{% url 'moovie:login' %}">Login</a>
-                </li>
-                <li>
-                    <a href="{% url 'moovie:register' %}">Sign up</a>
-                </li>
-                <li>
-                    <a href="{% url 'moovie:about-us' %}">About us</a>
-                </li>
-                <li>
-                    <a href="{% url 'moovie:contact_us' %}">Contact us</a>
-                </li>
-            </ul>
         </div>
         <div class="clearfix"></div>
     </div>

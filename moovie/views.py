@@ -1,7 +1,5 @@
-# from __future__ import generator_stop
 from multiprocessing import context
 from platform import release
-from tkinter import messagebox, mainloop
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
@@ -10,10 +8,8 @@ from django.views import View
 from django.shortcuts import render, redirect, reverse
 from moovie.models import *
 from moovie.forms import *
-from tkinter import *
 from django.http import HttpResponse
 from django.contrib import messages
-
 
 # Index view class
 class IndexView(View):
@@ -29,138 +25,68 @@ class IndexView(View):
 
         return render(request, 'moovie/index.html', context_dict)
 
-def register(request):
-    # A boolean value for telling the template
-    # whether the registration was successful.
-    # Set to False initially. Code changes value to
-    # True when registration succeeds.
-    registered = False
-    # If it's a HTTP POST, we're interested in processing form data.
-    if request.method == 'POST':
-        # Attempt to grab information from the raw form information.
-        # Note that we make use of both UserForm and UserProfileForm.
+class RegisterView(View):
+    #shows the register page.
+    def get (self, request):
+        user_form = UserForm()
 
+        return render(request, 'moovie/register.html', context={'user_form': user_form})
+
+    #registers users.
+    def post(self, request):
         user_form = UserForm(request.POST)
-        # profile_form = UserProfileForm(request.POST)
 
-        # If the two forms are valid...
-        # if user_form.is_valid() and profile_form.is_valid():
+        #checks if the form is valid.
         if user_form.is_valid():
-            # Save the user's form data to the database.
-            messages.success(request, "Congratulation! Welcome to Moovie!")
-
+            #saves user
             user = user_form.save()
-
-            # Now we hash the password with the set_password method.
-            # Once hashed, we can update the user object.
             user.set_password(user.password)
             user.save()
 
-            # messagebox.showinfo("Welcome", "Now you are one of us!")
-            # mainloop()
-            # root.destroy()
-            # Now sort out the UserProfile instance.
-            # Since we need to set the user attribute ourselves,
-            # we set commit=False. This delays saving the model
-            # until we're ready to avoid integrity problems.
-
-            # profile = profile_form.save(commit=False)
-            # profile.user = user
-
-            # Did the user provide a profile picture?
-            # If so, we need to get it from the input form and
-            # put it in the UserProfile model.
-
-            # if 'picture' in request.FILES:
-            #     profile.picture = request.FILES['picture']
-
-            # Now we save the UserProfile model instance.
-
-            # profile.save()
-
-            # Update our variable to indicate that the template
-            # registration was successful.
-            # registered = True
+            #creates user profile associated with the user saved.
+            UserProfile.objects.create(user=user)
+            messages.success(request, "Congratulation! Welcome to Moovie!")
             return redirect(reverse('moovie:login'))
         else:
-            # Invalid form or forms - mistakes or something else?
-            # Print problems to the terminal.
-            messages.error(request, "Something Wrong, please try again later...")
-            # print(user_form.errors, profile_form.errors)
+            messages.error(request, "Something went wrong, please try again later.")
             print(user_form.errors)
 
-    else:
-        # Not a HTTP POST, so we render our form using two ModelForm instances.
-        # These forms will be blank, ready for user input.
-        user_form = UserForm()
-        # profile_form = UserProfileForm()
-    # Render the template depending on the context.
-    return render(request, 'moovie/register.html',
-                  # context={'user_form': user_form, 'profile_form': profile_form, 'registered': registered})
-                  context={'user_form': user_form, 'registered': registered})
+        return render(request, 'moovie/register.html', context={'user_form': user_form})
 
-def user_login(request):
-    # If the request is a HTTP POST, try to pull out the relevant information.
-    # m=User.objects.get(USERNAME=request.POST['username'])
-    if request.method == 'POST':
-        # Gather the username and password provided by the user.
-        # This information is obtained from the login form.
-        # We use request.POST.get('<variable>') as opposed
-        # to request.POST['<variable>'], because the
-        # request.POST.get('<variable>') returns None if the
-        # value does not exist, while request.POST['<variable>']
-        # will raise a KeyError exception.
+class LoginView(View):
+    #shows the login page.
+    def get (self, request):
+
+        return render(request, 'moovie/login.html')
+
+    #logs the user in.
+    def post(self, request):
+        #gets user info from the request.
         username = request.POST['username']
         password = request.POST['password']
 
-        # Use Django's machinery to attempt to see if the username/password
-        # combination is valid - a User object is returned if it is.
+        #authenticates the user.
         user = authenticate(username=username, password=password)
 
-        # If we have a User object, the details are correct.
-        # If None (Python's way of representing the absence of a value), no user
-        # with matching credentials was found.
         if user:
-            # Is the account active? It could have been disabled.
+            #checks if the user is active.
             if user.is_active:
-                # If the account is valid and active, we can log the user in.
-                # We'll send the user back to the homepage.
-                # messagebox.showinfo("Welecome", "Login successfully!")
-                # mainloop()
-                # messages.success(request, "Login Successfully, Welcome!")
+                #logs the user in.
                 login(request, user)
                 return redirect(reverse('moovie:index'))
             else:
-                # An inactive account was used - no logging in!
-                # messages.error(request, "Something Wrong, please try again later...")
-                # messagebox.showerror("Sorry！", "Something Wrong, please try again later...")
-                # mainloop()
-                # root.destroy()
-                # return HttpResponse("Your moovie account is disabled.")
-                messages.error(request, 'The user name or password is incorrect')
+                messages.error(request, 'The user is not active.')
                 return redirect(reverse('moovie:login'))
         else:
-            # Bad login details were provided. So we can't log the user in.
-            # print(f"Invalid login details: {username}, {password}")
-            detail_is_invalid = True,
-            messages.error(request, "Something Wrong, please try again later...")
-            # messagebox.showerror("Sorry！", "Something Wrong, please try again later...")
-            # return HttpResponse("Invalid login details supplied.")
+            messages.error(request, "Something went wrong, please try again later.")
             return redirect(reverse('moovie:login'))
-
-    # The request is not a HTTP POST, so display the login form.
-    # This scenario would most likely be a HTTP GET.
-    else:
-        # No context variables to pass to the template system, hence the
-        # blank dictionary object...
-        # root.destroy()
-        return render(request, 'moovie/login.html')
 
 @login_required
 def user_logout(request):
-    # Since we know the user is logged in, we can now just log them out.
+    #logs the user out.
     logout(request)
-    # Take the user back to the homepage.
+
+    messages.success(request, "You logged out!")
     return redirect(reverse('moovie:index'))
 
 class searchResultView(View):

@@ -77,9 +77,9 @@ class UserForm(forms.ModelForm):
         fields = ('username', 'email', 'password', 'first_name', 'last_name')
 
 class UserProfileForm(forms.ModelForm):
-    age = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': "Duration - in minutes *"}), help_text="Age")
+    age = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': "Age *"}), help_text="Age")
     picture = forms.ImageField(widget=forms.ClearableFileInput(), help_text="Profile Image")
-    bio = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Description *"}), max_length=Movie.DESCRIPTION_MAX_LENGTH, help_text="Bio")
+    bio = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Bio *"}), max_length=UserProfile.BIO_MAX_LENGTH, help_text="Bio")
     
     class Meta:
         model = UserProfile

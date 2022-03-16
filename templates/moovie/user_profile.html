@@ -17,11 +17,13 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-4"></div>
-                    <div class="col-md-4 bg-secondary">
+                    <div class="col-md-4 bg-secondary border rounded">
                         <div class="row"><p><br></p></div>
                         <div class="row">
                             <div class="col">
-                                <img src="{{ MEDIA_URL }}{{ user_profile.picture }}" alt="Profile picture for {{ user_profile.user.username }}">
+                                <div class="profile-image-container">
+                                    <img src="{{ MEDIA_URL }}{{ user_profile.picture }}" alt="Profile picture for {{ user_profile.user.username }}" class="rounded-circle border profile-image">
+                                </div>
                             </div>
                             <div class="col text-center">
                                 <h1><strong>{{ user_profile.user.username }}</strong></h1> <br>
@@ -33,7 +35,7 @@
                                     {% if user.is_authenticated %}
                                         <br/>
                                         <br/>
-                                        <a href="#"><strong>Edit profile</strong></a>
+                                        <a href="{% url 'moovie:edit_profile' %}"><strong>Edit profile</strong></a>
                                     {% endif %}
                                 {% endif %}
                             </div>
@@ -80,14 +82,6 @@
 
                     {% else %}
                     No reviews yet.
-                    <!-- <a href="#" class="movie-item">
-                        <img src="{{ MEDIA_URL }}movie_images/placeholder.png" alt="">
-                        <div class="movie-item-content">
-                            <div class="movie-item-title">
-                                N/A
-                            </div>
-                        </div>
-                    </a> -->
 
                     {% endif %}
                 </div>
@@ -101,7 +95,7 @@
                     Wishlist
                 </div>
                 <div class="movies-slide carousel-nav-center owl-carousel">
-                    <!-- each movie item -->
+                    <!-- link to each movie item -->
                     {% if wishlist %}
                     {% for movie in wishlist %}
                     <a href="{% url 'moovie:show_movie_profile' movie.id %}" class="movie-item">
@@ -123,15 +117,7 @@
                     {% endfor %}
         
                     {% else %}
-                    Wishlist is empty
-                    <!-- <a href="#" class="movie-item">
-                        <img src="{{ MEDIA_URL }}movie_images/placeholder.png" alt="">
-                        <div class="movie-item-content">
-                            <div class="movie-item-title">
-                                N/A
-                            </div>
-                        </div>
-                    </a> -->
+                    Wishlist is empty.
         
                     {% endif %}
                 </div>

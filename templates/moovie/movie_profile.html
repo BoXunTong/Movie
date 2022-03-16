@@ -58,7 +58,9 @@
                 {% for review_with_user_info in reviews_with_user_info %}
                     <div class="media border-bottom border-top mb-5">
                         <figure class="figure">
-                            <img class="mr-3 profile-picture" src="{{ MEDIA_URL }}{{ review_with_user_info.user.picture }}" alt="Profile Picture">
+                            <div class="profile-image-container">
+                                <img class="mr-3 profile-picture profile-image rounded-circle border" src="{{ MEDIA_URL }}{{ review_with_user_info.user.picture }}" alt="Profile Picture">
+                            </div>
                             <figcaption class="figure-caption text-center" href="#">{{ review_with_user_info.user }}</figcaption>
                         </figure>
                         <div class="media-body">

@@ -89,18 +89,24 @@ def user_logout(request):
     messages.success(request, "You logged out!")
     return redirect(reverse('moovie:index'))
 
+# Search result view class
 class searchResultView(View):
+    # (get) direct access to the search result page
     def get(self, request):
         context_dict = {}
         if request.method == 'get':
+            # maintain current page
             query = None
         return render(request, 'moovie/search_result.html', context=context_dict)
-        
+
+    # (post) must enter request to access
     def post(self, request):
         context_dict = {}
         if request.method == 'POST':
             query = request.POST['query'].strip()
+            # get query from base
             keyword = request.POST['search_dropdown']
+            # get category from base
             if keyword == 'Title':
                 keyword = 1
             elif keyword == 'Director':
@@ -109,22 +115,24 @@ class searchResultView(View):
                 keyword = 3
             if query:
                 context_dict['result_list'] = self.run_query(query, keyword)
-                # context_dict['result_list'] = run_query(query)
                 context_dict['query'] = query
         return render(request, 'moovie/search_result.html', context=context_dict)
-
+    # if query = actor & director with their surname or name
     def get_movie_from_person(self, search_terms, keyword):
         person_list_name = []
         person_list_surname = []
         movie_list = []
         if search_terms:
+            # filter the query within the Person database
             person_list_name = Person.objects.filter(name__icontains=search_terms)
             person_list_surname = Person.objects.filter(surname__icontains=search_terms)
         for person_name in person_list_name:
             if keyword == 2:
+                # match the name with data in director object database
                 directors = DirectorMovie.objects.filter(person_id=person_name)
                 for director in directors:
                     movie_id = director.movie_id.id
+                    # get movie model
                     movie_list.append(Movie.objects.get(id=movie_id))
             elif keyword == 3:
                 actors = ActorMovie.objects.filter(person_id=person_name)
@@ -134,9 +142,11 @@ class searchResultView(View):
 
         for person_surname in person_list_surname:
             if keyword == 2:
+                # match the name with data in director object database
                 directors = DirectorMovie.objects.filter(person_id=person_surname)
                 for director in directors:
                     movie_id = director.movie_id.id
+                    # get movie model
                     movie_list.append(Movie.objects.get(id=movie_id))
             elif keyword == 3:
                 actors = ActorMovie.objects.filter(person_id=person_surname)
@@ -144,9 +154,10 @@ class searchResultView(View):
                 for actor in actors:
                     movie_id = actor.movie_id.id
                     movie_list.append(Movie.objects.get(id=movie_id))
+        # combine with set function
         movie_list = set(movie_list)
         return movie_list
-
+    # get move directly from Movie object
     def get_movie_list(self, search_terms):
         movie_list = []
         if search_terms:
@@ -163,22 +174,27 @@ class searchResultView(View):
 
         for result in search_results:
             movie_view = MovieView()
+            # modify data formats for output
+            # modify director
             director = movie_view.get_directors_for_movie(result)
             director = str(director)
             director = director.split('-', 1)
             director = director[1].split('>', 1)
             director = director[0]
 
+            # modify genre
             genre = movie_view.get_genres_for_movie(result)
             genre = str(genre)
             genre = genre.split(':', 1)
             genre = genre[1].split('>', 1)
             genre = genre[0]
             
+            # modify release_date
             release_date = str(result.release_date)
             release_date = release_date.split(' ', 1)
             release_date = release_date[0]
             
+            # return the set of result
             results.append({
                 'id':result.id,
                 'title':result.title,
@@ -200,6 +216,7 @@ def search_tag(request, search_type, query):
         keyword = 3
 
     if query:
+        # call the runqery from searchResult view
         context_dict['result_list'] = searchResultView.run_query(query, keyword)
         context_dict['query'] = query 
     return render(request, 'moovie/search_result.html', context=context_dict)

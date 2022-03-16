@@ -6,22 +6,26 @@ Edit Your Profile
 {% endblock %}
 
 {% block body_block %}
-<h1>Edit Profile</h1>
-<!-- provides a form for a logged in user to edit their profile info -->
-<div>
-    <form id="edit_profile_form" method="post" action="/moovie/edit_profile/" enctype="multipart/form-data">
-        {% csrf_token %}
-        {% for hidden in form.hidden_fields %}
-            {{ hidden }}
-        {% endfor %}
-        {% for field in form.visible_fields %}
-            <br>
-            {{ field.errors }}
-            {{ field.help_text }}
-            {{ field }}
-            <br>
-        {% endfor %}
-        <input type="submit" name="submit" value="Update Profile">
-    </form>
-</div>
+    <section class="mb-4 p-5">
+        <h1 class="h1-responsive font-weight-bold text-center my-4">Edit Profile</h1>
+        <!-- provides a form for a logged in user to edit their profile info -->
+
+        <div class="container">
+            <form id="edit_profile_form" method="post" action="/moovie/edit_profile/" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% for hidden in form.hidden_fields %}
+                    {{ hidden }}
+                {% endfor %}
+                {% for field in form.visible_fields %}
+                    <br>
+                    {{ field.errors }}
+                    {{ field.help_text }}
+                    {{ field }}
+                    <br>
+                {% endfor %}
+                <br>
+                <input type="submit" class="btn btn-primary" name="submit" value="Update Profile">
+            </form>
+        </div>
+    </section>
 {% endblock %}

@@ -45,10 +45,10 @@
                       action="{% url 'moovie:show_search_result' %}">
                     {% csrf_token %}
                     <select name="search_dropdown" class="custom-select " id="inlineFormCustomSelect">
-                        <option selected value="Title">Title</option>
-                        <option value="Director">Director</option>
-                        <option value="Actor">Actor</option>
-                        <option value="Genre">Genre</option>
+                        <option value="Title" {% if dropdown_value == 'Title' %} selected {% endif %}>Title</option>
+                        <option value="Director" {% if dropdown_value == 'Director' %} selected {% endif %}>Director</option>
+                        <option value="Actor" {% if dropdown_value == 'Actor' %} selected {% endif %}>Actor</option>
+                        <option value="Genre" {% if dropdown_value == 'Genre' %} selected {% endif %}>Genre</option>
                     </select>
 
                     <input class="form-control mr-sm-2" type="text" name="query" value="{{ query }}"

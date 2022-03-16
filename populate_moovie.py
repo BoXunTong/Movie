@@ -561,10 +561,12 @@ def populate():
             add_movie_genre(movie, genre)
 
     # Add user test
-    user1 = add_user('choiRogers', '12345678', 'rogers@gmail.com', 'Rogers', 'Choi')
-    user2 = add_user('anneHathaway', '87654321', 'hathaway@gmail.com', 'Anne', 'Hathaway')
+    user1 = add_user('choiRogers', '12345678', 'rogers@gmail.com', 'Rogers', 'Choi', False)
+    user2 = add_user('anneHathaway', '87654321', 'hathaway@gmail.com', 'Anne', 'Hathaway', False)
+    user3 = add_user('manager', '87654321', 'manager@gmail.com', 'Bob', 'Brown', True)
     add_user_profile(user1, 25, 'profile_images/user1.jpg', 'I love coding and hiking.')
-    add_user_profile(user2, 25, 'profile_images/user1.jpg', 'I like reading, walking, and driving')
+    add_user_profile(user2, 25, 'profile_images/user1.jpg', 'I like reading, walking, and driving.')
+    add_user_profile(user3, 23, 'profile_images/user1.jpg', 'I like managing web applications.')
 
     # user review test
     movie1 = Movie.objects.get(title='Harry Potter and the Philosophers Stone')
@@ -615,12 +617,13 @@ def add_actor_movie(movie_id, person_id):
     return actor_movie
 
 
-def add_user(username, password, email, first_name, last_name):
+def add_user(username, password, email, first_name, last_name, is_staff):
     user = User.objects.get_or_create(username=username)[0]
     user.set_password(password)
     user.email = email
     user.first_name = first_name
     user.last_name = last_name
+    user.is_staff = is_staff
     user.save()
     return user
 

@@ -12,28 +12,29 @@
 {% block body_block %}
     <section class="container p-5 ">
         {% if movie %}
-            <h1 class="h1-responsive font-weight-bold text-left my-4">{{ movie.title }}</h1>
+            <h1 class="h1-responsive display-3 text-left my-4">{{ movie.title }}</h1>
             <!-- shows movie's information including its poster. -->
             <div class="media">
                 <div class="media-body">
-                    <p> <strong> Released: </strong> {{ movie.release_date|date:"d M Y" }}</p>
-                    <p> <strong> Directed by: </strong> {% for director in directors %} 
+                    <i class="bx bx-star h3" ></i><span class="h3">{{ movie.average_rating }}</span>
+                    <p class="h4 p-1"> <strong> Released: </strong> {{ movie.release_date|date:"d M Y" }}</p>
+                    <p class="h4 p-1"> <strong> Directed by: </strong> {% for director in directors %}
                                         <a href="{% url 'moovie:search_tag' 'Director' director.name %}">{{ director.name }} {{director.surname}} </a>
                                     {% endfor %}
                     </p>
-                    <p> <strong> Starring: </strong> {% for star in stars %}
+                    <p class="h4 p-1"> <strong> Starring: </strong> {% for star in stars %}
                                         <a href="{% url 'moovie:search_tag' 'Actor' star.name %}">{{ star.name }} {{star.surname}} </a>
                                     {% endfor %}
                     </p>
-                    <p> <strong>Genre tags: </strong> {% for genre in genres %}
-                                        <a href="{% url 'moovie:search_tag' 'Genre' genre.name %}"> {{ genre.name }}</a>
+                    <p class="h5 p-1"> <strong> Description: </strong> {{ movie.description }}</p>
+                    <p class="pt-5 h4"> <strong>Genre tags: </strong> {% for genre in genres %}
+                                        <a href="{% url 'moovie:search_tag' 'Genre' genre.name %}"> [{{ genre.name }}]</a>
                                     {% endfor %}
                     </p>
-                    <p> <strong> Description: </strong> {{ movie.description }}</p>
 
                     <!-- enables the watchlist property if the user is authenticated. -->
                     {% if user.is_authenticated %}
-                        <p class="mt-5"> <strong>Watchlist:</strong> </p>
+                        <p class="mt-5 h4"> <strong>Watchlist:</strong> </p>
                         {% if already_added_to_watchlist == 0 %}
                             <a class="position-absolute" id="add_to_watchlist" data-url="{% url 'moovie:add_to_watchlist' movie.id %}" href="javascript:add_to_watchlist_function()">
                                 <img src="/static/icons/plus-circle.svg" alt="Add to Watchlist" width="32" height="32">
@@ -48,13 +49,14 @@
                 </div>
                 <div class="col-md-8 float-right">
                     <img class="" src="{{ MEDIA_URL }}{{ movie.poster }}" alt="Movie Image">
-                    <p> <strong>Average rating:</strong> {{ movie.average_rating }}/5.00</p>
+
                 </div>
             </div>
 
             <!-- shows all the reviews made for movie in a scrollable widget. -->
             <div class="review-scrollable mt-5">
                 <h2>User Reviews</h2>
+            {% if reviews_with_user_info %}
                 {% for review_with_user_info in reviews_with_user_info %}
                     <div class="media border-bottom border-top mb-5">
                         <figure class="figure">
@@ -64,12 +66,17 @@
                             <figcaption class="figure-caption text-center" href="#">{{ review_with_user_info.user }}</figcaption>
                         </figure>
                         <div class="media-body">
-                            <h5 class="mt-0">{{ review_with_user_info.review.header }}</h5>
-                            <p>{{ review_with_user_info.review.comment }}</p>
-                            <p>rating: {{ review_with_user_info.review.rating|floatformat:0 }}/5</p>
+                            <h5 class="mt-0 h2"> {{ review_with_user_info.review.header }}</h5>
+                            <p class="h5 text-lg-left"> Rating: {{ review_with_user_info.review.rating|floatformat:0 }}/5</p>
+                            <p class="p-2 h5">{{ review_with_user_info.review.comment }}</p>
+
                         </div>
                     </div>
                 {% endfor %}
+            {% else %}
+                <p class="h4 text-center">No comment for now.</p>
+            {% endif %}
+
             </div>
 
             <!-- shows and enables the review form if the user is authenticated. -->

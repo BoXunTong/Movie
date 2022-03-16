@@ -7,6 +7,7 @@ Edit Your Profile
 
 {% block body_block %}
 <h1>Edit Profile</h1>
+<!-- provides a form for a logged in user to edit their profile info -->
 <div>
     <form id="edit_profile_form" method="post" action="/moovie/edit_profile/" enctype="multipart/form-data">
         {% csrf_token %}

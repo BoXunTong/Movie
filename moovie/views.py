@@ -238,17 +238,21 @@ def search_tag(request, search_type, query):
 def show_user_profile(request, username):
     context_dict = {}
     try:
+        # get the User and UserProfile objects for this user
         thisuser = User.objects.get(username=username)
         user_profile = UserProfile.objects.get(user=thisuser.id)
         context_dict['user_profile'] = user_profile
 
+        # get all reviews (and associated Movie objects) authored by this user
         reviews_with_movies = get_reviews_for_user(thisuser)
         context_dict['reviews_with_movies'] = reviews_with_movies
 
+        # get the Movie objects in this user's wishlist
         wishlist = get_wishlist_for_user(thisuser)
         context_dict['wishlist'] = wishlist
 
     except (User.DoesNotExist, UserProfile.DoesNotExist):
+        # if there is no user with this username, return empty fields
         context_dict['user'] = None
         context_dict['user_profile'] = None
         context_dict['reviews_with_movies'] = None
@@ -257,6 +261,7 @@ def show_user_profile(request, username):
     return render(request, 'moovie/user_profile.html', context = context_dict)
 
 def get_reviews_for_user(user):
+    # takes a User objects and returns all Reviews authored by that User
     reviews = Review.objects.filter(username=user)
     reviews_with_movies = []
     for review in reviews:
@@ -265,6 +270,7 @@ def get_reviews_for_user(user):
     return reviews_with_movies
 
 def get_wishlist_for_user(user):
+    # takes a User objects and returns all Movies in that User's wishlist
     movies_to_watch = MovieToWatch.objects.filter(username=user)
     wishlist = []
     for mov2w in movies_to_watch:
@@ -279,10 +285,15 @@ class AboutUsView(View):
 @login_required
 def edit_profile(request):
 
+    # the edit profile function is only available to logged in users
+    # they can also only edit their own profile!!
+
+    # get the logged in user; retreive their UserProfile object; load this into a form
     curr_user = request.user
     curr_user_profile = UserProfile.objects.get(user=curr_user.id)
     form = UserProfileForm(instance=curr_user_profile)
 
+    # parse submitted form data
     if request.method == 'POST':
         form = UserProfileForm(request.POST, request.FILES, instance=curr_user_profile)
 

@@ -113,6 +113,8 @@ class searchResultView(View):
                 keyword = 2
             elif keyword == 'Actor':
                 keyword = 3
+            else:
+                keyword = 4
             if query:
                 context_dict['result_list'] = self.run_query(query, keyword)
                 context_dict['query'] = query
@@ -164,12 +166,24 @@ class searchResultView(View):
             movie_list = Movie.objects.filter(title__icontains=search_terms)
         return movie_list
 
+    # get move directly from Genre object
+    def get_movie_from_genre(self, search_terms):
+        movie_list = []
+        print(search_terms)
+        if search_terms:
+            movie_genre_list = MovieGenre.objects.filter(genre_name=search_terms)
+        for movie_genre in movie_genre_list:
+            movie_list.append(movie_genre.movie_id)
+        return movie_list
+
     def run_query(self, search_terms, keyword):
         search_results = []
         if (keyword == 1):
             search_results = self.get_movie_list(search_terms)
-        else:
+        elif(keyword == 2| keyword == 3):
             search_results = self.get_movie_from_person(search_terms, keyword)
+        else:
+            search_results = self.get_movie_from_genre(search_terms)
         results = []
 
         for result in search_results:
@@ -214,7 +228,6 @@ def search_tag(request, search_type, query):
         keyword = 2
     elif search_type == 'Actor':
         keyword = 3
-
     if query:
         # call the runqery from searchResult view
         context_dict['result_list'] = searchResultView.run_query(query, keyword)

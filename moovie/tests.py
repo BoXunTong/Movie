@@ -26,6 +26,59 @@ class MovieTests(TestCase):
 
         Review.objects.create(username=self.user, movie_id=self.movie, rating=Decimal(5.00))
 
+    """
+    Tests the views manipulated for searchResult views
+    """
+
+    def test_if_search_movie_retrieves_correct_info_when_all_data_exists(self):
+        response = self.client.get(reverse('moovie:show_search_result', kwargs={'movie_id': 1}), follow=True)
+        self.assertEqual(HTTPStatus.OK, response.status_code)
+        self.assertEqual("The Lord of The Rings", response.context['movie'].title)
+        self.assertEqual("Peter", response.context['directors'][0].name)
+        self.assertEqual("Fantastic", response.context['genres'][0].name)
+
+    def test_if_search_movie_returns_empty_when_there_is_no_movie(self):
+        Movie.objects.filter(name='The Lord of The Rings').delete()
+
+        response = self.client.get(reverse('moovie:show_search_result', kwargs={'movie_id': 1}), follow=True)
+        self.assertEqual(HTTPStatus.OK, response.status_code)
+        self.assertIsNone(response.context['movie'])
+        self.assertIsNone(response.context['directors'])
+        self.assertIsNone(response.context['genres'])
+
+    def test_if_search_movie_returns_empty_when_there_is_no_director(self):
+        Person.objects.filter(name='Peter').delete()
+
+        response = self.client.get(reverse('moovie:show_search_result', kwargs={'movie_id': 1}), follow=True)
+        self.assertEqual(HTTPStatus.OK, response.status_code)
+        self.assertEqual("The Lord of The Rings", response.context['movie'].title)
+        self.assertEqual([], response.context['directors'])
+        self.assertEqual("Fantastic", response.context['genres'][0].name)
+
+    def test_if_search_movie_returns_empty_when_there_is_no_actor(self):
+        Person.objects.filter(name='Orlando').delete()
+
+        response = self.client.get(reverse('moovie:show_search_result', kwargs={'movie_id': 1}), follow=True)
+        self.assertEqual(HTTPStatus.OK, response.status_code)
+        self.assertEqual(response.context['id'])
+        self.assertEqual(response.context['movie'])
+        self.assertEqual(response.context['directors'])
+        self.assertEqual(response.context['genres'])
+    
+    def test_if_search_movie_returns_empty_when_there_is_no_genre(self):
+        Genre.objects.filter(name='Fantastic').delete()
+
+        response = self.client.get(reverse('moovie:show_search_result', kwargs={'movie_id': 1}), follow=True)
+        self.assertEqual(HTTPStatus.OK, response.status_code)
+        self.assertEqual("The Lord of The Rings", response.context['movie'].title)
+        self.assertEqual("Peter", response.context['directors'][0].name)
+        self.assertEqual([], response.context['genres'])
+
+
+    '''
+    Tests the views manipulated for movieProfile views
+    '''
+
     def test_if_show_movie_retrieves_correct_info_when_all_data_exists(self):
         response = self.client.get(reverse('moovie:show_movie_profile', kwargs={'movie_id': 1}), follow=True)
         self.assertEqual(HTTPStatus.OK, response.status_code)

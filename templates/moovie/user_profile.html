@@ -62,7 +62,7 @@
                     {% if reviews_with_movies %}
                     {% for r in reviews_with_movies %}
                     <a href="{% url 'moovie:show_movie_profile' r.movie.id %}" class="movie-item">
-                        <img src="{{ MEDIA_URL }}{{ r.movie.image }}"" alt="poster image for {{ r.movie.title }}">
+                        <img src="{{ MEDIA_URL }}{{ r.movie.image }}" alt="poster image for {{ r.movie.title }}">
                         <div class="movie-item-content">
                             <div class="movie-item-title">
                                 {{ r.movie.title }}
@@ -99,7 +99,7 @@
                     {% if wishlist %}
                     {% for movie in wishlist %}
                     <a href="{% url 'moovie:show_movie_profile' movie.id %}" class="movie-item">
-                        <img src="{{ MEDIA_URL }}{{ movie.image }}"" alt=" poster image for {{ movie.title }}">
+                        <img src="{{ MEDIA_URL }}{{ movie.image }}" alt=" poster image for {{ movie.title }}">
                         <div class="movie-item-content">
                             <div class="movie-item-title">
                                 {{ movie.title }}

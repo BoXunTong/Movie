@@ -27,8 +27,8 @@
 }
 
 .card-media-img {
-  width: auto;
-  height: 300px;
+  width: 200px;
+  height: auto;
   float: left;
 }
 

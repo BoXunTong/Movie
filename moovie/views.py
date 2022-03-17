@@ -15,9 +15,24 @@ from django.contrib import messages
 class IndexView(View):
     def get(self, request):
         context_dict = {}
-        top_3_movie = Movie.objects.order_by('-average_rating')[0:3]
-        movies_by_rating = Movie.objects.order_by('-average_rating')[3:9]
-        movies_by_release = Movie.objects.order_by('-release_date')[:6]
+        top_3_movie = []
+        movies_by_rating = []
+        movies_by_release = []
+        if len(Movie.objects.all()) > 9:
+            top_3_movie = Movie.objects.order_by('-average_rating')[0:3]
+            movies_by_release = Movie.objects.order_by('-release_date')[:6]
+            movies_by_rating = Movie.objects.order_by('-average_rating')[3:9]
+        elif len(Movie.objects.all()) > 6:
+            top_3_movie = Movie.objects.order_by('-average_rating')[0:3]
+            movies_by_release = Movie.objects.order_by('-release_date')[:6]
+            movies_by_rating = Movie.objects.order_by('-average_rating')[3:6]
+        elif len(Movie.objects.all()) > 3:
+            top_3_movie = Movie.objects.order_by('-average_rating')[0:3]
+            movies_by_release = Movie.objects.order_by('release_date')
+            movies_by_rating = Movie.objects.order_by('-average_rating')[3:]
+        elif len(Movie.objects.all()) > 0:
+            top_3_movie = Movie.objects.order_by('-average_rating')
+            movies_by_release = Movie.objects.order_by('release_date')
 
         context_dict['top_3_movie'] = top_3_movie
         context_dict['movies_by_rating'] = movies_by_rating

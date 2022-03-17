@@ -1,3 +1,4 @@
+from platform import release
 from django.test import TestCase, Client, override_settings
 from moovie.forms import UserProfileForm
 from moovie.models import *
@@ -29,59 +30,6 @@ class MovieTests(TestCase):
         UserProfile.objects.create(user=self.user)
 
         Review.objects.create(username=self.user, movie_id=self.movie, rating=Decimal(5.00))
-
-    """
-    Tests the views manipulated for searchResult views
-    """
-
-    def test_if_search_movie_retrieves_correct_info_when_all_data_exists(self):
-        response = self.client.get(reverse('moovie:show_search_result', kwargs={'movie_id': 1}), follow=True)
-        self.assertEqual(HTTPStatus.OK, response.status_code)
-        self.assertEqual("The Lord of The Rings", response.context['movie'].title)
-        self.assertEqual("Peter", response.context['directors'][0].name)
-        self.assertEqual("Fantastic", response.context['genres'][0].name)
-
-    def test_if_search_movie_returns_empty_when_there_is_no_movie(self):
-        Movie.objects.filter(name='The Lord of The Rings').delete()
-
-        response = self.client.get(reverse('moovie:show_search_result', kwargs={'movie_id': 1}), follow=True)
-        self.assertEqual(HTTPStatus.OK, response.status_code)
-        self.assertIsNone(response.context['movie'])
-        self.assertIsNone(response.context['directors'])
-        self.assertIsNone(response.context['genres'])
-
-    def test_if_search_movie_returns_empty_when_there_is_no_director(self):
-        Person.objects.filter(name='Peter').delete()
-
-        response = self.client.get(reverse('moovie:show_search_result', kwargs={'movie_id': 1}), follow=True)
-        self.assertEqual(HTTPStatus.OK, response.status_code)
-        self.assertEqual("The Lord of The Rings", response.context['movie'].title)
-        self.assertEqual([], response.context['directors'])
-        self.assertEqual("Fantastic", response.context['genres'][0].name)
-
-    def test_if_search_movie_returns_empty_when_there_is_no_actor(self):
-        Person.objects.filter(name='Orlando').delete()
-
-        response = self.client.get(reverse('moovie:show_search_result', kwargs={'movie_id': 1}), follow=True)
-        self.assertEqual(HTTPStatus.OK, response.status_code)
-        self.assertEqual(response.context['id'])
-        self.assertEqual(response.context['movie'])
-        self.assertEqual(response.context['directors'])
-        self.assertEqual(response.context['genres'])
-    
-    def test_if_search_movie_returns_empty_when_there_is_no_genre(self):
-        Genre.objects.filter(name='Fantastic').delete()
-
-        response = self.client.get(reverse('moovie:show_search_result', kwargs={'movie_id': 1}), follow=True)
-        self.assertEqual(HTTPStatus.OK, response.status_code)
-        self.assertEqual("The Lord of The Rings", response.context['movie'].title)
-        self.assertEqual("Peter", response.context['directors'][0].name)
-        self.assertEqual([], response.context['genres'])
-
-
-    '''
-    Tests the views manipulated for movieProfile views
-    '''
 
     def test_if_show_movie_retrieves_correct_info_when_all_data_exists(self):
         response = self.client.get(reverse('moovie:show_movie_profile', kwargs={'movie_id': 1}), follow=True)
@@ -168,6 +116,98 @@ class MovieTests(TestCase):
         response = RemoveFromWatchlistView().get(request, 1)
         self.assertEqual(HTTPStatus.OK, response.status_code)
         self.assertEqual(0, MovieToWatch.objects.filter(movie_id=1).count())
+
+class SearchResultTests(TestCase): 
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.movie = Movie.objects.create(title="The Batman", duration=176, release_date=datetime.datetime(2022, 3, 4), average_rating=Decimal(5.00))
+
+        self.director = Person.objects.create(name='Matt', surname='Reeves', person_type='Director')
+        DirectorMovie.objects.create(movie_id=self.movie, person_id=self.director)
+
+        self.actor = Person.objects.create(name='Robert', surname='Pattinson', person_type='Actor')
+        ActorMovie.objects.create(movie_id=self.movie, person_id=self.actor)
+
+        self.genre = Genre.objects.create(name='Action')
+        MovieGenre.objects.create(movie_id=self.movie, genre_name=self.genre)
+
+    def test_if_search_movie_retrieves_correct_info_when_search_for_title(self):
+        # query def for testing searching movie title
+        response = self.client.post(reverse('moovie:show_search_result'), {'query': 'The Batman', 'search_dropdown': 'Title'})
+        response_list = str(response.context['result_list'])[0:-2]
+        response_list_title_all = response_list.split(',', 8)[1]
+        response_title = response_list_title_all.split(': ', 2)[1][1:-1]
+        response_list_director_all = response_list.split(',', 8)[3]
+        response_director = response_list_director_all.split(': ', 2)[1][1:-1]
+        response_list_release_date_all = response_list.split(',', 8)[4]
+        response_release_date = response_list_release_date_all.split(': ', 2)[1][1:-1]
+        response_list_genre_all = response_list.split(',', 8)[5]
+        response_genre = response_list_genre_all.split(': ', 2)[1][2:-1]
+        
+        self.assertEqual(HTTPStatus.OK, response.status_code)
+        self.assertEqual("The Batman", response_title)
+        self.assertEqual("Matt Reeves", response_director)
+        self.assertEqual("2022-03-04", response_release_date)
+        self.assertEqual("Action", response_genre)
+        
+    def test_if_search_movie_retrieves_correct_info_when_search_for_director(self):
+        # query def for testing searching movie director
+        response = self.client.post(reverse('moovie:show_search_result'), {'query': 'Matt', 'search_dropdown': 'Director'})
+        response_list = str(response.context['result_list'])[0:-2]
+        response_list_title_all = response_list.split(',', 8)[1]
+        response_title = response_list_title_all.split(': ', 2)[1][1:-1]
+        response_list_director_all = response_list.split(',', 8)[3]
+        response_director = response_list_director_all.split(': ', 2)[1][1:-1]
+        response_list_release_date_all = response_list.split(',', 8)[4]
+        response_release_date = response_list_release_date_all.split(': ', 2)[1][1:-1]
+        response_list_genre_all = response_list.split(',', 8)[5]
+        response_genre = response_list_genre_all.split(': ', 2)[1][2:-1]
+
+        self.assertEqual(HTTPStatus.OK, response.status_code)
+        self.assertEqual("The Batman", response_title)
+        self.assertEqual("Matt Reeves", response_director)
+        self.assertEqual("2022-03-04", response_release_date)
+        self.assertEqual("Action", response_genre)
+
+    def test_if_search_movie_retrieves_correct_info_when_search_for_actor(self):
+        # query def for testing searching movie actor
+        response = self.client.post(reverse('moovie:show_search_result'), {'query': 'Robert', 'search_dropdown': 'Actor'})
+        response_list = str(response.context['result_list'])[0:-2]
+        response_list_title_all = response_list.split(',', 8)[1]
+        response_title = response_list_title_all.split(': ', 2)[1][1:-1]
+        response_list_director_all = response_list.split(',', 8)[3]
+        response_director = response_list_director_all.split(': ', 2)[1][1:-1]
+        response_list_release_date_all = response_list.split(',', 8)[4]
+        response_release_date = response_list_release_date_all.split(': ', 2)[1][1:-1]
+        response_list_genre_all = response_list.split(',', 8)[5]
+        response_genre = response_list_genre_all.split(': ', 2)[1][2:-1]
+
+        self.assertEqual(HTTPStatus.OK, response.status_code)
+        self.assertEqual("The Batman", response_title)
+        self.assertEqual("Matt Reeves", response_director)
+        self.assertEqual("2022-03-04", response_release_date)
+        self.assertEqual("Action", response_genre)
+
+    def test_if_search_movie_retrieves_correct_info_when_search_for_genre(self):
+        # query def for testing searching movie genre
+        response = self.client.post(reverse('moovie:show_search_result'), {'query': 'Action', 'search_dropdown': 'Genre'})
+        response_list = str(response.context['result_list'])[0:-2]
+        response_list_title_all = response_list.split(',', 8)[1]
+        response_title = response_list_title_all.split(': ', 2)[1][1:-1]
+        response_list_director_all = response_list.split(',', 8)[3]
+        response_director = response_list_director_all.split(': ', 2)[1][1:-1]
+        response_list_release_date_all = response_list.split(',', 8)[4]
+        response_release_date = response_list_release_date_all.split(': ', 2)[1][1:-1]
+        response_list_genre_all = response_list.split(',', 8)[5]
+        print(response_list_genre_all)
+        response_genre = response_list_genre_all.split(': ', 2)[1][2:-1]
+
+        self.assertEqual(HTTPStatus.OK, response.status_code)
+        self.assertEqual("The Batman", response_title)
+        self.assertEqual("Matt Reeves", response_director)
+        self.assertEqual("2022-03-04", response_release_date)
+        self.assertEqual("Action", response_genre)
+    
 
 class ContactMessageTests(TestCase):
     def test_if_data_is_stored_in_database_correctly(self):

@@ -11,30 +11,63 @@
         <div class="hero-slide">
             <div class="owl-carousel carousel-nav-center" id="hero-carousel">
                 <!-- slide items -->
-                {% for foo in top_3_movie %}
+                {% if top_3_movie%}
+                    {% for foo in top_3_movie %}
+                        <div class="hero-slide-item">
+                            <img src="{{ MEDIA_URL }}{{ foo.poster }}" alt="">
+                            <div class="overlay"></div>
+                            <div class="hero-slide-item-content">
+                                <div class="item-content-wraper">
+                                    <div class="item-content-title">
+                                        {{ foo.title }}
+                                    </div>
+                                    <div class="movie-infos top-down delay-2">
+                                        <div class="movie-info">
+                                            <i class="bx bxs-star"></i>
+                                            <span>{{ foo.average_rating }}</span>
+                                        </div>
+                                        <div class="movie-info">
+                                            <i class="bx bxs-time"></i>
+                                            <span>{{ foo.duration }} mins</span>
+                                        </div>
+                                    </div>
+                                    <div class="item-content-description top-down delay-4">
+                                        {{ foo.description }}
+                                    </div>
+                                    <div class="item-action top-down delay-6">
+                                        <a href="{% url 'moovie:show_movie_profile' foo.id %}" class="btn btn-hover">
+                                            <i class="bx bx-comment"></i>
+                                            <span>Comment Now</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    {% else %}
                     <div class="hero-slide-item">
-                        <img src="{{ MEDIA_URL }}{{ foo.poster }}" alt="">
+                        <img src="{{ MEDIA_URL }}poster_images/placeholder.png" alt="placeholder">
                         <div class="overlay"></div>
                         <div class="hero-slide-item-content">
                             <div class="item-content-wraper">
                                 <div class="item-content-title">
-                                    {{ foo.title }}
+                                    There are no movies present.
                                 </div>
                                 <div class="movie-infos top-down delay-2">
                                     <div class="movie-info">
                                         <i class="bx bxs-star"></i>
-                                        <span>{{ foo.average_rating }}</span>
+                                        <span>0</span>
                                     </div>
                                     <div class="movie-info">
                                         <i class="bx bxs-time"></i>
-                                        <span>{{ foo.duration }} mins</span>
+                                        <span>0 mins</span>
                                     </div>
                                 </div>
                                 <div class="item-content-description top-down delay-4">
-                                    {{ foo.description }}
+
                                 </div>
                                 <div class="item-action top-down delay-6">
-                                    <a href="{% url 'moovie:show_movie_profile' foo.id %}" class="btn btn-hover">
+                                    <a href="#" class="btn btn-hover">
                                         <i class="bx bx-comment"></i>
                                         <span>Comment Now</span>
                                     </a>
@@ -42,13 +75,15 @@
                             </div>
                         </div>
                     </div>
-                {% endfor %}
+                {% endif %}
+
             </div>
         </div>
         <!-- top slide -->
         <div class="top-movies-slide">
             <div class="owl-carousel" id="top-movies-slide">
                 <!-- item -->
+            {% if movies_by_rating %}
                 {% for foo in movies_by_rating %}
                     <div class="movie-item">
                         <a href="{% url 'moovie:show_movie_profile' foo.id %}">
@@ -68,6 +103,10 @@
 
                     </div>
                 {% endfor %}
+            {% else %}
+                <strong>There are no movies present.</strong>
+            {% endif %}
+
 
             </div>
         </div>
@@ -82,6 +121,7 @@
             </div>
             <div class="movies-slide carousel-nav-center owl-carousel">
                 <!-- each movie item -->
+
                 {% if movies_by_release %}
                     {% for movie in movies_by_release %}
                         <a href="{% url 'moovie:show_movie_profile' movie.id %}" class="movie-item">
@@ -101,7 +141,6 @@
                             </div>
                         </a>
                     {% endfor %}
-
                 {% else %}
                     <a href="#" class="movie-item">
                         <img src="{{ MEDIA_URL }}movie_images/placeholder.png" alt="">

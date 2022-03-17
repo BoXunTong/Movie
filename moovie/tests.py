@@ -357,6 +357,33 @@ class UserProfileTests(TestCase):
         response = self.client.get(reverse('moovie:show_user_profile', kwargs={'username': 'testy_mctestface'}))
         self.assertEqual(biography,response.context['user_profile'].bio)
 
+
+class IndexViewTest(TestCase):
+    def test_index_view_with_no_movies(self):
+        response = self.client.get(reverse('moovie:index'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'There are no movies present.')
+        self.assertQuerysetEqual(response.context['top_3_movie'], [])
+        self.assertQuerysetEqual(response.context['movies_by_rating'], [])
+        self.assertQuerysetEqual(response.context['movies_by_release'], [])
+
+    def setData(self):
+        self.factory = RequestFactory()
+        self.movie1 = Movie.objects.create(title="The Lord of The Rings", duration=192,
+                                           release_date=datetime.datetime(2001, 11, 16), average_rating=Decimal(5.00))
+        self.movie2 = Movie.objects.create(title="Babe: Sheep Pig", duration=123,
+                                           release_date=datetime.datetime(2004, 7, 12), average_rating=Decimal(4.70))
+        self.movie3 = Movie.objects.create(title="Doctor Strange", duration=120,
+                                           release_date=datetime.date(2017, 1, 1), average_rating=Decimal(4.80))
+
+    def test_index_top_3(self):
+        self.setData()
+        response = self.client.get(reverse('moovie:index'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['movies_by_rating'], [])
+
 class SimplePageLoadTests(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
@@ -366,6 +393,15 @@ class SimplePageLoadTests(TestCase):
         self.assertEqual(HTTPStatus.OK, response.status_code)
         self.assertContains(response, "We are a movie rating site with a love for cow jokes.")
 
+    def test_register_page_loads(self):
+        response = self.client.get(reverse('moovie:register'))
+        self.assertEqual(HTTPStatus.OK, response.status_code)
+        self.assertContains(response, 'Create an account')
+
+    def test_login_page_loads(self):
+        response = self.client.get(reverse('moovie:login'))
+        self.assertEqual(HTTPStatus.OK, response.status_code)
+        self.assertContains(response, 'Log in to your account')
     def test_register_page_loads(self):
         response = self.client.get(reverse('moovie:register'))
         self.assertEqual(HTTPStatus.OK, response.status_code)

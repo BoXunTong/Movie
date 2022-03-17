@@ -134,78 +134,48 @@ class SearchResultTests(TestCase):
     def test_if_search_movie_retrieves_correct_info_when_search_for_title(self):
         # query def for testing searching movie title
         response = self.client.post(reverse('moovie:show_search_result'), {'query': 'The Batman', 'search_dropdown': 'Title'})
-        response_list = str(response.context['result_list'])[0:-2]
-        response_list_title_all = response_list.split(',', 8)[1]
-        response_title = response_list_title_all.split(': ', 2)[1][1:-1]
-        response_list_director_all = response_list.split(',', 8)[3]
-        response_director = response_list_director_all.split(': ', 2)[1][1:-1]
-        response_list_release_date_all = response_list.split(',', 8)[4]
-        response_release_date = response_list_release_date_all.split(': ', 2)[1][1:-1]
-        response_list_genre_all = response_list.split(',', 8)[5]
-        response_genre = response_list_genre_all.split(': ', 2)[1][2:-1]
+        response_genre = response.context['result_list'][0]['genre'].lstrip()
         
         self.assertEqual(HTTPStatus.OK, response.status_code)
-        self.assertEqual("The Batman", response_title)
-        self.assertEqual("Matt Reeves", response_director)
-        self.assertEqual("2022-03-04", response_release_date)
+        self.assertEqual("The Batman", response.context['result_list'][0]['title'])
+        self.assertEqual("Matt Reeves", response.context['result_list'][0]['director'])
+        self.assertEqual("2022-03-04", response.context['result_list'][0]['release_date'])
         self.assertEqual("Action", response_genre)
         
     def test_if_search_movie_retrieves_correct_info_when_search_for_director(self):
         # query def for testing searching movie director
         response = self.client.post(reverse('moovie:show_search_result'), {'query': 'Matt', 'search_dropdown': 'Director'})
-        response_list = str(response.context['result_list'])[0:-2]
-        response_list_title_all = response_list.split(',', 8)[1]
-        response_title = response_list_title_all.split(': ', 2)[1][1:-1]
-        response_list_director_all = response_list.split(',', 8)[3]
-        response_director = response_list_director_all.split(': ', 2)[1][1:-1]
-        response_list_release_date_all = response_list.split(',', 8)[4]
-        response_release_date = response_list_release_date_all.split(': ', 2)[1][1:-1]
-        response_list_genre_all = response_list.split(',', 8)[5]
-        response_genre = response_list_genre_all.split(': ', 2)[1][2:-1]
-
+        response_genre = response.context['result_list'][0]['genre'].lstrip()
+        
         self.assertEqual(HTTPStatus.OK, response.status_code)
-        self.assertEqual("The Batman", response_title)
-        self.assertEqual("Matt Reeves", response_director)
-        self.assertEqual("2022-03-04", response_release_date)
+        self.assertEqual("The Batman", response.context['result_list'][0]['title'])
+        self.assertEqual("Matt Reeves", response.context['result_list'][0]['director'])
+        self.assertEqual("2022-03-04", response.context['result_list'][0]['release_date'])
         self.assertEqual("Action", response_genre)
+
+
 
     def test_if_search_movie_retrieves_correct_info_when_search_for_actor(self):
         # query def for testing searching movie actor
         response = self.client.post(reverse('moovie:show_search_result'), {'query': 'Robert', 'search_dropdown': 'Actor'})
-        response_list = str(response.context['result_list'])[0:-2]
-        response_list_title_all = response_list.split(',', 8)[1]
-        response_title = response_list_title_all.split(': ', 2)[1][1:-1]
-        response_list_director_all = response_list.split(',', 8)[3]
-        response_director = response_list_director_all.split(': ', 2)[1][1:-1]
-        response_list_release_date_all = response_list.split(',', 8)[4]
-        response_release_date = response_list_release_date_all.split(': ', 2)[1][1:-1]
-        response_list_genre_all = response_list.split(',', 8)[5]
-        response_genre = response_list_genre_all.split(': ', 2)[1][2:-1]
-
+        response_genre = response.context['result_list'][0]['genre'].lstrip()
+        
         self.assertEqual(HTTPStatus.OK, response.status_code)
-        self.assertEqual("The Batman", response_title)
-        self.assertEqual("Matt Reeves", response_director)
-        self.assertEqual("2022-03-04", response_release_date)
+        self.assertEqual("The Batman", response.context['result_list'][0]['title'])
+        self.assertEqual("Matt Reeves", response.context['result_list'][0]['director'])
+        self.assertEqual("2022-03-04", response.context['result_list'][0]['release_date'])
         self.assertEqual("Action", response_genre)
+
 
     def test_if_search_movie_retrieves_correct_info_when_search_for_genre(self):
         # query def for testing searching movie genre
         response = self.client.post(reverse('moovie:show_search_result'), {'query': 'Action', 'search_dropdown': 'Genre'})
-        response_list = str(response.context['result_list'])[0:-2]
-        response_list_title_all = response_list.split(',', 8)[1]
-        response_title = response_list_title_all.split(': ', 2)[1][1:-1]
-        response_list_director_all = response_list.split(',', 8)[3]
-        response_director = response_list_director_all.split(': ', 2)[1][1:-1]
-        response_list_release_date_all = response_list.split(',', 8)[4]
-        response_release_date = response_list_release_date_all.split(': ', 2)[1][1:-1]
-        response_list_genre_all = response_list.split(',', 8)[5]
-        print(response_list_genre_all)
-        response_genre = response_list_genre_all.split(': ', 2)[1][2:-1]
-
+        response_genre = response.context['result_list'][0]['genre'].lstrip()
+        
         self.assertEqual(HTTPStatus.OK, response.status_code)
-        self.assertEqual("The Batman", response_title)
-        self.assertEqual("Matt Reeves", response_director)
-        self.assertEqual("2022-03-04", response_release_date)
+        self.assertEqual("The Batman", response.context['result_list'][0]['title'])
+        self.assertEqual("Matt Reeves", response.context['result_list'][0]['director'])
+        self.assertEqual("2022-03-04", response.context['result_list'][0]['release_date'])
         self.assertEqual("Action", response_genre)
     
 

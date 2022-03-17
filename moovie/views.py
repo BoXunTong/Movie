@@ -226,7 +226,7 @@ class SearchResultView(View):
     def get_movie_from_genre(self, search_terms):
         movie_list = []
 
-        movie_genre_list = MovieGenre.objects.filter(genre_name=search_terms)
+        movie_genre_list = MovieGenre.objects.filter(genre_name__name__icontains=search_terms)
 
         for movie_genre in movie_genre_list:
             movie_list.append(movie_genre.movie_id)

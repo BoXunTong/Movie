@@ -20,15 +20,14 @@
             <div class="card u-clearfix">
                 <div class="card-media">
                     <img class="card-media-img" src="{{ MEDIA_URL }}{{ result.image }}" alt="Picture of Movie" style="object-fit:cover;">
-                    <span class="card-media-tag card-media-tag-orange">{{ result.genre }}</span>
                 </div>
                 <div class="card-body">
                     <a class="card-body-heading" href="{% url 'moovie:show_movie_profile' result.id %}">
                         {{ result.title }}
                     </a>
                     <br>
-                    <h4 class="card-body-description1">
-                        {{ result.director }}
+                    <h4 class="card-body-description1 mt-5">
+                       Directed by: {{ result.director }}
                     </h4>
                     <br>
                     <p class="card-body-description2">

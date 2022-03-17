@@ -357,3 +357,21 @@ class UserProfileTests(TestCase):
         response = self.client.get(reverse('moovie:show_user_profile', kwargs={'username': 'testy_mctestface'}))
         self.assertEqual(biography,response.context['user_profile'].bio)
 
+class SimplePageLoadTests(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+
+    def test_about_us_page_loads(self):
+        response = self.client.get(reverse('moovie:about-us'))
+        self.assertEqual(HTTPStatus.OK, response.status_code)
+        self.assertContains(response, "We are a movie rating site with a love for cow jokes.")
+
+    def test_register_page_loads(self):
+        response = self.client.get(reverse('moovie:register'))
+        self.assertEqual(HTTPStatus.OK, response.status_code)
+        self.assertContains(response, 'Create an account')
+
+    def test_login_page_loads(self):
+        response = self.client.get(reverse('moovie:login'))
+        self.assertEqual(HTTPStatus.OK, response.status_code)
+        self.assertContains(response, 'Log in to your account')

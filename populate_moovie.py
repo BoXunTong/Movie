@@ -598,8 +598,7 @@ def add_genre(name):
 
 
 def add_person(name, surname, person_type):
-    person = Person.objects.get_or_create(name=name)[0]
-    person.surname = surname
+    person = Person.objects.get_or_create(name=name, surname=surname)[0]
     person.person_type = person_type
     person.save()
     return person

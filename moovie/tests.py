@@ -1,4 +1,8 @@
-from platform import release
+import os
+import re
+
+from django.conf import settings
+from django.template.loader import get_template
 from django.test import TestCase, Client, override_settings
 from moovie.forms import UserProfileForm
 from moovie.models import *
@@ -7,10 +11,16 @@ from decimal import *
 from http import HTTPStatus
 import datetime
 from django.test.client import RequestFactory
+
+from . import forms
 from .views import AddToWatchlistView, RemoveFromWatchlistView
 import tempfile, base64
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from io import BytesIO
+
+FAILURE_HEADER = f"{os.linesep}{os.linesep}{os.linesep}================{os.linesep}TwD TEST FAILURE =({os.linesep}================{os.linesep}"
+FAILURE_FOOTER = f"{os.linesep}"
+f"{FAILURE_HEADER} {FAILURE_FOOTER}"
 
 class MovieTests(TestCase):
     def setUp(self):
@@ -372,12 +382,76 @@ class SimplePageLoadTests(TestCase):
         response = self.client.get(reverse('moovie:login'))
         self.assertEqual(HTTPStatus.OK, response.status_code)
         self.assertContains(response, 'Log in to your account')
-    def test_register_page_loads(self):
-        response = self.client.get(reverse('moovie:register'))
-        self.assertEqual(HTTPStatus.OK, response.status_code)
-        self.assertContains(response, 'Create an account')
 
-    def test_login_page_loads(self):
-        response = self.client.get(reverse('moovie:login'))
-        self.assertEqual(HTTPStatus.OK, response.status_code)
-        self.assertContains(response, 'Log in to your account')
+class MoovieRegistrationTests(TestCase):
+    """
+    A series of tests that examine changes to views that take place in Chapter 9.
+    Specifically, we look at tests related to registering a user.
+    """
+    def test_new_registration_view_exists(self):
+        """
+        Checks to see if the new registration view exists in the correct place, with the correct name.
+        """
+        url = ''
+
+        try:
+            url = reverse('moovie:register')
+        except:
+            pass
+
+        self.assertEqual(url, '/moovie/register/', f"{FAILURE_HEADER}Have you created the Moovie:register URL mapping correctly? It should point to the new register() view, and have a URL of '/rango/register/' Remember the first part of the URL (/rango/) is handled by the project's urls.py module, and the second part (register/) is handled by the Rango app's urls.py module.{FAILURE_FOOTER}")
+
+    def test_registration_template(self):
+        """
+        Does the register.html template exist in the correct place, and does it make use of template inheritance?
+        """
+        template_base_path = os.path.join(settings.TEMPLATE_DIR, 'moovie')
+        template_path = os.path.join(template_base_path, 'register.html')
+        self.assertTrue(os.path.exists(template_path), f"{FAILURE_HEADER}We couldn't find the 'register.html' template in the 'templates/rango/' directory. Did you put it in the right place?{FAILURE_FOOTER}")
+
+        template_str = get_template(template_path)
+
+        request = self.client.get(reverse('moovie:register'))
+        content = request.content.decode('utf-8')
+
+
+    def test_registration_get_response(self):
+        """
+        Checks the GET response of the registration view.
+        There should be a form with the correct markup.
+        """
+        request = self.client.get(reverse('moovie:register'))
+        content = request.content.decode('utf-8')
+
+        self.assertTrue('enctype="multipart/form-data"' in content, f"{FAILURE_HEADER}In your register.html template, are you using 'multipart/form-data' for the <form>'s 'enctype'?{FAILURE_FOOTER}")
+        self.assertTrue('action="/moovie/register/"' in content, f"{FAILURE_HEADER}Is your <form> in register.html pointing to the correct URL for registering a user?{FAILURE_FOOTER}")
+
+
+    def test_good_form_creation(self):
+        """
+        Tests the functionality of the forms.
+        Creates a UserProfileForm and UserForm, and attempts to save them.
+        Upon completion, we should be able to login with the details supplied.
+        """
+        user_data = {'username': 'testuser', 'password': 'test123', 'email': 'test@test.com'}
+        user_form = forms.UserForm(data=user_data)
+
+        self.assertTrue(user_form.is_valid(), f"{FAILURE_HEADER}The UserForm was not valid after entering the required data. Check your implementation of UserForm, and try again.{FAILURE_FOOTER}")
+
+        user_object = user_form.save()
+        user_object.set_password(user_data['password'])
+        user_object.save()
+
+        self.assertEqual(len(User.objects.all()), 1, f"{FAILURE_HEADER}We were expecting to see a User object created, but it didn't appear. Check your UserForm implementation, and try again.{FAILURE_FOOTER}")
+        self.assertTrue(self.client.login(username='testuser', password='test123'), f"{FAILURE_HEADER}We couldn't log our sample user in during the tests. Please check your implementation of UserForm and UserProfileForm.{FAILURE_FOOTER}")
+
+    def test_good_registration_post_response(self):
+        """
+        Checks the POST response of the registration view.
+        We should be able to log a user in with new details after this!
+        """
+        post_data = {'username': 'webformuser', 'password': 'test123', 'email': 'test@test.com', 'website': 'http://www.bing.com', 'picture': tempfile.NamedTemporaryFile(suffix=".jpg").name}
+        request = self.client.post(reverse('moovie:register'), post_data)
+        content = request.content.decode('utf-8')
+
+        self.assertTrue(self.client.login(username='webformuser', password='test123'), f"{FAILURE_HEADER}We couldn't log in the user we created using your registration form. Please check your implementation of the register() view. Are you missing a .save() call?{FAILURE_FOOTER}")

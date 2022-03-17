@@ -1,4 +1,4 @@
+Django==2.1.5
 django-registration-redux==2.2
-django==2.1.5
-pillow==5.4.1
-
+Pillow==5.4.1
+pytz==2021.3

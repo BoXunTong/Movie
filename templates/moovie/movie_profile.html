@@ -19,16 +19,16 @@
                     <i class="bx bx-star h3" ></i><span class="h3">{{ movie.average_rating }}</span>
                     <p class="h4 p-1"> <strong> Released: </strong> {{ movie.release_date|date:"d M Y" }}</p>
                     <p class="h4 p-1"> <strong> Directed by: </strong> {% for director in directors %}
-                                        <a href="{% url 'moovie:search_tag' 'Director' director.name %}">{{ director.name }} {{director.surname}} </a>
+                                        <a href="{% url 'moovie:search_tag' 'Director' director.name %}">{{ director.name }} {{director.surname}},  </a>
                                     {% endfor %}
                     </p>
                     <p class="h4 p-1"> <strong> Starring: </strong> {% for star in stars %}
-                                        <a href="{% url 'moovie:search_tag' 'Actor' star.name %}">{{ star.name }} {{star.surname}} </a>
+                                        <a href="{% url 'moovie:search_tag' 'Actor' star.name %}">{{ star.name }} {{star.surname}},  </a>
                                     {% endfor %}
                     </p>
                     <p class="h5 p-1"> <strong> Description: </strong> {{ movie.description }}</p>
                     <p class="pt-5 h4"> <strong>Genre tags: </strong> {% for genre in genres %}
-                                        <a href="{% url 'moovie:search_tag' 'Genre' genre.name %}"> {{ genre.name }} </a>
+                                        <a  href="{% url 'moovie:search_tag' 'Genre' genre.name %}"> [{{ genre.name }}] </a>
                                     {% endfor %}
                     </p>
 
